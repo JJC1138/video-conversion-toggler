@@ -23,7 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		FC7110471C3AA8F6002755E4 /* Video Conversion Toggler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Video Conversion Toggler"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC7110471C3AA8F6002755E4 /* vidconvtoggle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vidconvtoggle; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC71104A1C3AA8F6002755E4 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -41,7 +41,7 @@
 		FC71103C1C3AA6B1002755E4 = {
 			isa = PBXGroup;
 			children = (
-				FC7110491C3AA8F6002755E4 /* Video Conversion Toggler */,
+				FC7110491C3AA8F6002755E4 /* OS X Command Line */,
 				FC7110481C3AA8F6002755E4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -49,25 +49,25 @@
 		FC7110481C3AA8F6002755E4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FC7110471C3AA8F6002755E4 /* Video Conversion Toggler */,
+				FC7110471C3AA8F6002755E4 /* vidconvtoggle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FC7110491C3AA8F6002755E4 /* Video Conversion Toggler */ = {
+		FC7110491C3AA8F6002755E4 /* OS X Command Line */ = {
 			isa = PBXGroup;
 			children = (
 				FC71104A1C3AA8F6002755E4 /* main.swift */,
 			);
-			path = "Video Conversion Toggler";
+			path = "OS X Command Line";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FC7110461C3AA8F6002755E4 /* Video Conversion Toggler */ = {
+		FC7110461C3AA8F6002755E4 /* Video Conversion Toggler (OS X Command Line) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FC71104C1C3AA8F6002755E4 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler" */;
+			buildConfigurationList = FC71104C1C3AA8F6002755E4 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (OS X Command Line)" */;
 			buildPhases = (
 				FC7110431C3AA8F6002755E4 /* Sources */,
 				FC7110441C3AA8F6002755E4 /* Frameworks */,
@@ -77,9 +77,9 @@
 			);
 			dependencies = (
 			);
-			name = "Video Conversion Toggler";
+			name = "Video Conversion Toggler (OS X Command Line)";
 			productName = "Video Conversion Toggler";
-			productReference = FC7110471C3AA8F6002755E4 /* Video Conversion Toggler */;
+			productReference = FC7110471C3AA8F6002755E4 /* vidconvtoggle */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -108,7 +108,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				FC7110461C3AA8F6002755E4 /* Video Conversion Toggler */,
+				FC7110461C3AA8F6002755E4 /* Video Conversion Toggler (OS X Command Line) */,
 			);
 		};
 /* End PBXProject section */
@@ -176,7 +176,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = vidconvtoggle;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -214,7 +214,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = vidconvtoggle;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -231,7 +231,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FC71104C1C3AA8F6002755E4 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler" */ = {
+		FC71104C1C3AA8F6002755E4 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (OS X Command Line)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FC71104D1C3AA8F6002755E4 /* Debug */,

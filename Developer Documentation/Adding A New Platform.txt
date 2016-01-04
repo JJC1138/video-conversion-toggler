@@ -1,0 +1,8 @@
+add target with name "Video Conversion Toggler"
+select project file and expand the "project and targets list" pane on the left of the editor (by clicking the square icon with a line on the left that is on the same header as the "Resource Tags" and "Build Settings" headings)
+in the target list rename the target to "Video Conversion Toggler ([platform])"
+in the "Packaging" section of the target settings change "Product Name" to "Video Conversion Toggler.app" or whatever is appropriate for the platform
+in Project navigator rename the new "Video Conversion Toggler" group to "[platform]")
+rename the new "Video Conversion Toggler" folder in the project to "[platform]"
+select the [platform] group in the Project navigator and in the Utilities pane on the far right of the window select the File inspector tab
+click the folder icon below the old folder name listed as the Location, and select the new folder name
