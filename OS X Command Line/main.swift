@@ -11,11 +11,40 @@ struct AppError {
     let error: NSError?
 }
 
-var errors = [String: AppError]()
-var errorsLock = NSObject()
+// From http://stackoverflow.com/a/24103086
+func synced(lock: AnyObject, closure: () -> ()) {
+    objc_sync_enter(lock)
+    defer { objc_sync_exit(lock) }
+    closure()
+}
 
-func describeError(deviceInfo: String, error: AppError) -> String {
+struct Errors {
+    private var errors = [String: AppError]()
+    private var errorsLock = NSObject()
+    subscript(deviceInfo: String) -> AppError? {
+        get {
+            objc_sync_enter(errorsLock)
+            defer { objc_sync_exit(errorsLock) }
+            return self.errors[deviceInfo]
+        }
+        set {
+            synced(errorsLock) {
+                self.errors[deviceInfo] = newValue
+            }
+        }
+    }
+    func deviceInfos() -> [String] {
+        objc_sync_enter(errorsLock)
+        defer { objc_sync_exit(errorsLock) }
+        return [String](errors.keys)
+    }
+}
+var errors = Errors()
+
+func describeError(deviceInfo: String) -> String? {
     // LOCALIZE all strings
+    
+    guard let error = errors[deviceInfo] else { return nil }
     
     let errorDescriptionFormat: String = {
         switch error.kind {
@@ -40,13 +69,6 @@ func describeError(deviceInfo: String, error: AppError) -> String {
     
     return String.localizedStringWithFormat("%@\n\nPlease contact %@ with this error information:\n\n%@",
         errorDescription, "vidconvtoggle@jjc1138.net", errorInfo)
-}
-
-// From http://stackoverflow.com/a/24103086
-func synced(lock: AnyObject, closure: () -> ()) {
-    objc_sync_enter(lock)
-    defer { objc_sync_exit(lock) }
-    closure()
 }
 
 // From http://stackoverflow.com/a/25226794
@@ -79,16 +101,12 @@ session.dataTaskWithURL(configPageURL, completionHandler: {
     print("completion") // FIXME
     
     if let error = error {
-        synced(errorsLock) {
-            errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface, error: error)
-        }
+        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface, error: error)
     }
 }).resume()
 
 dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
 
-synced(errorsLock) {
-    for (deviceHostname, error) in errors {
-        print(describeError(deviceHostname, error: error), toStream: &stderr)
-    }
+for deviceInfo in errors.deviceInfos() {
+    if let errorInfo = describeError(deviceInfo) { print(errorInfo, toStream: &stderr) }
 }
