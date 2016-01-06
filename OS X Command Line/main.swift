@@ -9,6 +9,11 @@ struct AppError : ErrorType {
     let kind: Kind
     let nsError: NSError?
     let unexpectedHTTPStatus: Int?
+    init(kind: Kind, nsError: NSError? = nil, unexpectedHTTPStatus: Int? = nil) {
+        self.kind = kind
+        self.nsError = nsError
+        self.unexpectedHTTPStatus = unexpectedHTTPStatus
+    }
 }
 
 // From http://stackoverflow.com/a/24103086
@@ -92,17 +97,17 @@ session.dataTaskWithURL(configPageURL, completionHandler: {
     defer { dispatch_semaphore_signal(complete) }
     
     if let error = error {
-        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface, nsError: error, unexpectedHTTPStatus: nil)
+        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface, nsError: error)
     }
     
     guard let response = response as? NSHTTPURLResponse else {
         // I'm not sure if this is possible, but the docs aren't explicit.
-        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface, nsError: nil, unexpectedHTTPStatus: nil)
+        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface)
         return
     }
     
     guard response.statusCode == 200 else {
-        errors[deviceHostname] = AppError(kind: .WebInterfaceNotAsExpected, nsError: nil, unexpectedHTTPStatus: response.statusCode)
+        errors[deviceHostname] = AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode)
         return
     }
     
