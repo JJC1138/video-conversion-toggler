@@ -1,14 +1,14 @@
 import Foundation
 
-enum ErrorKind {
-    case CouldNotAccessWebInterface
-    case WebInterfaceNotAsExpected
-    case SubmittingChangeFailed
-}
-
-struct AppError {
-    let kind: ErrorKind
-    let error: NSError?
+struct AppError : ErrorType {
+    enum Kind {
+        case CouldNotAccessWebInterface
+        case WebInterfaceNotAsExpected
+        case SubmittingChangeFailed
+    }
+    let kind: Kind
+    let nsError: NSError?
+    let unexpectedHTTPStatus: Int?
 }
 
 // From http://stackoverflow.com/a/24103086
@@ -57,18 +57,13 @@ func describeError(deviceInfo: String) -> String? {
         }
     }()
     
-    let errorDescription = String.localizedStringWithFormat(errorDescriptionFormat, deviceInfo)
+    var errorInfo = [String]()
     
-    let errorInfo: String = {
-        if let e = error.error {
-            return e.localizedDescription
-        } else {
-            return "[No error description]"
-        }
-    }()
+    errorInfo.append(String.localizedStringWithFormat(errorDescriptionFormat, deviceInfo))
+    if let e = error.nsError { errorInfo.append(e.localizedDescription) }
+    if let e = error.unexpectedHTTPStatus { errorInfo.append(String.localizedStringWithFormat("HTTP status %d", e)) }
     
-    return String.localizedStringWithFormat("%@\n\nPlease contact %@ with this error information:\n\n%@",
-        errorDescription, "vidconvtoggle@jjc1138.net", errorInfo)
+    return errorInfo.joinWithSeparator("\n\n")
 }
 
 // From http://stackoverflow.com/a/25226794
@@ -80,9 +75,7 @@ class StandardErrorOutputStream: OutputStreamType {
 var stderr = StandardErrorOutputStream()
 
 let deviceHostname = Process.arguments[1]
-let configPageURL = NSURL(string: "http://\(deviceHostname)/SETUP/VIDEO/d_video.asp-doesnotexist")! // FIXME remove debug suffix
-
-print(configPageURL) // FIXME remove
+let configPageURL = NSURL(string: "http://\(deviceHostname)/SETUP/VIDEO/d_video.asp")!
 
 let session: NSURLSession = {
     let configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
@@ -98,15 +91,39 @@ session.dataTaskWithURL(configPageURL, completionHandler: {
     
     defer { dispatch_semaphore_signal(complete) }
     
-    print("completion") // FIXME
-    
     if let error = error {
-        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface, error: error)
+        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface, nsError: error, unexpectedHTTPStatus: nil)
     }
+    
+    guard let response = response as? NSHTTPURLResponse else {
+        // I'm not sure if this is possible, but the docs aren't explicit.
+        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface, nsError: nil, unexpectedHTTPStatus: nil)
+        return
+    }
+    
+    guard response.statusCode == 200 else {
+        errors[deviceHostname] = AppError(kind: .WebInterfaceNotAsExpected, nsError: nil, unexpectedHTTPStatus: response.statusCode)
+        return
+    }
+    
+    print("completion") // FIXME
 }).resume()
 
 dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
 
-for deviceInfo in errors.deviceInfos() {
-    if let errorInfo = describeError(deviceInfo) { print(errorInfo, toStream: &stderr) }
+do {
+    let deviceInfos = errors.deviceInfos()
+    for deviceInfo in deviceInfos {
+        if let errorInfo = describeError(deviceInfo) { print(errorInfo, toStream: &stderr) }
+    }
+    
+    if !deviceInfos.isEmpty {
+        // LOCALIZE all:
+        let contact = "vidconvtoggle@jjc1138.net"
+        
+        print(toStream: &stderr)
+        print(String.localizedStringWithFormat("Please contact %@ with the above error information.", contact),
+            toStream: &stderr)
+        exit(1)
+    }
 }
