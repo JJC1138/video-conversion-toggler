@@ -62,10 +62,12 @@ let configPageURL = NSURL(string: "http://\(deviceHostname)/SETUP/VIDEO/d_video.
 
 print(configPageURL) // FIXME remove
 
-let sessionConfiguration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
-sessionConfiguration.timeoutIntervalForRequest = 5
-
-let session = NSURLSession(configuration: sessionConfiguration)
+let session: NSURLSession = {
+    let sessionConfiguration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
+    sessionConfiguration.timeoutIntervalForRequest = 5
+    
+    return NSURLSession(configuration: sessionConfiguration)
+}()
 
 let complete = dispatch_semaphore_create(0)!
 
