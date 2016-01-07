@@ -113,7 +113,17 @@ session.dataTaskWithURL(configPageURL, completionHandler: {
         return
     }
     
-    print("completion") // FIXME
+    guard let data = data else {
+        // I'm not sure if this is possible, but the docs aren't explicit.
+        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface)
+        return
+    }
+    
+    var doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
+    
+    print(doc.rootElement!.serializedFragment) // FIXME remove
+    
+    print("completion") // FIXME remove
 }).resume()
 
 dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
