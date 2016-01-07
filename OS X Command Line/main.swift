@@ -1,5 +1,7 @@
 import Foundation
 
+import HTMLReader
+
 struct AppError : ErrorType {
     enum Kind {
         case CouldNotAccessWebInterface

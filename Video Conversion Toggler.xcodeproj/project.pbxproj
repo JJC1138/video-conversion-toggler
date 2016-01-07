@@ -8,23 +8,27 @@
 
 /* Begin PBXBuildFile section */
 		FC71104B1C3AA8F6002755E4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC71104A1C3AA8F6002755E4 /* main.swift */; };
+		FCB6124D1C3EEC4000D12012 /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCB612491C3EEB6600D12012 /* HTMLReader.framework */; };
+		FCB612511C3EF01C00D12012 /* HTMLReader.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FCB612491C3EEB6600D12012 /* HTMLReader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		FC7110451C3AA8F6002755E4 /* CopyFiles */ = {
+		FCB6124F1C3EEF6100D12012 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			dstPath = "";
+			dstSubfolderSpec = 10;
 			files = (
+				FCB612511C3EF01C00D12012 /* HTMLReader.framework in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		FC7110471C3AA8F6002755E4 /* vidconvtoggle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vidconvtoggle; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC71104A1C3AA8F6002755E4 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		FCB612491C3EEB6600D12012 /* HTMLReader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTMLReader.framework; path = Carthage/Build/Mac/HTMLReader.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCB6124D1C3EEC4000D12012 /* HTMLReader.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +46,7 @@
 		FC71103C1C3AA6B1002755E4 = {
 			isa = PBXGroup;
 			children = (
+				FCB612491C3EEB6600D12012 /* HTMLReader.framework */,
 				FC7110491C3AA8F6002755E4 /* OS X Command Line */,
 				FC7110481C3AA8F6002755E4 /* Products */,
 			);
@@ -71,7 +77,7 @@
 			buildPhases = (
 				FC7110431C3AA8F6002755E4 /* Sources */,
 				FC7110441C3AA8F6002755E4 /* Frameworks */,
-				FC7110451C3AA8F6002755E4 /* CopyFiles */,
+				FCB6124F1C3EEF6100D12012 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -102,6 +108,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = FC71103C1C3AA6B1002755E4;
 			productRefGroup = FC7110481C3AA8F6002755E4 /* Products */;
@@ -159,6 +166,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -205,6 +216,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
