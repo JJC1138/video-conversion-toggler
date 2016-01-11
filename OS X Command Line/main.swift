@@ -36,8 +36,7 @@ struct DeviceInfo: Hashable, CustomStringConvertible {
 func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.hostname == b.hostname }
 
 enum DeviceStatus {
-    case SettingOn
-    case SettingOff
+    case SettingRetrieved(Bool)
     case Error(AppError)
 }
 
@@ -150,7 +149,7 @@ class FetchStatusOperation: NSOperation {
             
             let conversionWasOn = conversionElement.attributes["checked"] != nil
             
-            deviceStatuses[self.deviceInfo] = conversionWasOn ? .SettingOn : .SettingOff
+            deviceStatuses[self.deviceInfo] = .SettingRetrieved(conversionWasOn)
         }).resume()
         
         dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
@@ -169,19 +168,13 @@ do {
     for deviceInfo in deviceInfos {
         guard let status = deviceStatuses[deviceInfo] else { continue }
         
-        var setting: Bool
         switch status {
-        case .SettingOn:
-            setting = true
-        case .SettingOff:
-            setting = false
+        case .SettingRetrieved(let setting):
+            print("\(deviceInfo): \(setting ? "on" : "off")")
         case .Error(let e):
             anyErrors = true
             print(describeError(e, forDevice: deviceInfo), toStream: &stderr)
-            continue
         }
-        
-        print("\(deviceInfo): \(setting ? "on" : "off")")
     }
     
     if anyErrors {
