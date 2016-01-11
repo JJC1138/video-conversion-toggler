@@ -64,17 +64,8 @@ struct DevicesStatuses {
 }
 var deviceStatuses = DevicesStatuses()
 
-func describeError(deviceInfo: DeviceInfo) -> String? {
+func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String {
     // LOCALIZE all strings
-    guard let status = deviceStatuses[deviceInfo] else { return nil }
-    
-    guard let error: AppError = {
-        switch status {
-        case .Error(let e): return e
-        default: return nil
-        }
-        }() else { return nil }
-    
     let errorDescriptionFormat: String = {
         switch error.kind {
         case .CouldNotAccessWebInterface:
@@ -158,9 +149,8 @@ class FetchStatusOperation: NSOperation {
             }
             
             let conversionWasOn = conversionElement.attributes["checked"] != nil
-            print("Conversion was \(conversionWasOn ? "on" : "off")") // FIXME remove
             
-            print("completion") // FIXME remove
+            deviceStatuses[self.deviceInfo] = conversionWasOn ? .SettingOn : .SettingOff
         }).resume()
         
         dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
@@ -177,10 +167,21 @@ do {
     let deviceInfos = deviceStatuses.devices()
     var anyErrors = false
     for deviceInfo in deviceInfos {
-        if let errorInfo = describeError(deviceInfo) {
+        guard let status = deviceStatuses[deviceInfo] else { continue }
+        
+        var setting: Bool
+        switch status {
+        case .SettingOn:
+            setting = true
+        case .SettingOff:
+            setting = false
+        case .Error(let e):
             anyErrors = true
-            print(errorInfo, toStream: &stderr)
+            print(describeError(e, forDevice: deviceInfo), toStream: &stderr)
+            continue
         }
+        
+        print("\(deviceInfo): \(setting ? "on" : "off")")
     }
     
     if anyErrors {
