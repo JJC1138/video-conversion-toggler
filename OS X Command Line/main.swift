@@ -174,7 +174,38 @@ class SetSettingOperation: NSOperation {
     }
     
     override func main() {
-        // FIXME implement
+        let complete = dispatch_semaphore_create(0)!
+        
+        let setConfigRequest = NSURLRequest(URL: NSURL(string: "http://\(deviceInfo.hostname)/SETUP/VIDEO/s_video.asp")!)
+        
+        let data = NSData()
+        // FIXME populate data
+        
+        session.uploadTaskWithRequest(setConfigRequest, fromData: data, completionHandler: {
+            data, response, error in
+            
+            defer { dispatch_semaphore_signal(complete) }
+            
+            if let error = error {
+                self.error = AppError(kind: .CouldNotAccessWebInterface, nsError: error)
+                return
+            }
+            
+            guard let response = response as? NSHTTPURLResponse else {
+                // I'm not sure if this is possible, but the docs aren't explicit.
+                self.error = AppError(kind: .CouldNotAccessWebInterface)
+                return
+            }
+            
+            guard response.statusCode == 200 else {
+                self.error = AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode)
+                return
+            }
+        }).resume()
+        
+        dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+        
+        if let error = self.error { deviceErrors[self.deviceInfo] = error }
     }
     
 }
