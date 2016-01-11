@@ -136,7 +136,7 @@ class FetchStatusOperation: NSOperation {
                 return
             }
             
-            let doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
+            let doc = HTMLDocument(data: data!, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
             
             guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
                 self.error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
