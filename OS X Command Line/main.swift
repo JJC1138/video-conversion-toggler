@@ -9,10 +9,12 @@ struct AppError : ErrorType {
         case SubmittingChangeFailed
     }
     let kind: Kind
+    let message: String?
     let nsError: NSError?
     let unexpectedHTTPStatus: Int?
-    init(kind: Kind, nsError: NSError? = nil, unexpectedHTTPStatus: Int? = nil) {
+    init(kind: Kind, message: String? = nil, nsError: NSError? = nil, unexpectedHTTPStatus: Int? = nil) {
         self.kind = kind
+        self.message = message
         self.nsError = nsError
         self.unexpectedHTTPStatus = unexpectedHTTPStatus
     }
@@ -67,6 +69,7 @@ func describeError(deviceInfo: String) -> String? {
     var errorInfo = [String]()
     
     errorInfo.append(String.localizedStringWithFormat(errorDescriptionFormat, deviceInfo))
+    if let e = error.message { errorInfo.append(e) }
     if let e = error.nsError { errorInfo.append(e.localizedDescription) }
     if let e = error.unexpectedHTTPStatus { errorInfo.append(String.localizedStringWithFormat("HTTP status %d", e)) }
     
@@ -115,13 +118,19 @@ session.dataTaskWithURL(configPageURL, completionHandler: {
     
     guard let data = data else {
         // I'm not sure if this is possible, but the docs aren't explicit.
-        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface)
+        errors[deviceHostname] = AppError(kind: .WebInterfaceNotAsExpected, message: "No data received")
         return
     }
     
-    var doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
+    let doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
     
-    print(doc.rootElement!.serializedFragment) // FIXME remove
+    guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
+        errors[deviceHostname] = AppError(kind: .WebInterfaceNotAsExpected, message: "Couldn't find setting input element")
+        return
+    }
+    
+    let conversionWasOn = conversionElement.attributes["checked"] != nil
+    print("Conversion was \(conversionWasOn ? "on" : "off")") // FIXME remove
     
     print("completion") // FIXME remove
 }).resume()
