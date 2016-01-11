@@ -27,6 +27,14 @@ func synced(lock: AnyObject, closure: () -> ()) {
     closure()
 }
 
+struct DeviceInfo: Hashable, CustomStringConvertible {
+    let hostname: String
+    
+    var hashValue: Int { return hostname.hashValue }
+    var description: String { return hostname }
+}
+func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.hostname == b.hostname }
+
 enum DeviceStatus {
     case SettingOn
     case SettingOff
@@ -34,9 +42,9 @@ enum DeviceStatus {
 }
 
 struct DevicesStatuses {
-    private var statuses = [String: DeviceStatus]()
+    private var statuses = [DeviceInfo: DeviceStatus]()
     private var statusesLock = NSObject()
-    subscript(deviceInfo: String) -> DeviceStatus? {
+    subscript(deviceInfo: DeviceInfo) -> DeviceStatus? {
         get {
             objc_sync_enter(statusesLock)
             defer { objc_sync_exit(statusesLock) }
@@ -48,15 +56,15 @@ struct DevicesStatuses {
             }
         }
     }
-    func devices() -> [String] {
+    func devices() -> [DeviceInfo] {
         objc_sync_enter(statusesLock)
         defer { objc_sync_exit(statusesLock) }
-        return [String](self.statuses.keys)
+        return [DeviceInfo](self.statuses.keys)
     }
 }
 var deviceStatuses = DevicesStatuses()
 
-func describeError(deviceInfo: String) -> String? {
+func describeError(deviceInfo: DeviceInfo) -> String? {
     // LOCALIZE all strings
     guard let status = deviceStatuses[deviceInfo] else { return nil }
     
@@ -80,7 +88,7 @@ func describeError(deviceInfo: String) -> String? {
     
     var errorInfo = [String]()
     
-    errorInfo.append(String.localizedStringWithFormat(errorDescriptionFormat, deviceInfo))
+    errorInfo.append(String.localizedStringWithFormat(errorDescriptionFormat, String(deviceInfo)))
     if let e = error.info { errorInfo.append(e) }
     if let e = error.nsError { errorInfo.append(e.localizedDescription) }
     if let e = error.unexpectedHTTPStatus { errorInfo.append(String.localizedStringWithFormat("HTTP status %d", e)) }
@@ -96,9 +104,6 @@ class StandardErrorOutputStream: OutputStreamType {
 }
 var stderr = StandardErrorOutputStream()
 
-let deviceHostname = Process.arguments[1]
-let configPageURL = NSURL(string: "http://\(deviceHostname)/SETUP/VIDEO/d_video.asp")!
-
 let session: NSURLSession = {
     let configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
     configuration.timeoutIntervalForRequest = 5
@@ -106,48 +111,65 @@ let session: NSURLSession = {
     return NSURLSession(configuration: configuration)
 }()
 
-let complete = dispatch_semaphore_create(0)!
+class FetchStatusOperation: NSOperation {
+    
+    let deviceInfo: DeviceInfo
+    
+    init(deviceInfo: DeviceInfo) {
+        self.deviceInfo = deviceInfo
+    }
+    
+    override func main() {
+        let complete = dispatch_semaphore_create(0)!
+        
+        let configPageURL = NSURL(string: "http://\(deviceInfo.hostname)/SETUP/VIDEO/d_video.asp")!
+        
+        session.dataTaskWithURL(configPageURL, completionHandler: {
+            data, response, error in
+            
+            defer { dispatch_semaphore_signal(complete) }
+            
+            if let error = error {
+                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .CouldNotAccessWebInterface, nsError: error))
+            }
+            
+            guard let response = response as? NSHTTPURLResponse else {
+                // I'm not sure if this is possible, but the docs aren't explicit.
+                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .CouldNotAccessWebInterface))
+                return
+            }
+            
+            guard response.statusCode == 200 else {
+                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode))
+                return
+            }
+            
+            guard let data = data else {
+                // I'm not sure if this is possible, but the docs aren't explicit.
+                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "No data received"))
+                return
+            }
+            
+            let doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
+            
+            guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
+                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element"))
+                return
+            }
+            
+            let conversionWasOn = conversionElement.attributes["checked"] != nil
+            print("Conversion was \(conversionWasOn ? "on" : "off")") // FIXME remove
+            
+            print("completion") // FIXME remove
+        }).resume()
+        
+        dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+    }
+}
 
-session.dataTaskWithURL(configPageURL, completionHandler: {
-    data, response, error in
-    
-    defer { dispatch_semaphore_signal(complete) }
-    
-    if let error = error {
-        deviceStatuses[deviceHostname] = .Error(AppError(kind: .CouldNotAccessWebInterface, nsError: error))
-    }
-    
-    guard let response = response as? NSHTTPURLResponse else {
-        // I'm not sure if this is possible, but the docs aren't explicit.
-        deviceStatuses[deviceHostname] = .Error(AppError(kind: .CouldNotAccessWebInterface))
-        return
-    }
-    
-    guard response.statusCode == 200 else {
-        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode))
-        return
-    }
-    
-    guard let data = data else {
-        // I'm not sure if this is possible, but the docs aren't explicit.
-        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "No data received"))
-        return
-    }
-    
-    let doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
-    
-    guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
-        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element"))
-        return
-    }
-    
-    let conversionWasOn = conversionElement.attributes["checked"] != nil
-    print("Conversion was \(conversionWasOn ? "on" : "off")") // FIXME remove
-    
-    print("completion") // FIXME remove
-}).resume()
-
-dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+let operation = FetchStatusOperation(deviceInfo: DeviceInfo(hostname: Process.arguments[1]))
+operation.start()
+operation.waitUntilFinished()
 
 do {
     let deviceInfos = deviceStatuses.devices()
