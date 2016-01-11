@@ -36,33 +36,29 @@ struct DeviceInfo: Hashable, CustomStringConvertible {
 }
 func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.hostname == b.hostname }
 
-enum DeviceStatus {
-    case SettingRetrieved(Bool)
-    case Error(AppError)
-}
-
-struct DevicesStatuses {
-    private var statuses = [DeviceInfo: DeviceStatus]()
-    private var statusesLock = NSObject()
-    subscript(deviceInfo: DeviceInfo) -> DeviceStatus? {
+struct ConcurrentDictionary<Key, Value where Key: Hashable> {
+    private var d = [Key: Value]()
+    private var dLock = NSObject()
+    subscript(k: Key) -> Value? {
         get {
-            objc_sync_enter(statusesLock)
-            defer { objc_sync_exit(statusesLock) }
-            return self.statuses[deviceInfo]
+            objc_sync_enter(dLock)
+            defer { objc_sync_exit(dLock) }
+            return self.d[k]
         }
         set {
-            synced(statusesLock) {
-                self.statuses[deviceInfo] = newValue
+            synced(dLock) {
+                self.d[k] = newValue
             }
         }
     }
-    func devices() -> [DeviceInfo] {
-        objc_sync_enter(statusesLock)
-        defer { objc_sync_exit(statusesLock) }
-        return [DeviceInfo](self.statuses.keys)
+    func keys() -> [Key] {
+        objc_sync_enter(dLock)
+        defer { objc_sync_exit(dLock) }
+        return [Key](self.d.keys)
     }
 }
-var deviceStatuses = DevicesStatuses()
+var deviceErrors = ConcurrentDictionary<DeviceInfo, AppError>()
+var deviceSettings = ConcurrentDictionary<DeviceInfo, Bool>()
 
 func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String {
     // LOCALIZE all strings
@@ -75,7 +71,7 @@ func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String 
         case .SubmittingChangeFailed:
             return "Found device %@ and accessed web interface but changing setting failed."
         case .SettingDidNotChange:
-            return "Found device %@ and tried to change setting, but it didn't update. Is the device switched off?"
+            return "Found device %@ and tried to change setting, but it didn't update. That can happen if the device is switched off, so please check if it is on."
         }
     }()
     
@@ -107,7 +103,8 @@ let session: NSURLSession = {
 class FetchStatusOperation: NSOperation {
     
     let deviceInfo: DeviceInfo
-    var result: DeviceStatus?
+    var error: AppError?
+    var result: Bool?
     
     init(deviceInfo: DeviceInfo) {
         self.deviceInfo = deviceInfo
@@ -119,45 +116,54 @@ class FetchStatusOperation: NSOperation {
         let configPageURL = NSURL(string: "http://\(deviceInfo.hostname)/SETUP/VIDEO/d_video.asp")!
         
         session.dataTaskWithURL(configPageURL, completionHandler: {
-            data, response, error in
+            data, response, e in
             
             defer { dispatch_semaphore_signal(complete) }
             
-            if let error = error {
-                self.result = .Error(AppError(kind: .CouldNotAccessWebInterface, nsError: error))
+            if let e = e {
+                self.error = AppError(kind: .CouldNotAccessWebInterface, nsError: e)
                 return
             }
             
             guard let response = response as? NSHTTPURLResponse else {
                 // I'm not sure if this is possible, but the docs aren't explicit.
-                self.result = .Error(AppError(kind: .CouldNotAccessWebInterface))
+                self.error = AppError(kind: .CouldNotAccessWebInterface)
                 return
             }
             
             guard response.statusCode == 200 else {
-                self.result = .Error(AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode))
+                self.error = AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode)
                 return
             }
             
             guard let data = data else {
                 // I'm not sure if this is possible, but the docs aren't explicit.
-                self.result = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "No data received"))
+                self.error = AppError(kind: .WebInterfaceNotAsExpected, info: "No data received")
                 return
             }
             
             let doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
             
             guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
-                self.result = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element"))
+                self.error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
                 return
             }
             
             let conversionWasOn = conversionElement.attributes["checked"] != nil
             
-            self.result = .SettingRetrieved(conversionWasOn)
+            self.result = conversionWasOn
         }).resume()
         
         dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+        
+        if let result = self.result { deviceSettings[self.deviceInfo] = result }
+        if let error = self.error {
+            deviceErrors[self.deviceInfo] = error
+            if self.result == nil {
+                // We couldn't retrieve it properly, so any previously stored value might well be wrong. We should remove it to avoid showing potentially wrong information.
+                deviceSettings[self.deviceInfo] = nil
+            }
+        }
     }
     
 }
@@ -182,55 +188,31 @@ class SetSettingOperation: NSOperation {
 class ToggleSettingOperation: NSOperation {
     
     let deviceInfo: DeviceInfo
-    var result: DeviceStatus?
     
     init(deviceInfo: DeviceInfo) {
         self.deviceInfo = deviceInfo
     }
     
     override func main() {
-        let fetch1 = FetchStatusOperation(deviceInfo: deviceInfo)
+        let fetch1 = FetchStatusOperation(deviceInfo: self.deviceInfo)
         fetch1.start()
         fetch1.waitUntilFinished()
+        guard let setting1 = fetch1.result else { return }
         
-        guard let setting1: Bool = {
-            switch fetch1.result! {
-            case .Error(let e):
-                result = .Error(e)
-                return nil
-            case .SettingRetrieved(let setting):
-                return setting
-            }
-            }() else { return }
-        
-        let set = SetSettingOperation(deviceInfo: deviceInfo, setting: !setting1)
+        let set = SetSettingOperation(deviceInfo: self.deviceInfo, setting: !setting1)
         set.start()
         set.waitUntilFinished()
-        if let e = set.error {
-            result = .Error(e)
-            return
-        }
+        guard set.error == nil else { return }
         
-        let fetch2 = FetchStatusOperation(deviceInfo: deviceInfo)
+        let fetch2 = FetchStatusOperation(deviceInfo: self.deviceInfo)
         fetch2.start()
         fetch2.waitUntilFinished()
-        
-        guard let setting2: Bool = {
-            switch fetch2.result! {
-            case .Error(let e):
-                result = .Error(e)
-                return nil
-            case .SettingRetrieved(let setting):
-                return setting
-            }
-            }() else { return }
+        guard let setting2 = fetch2.result else { return }
         
         if (setting1 == setting2) {
-            result = .Error(AppError(kind: .SettingDidNotChange))
+            deviceErrors[self.deviceInfo] = AppError(kind: .SettingDidNotChange)
             return
         }
-        
-        result = .SettingRetrieved(setting2)
     }
 
 }
@@ -241,28 +223,26 @@ operationQueue.addOperation(ToggleSettingOperation(deviceInfo: DeviceInfo(hostna
 
 operationQueue.waitUntilAllOperationsAreFinished()
 
-do {
-    let deviceInfos = deviceStatuses.devices()
-    var anyErrors = false
-    for deviceInfo in deviceInfos {
-        guard let status = deviceStatuses[deviceInfo] else { continue }
-        
-        switch status {
-        case .SettingRetrieved(let setting):
-            print("\(deviceInfo): \(setting ? "on" : "off")")
-        case .Error(let e):
-            anyErrors = true
-            print(describeError(e, forDevice: deviceInfo), toStream: &stderr)
-        }
-    }
+for deviceInfo in deviceSettings.keys() {
+    guard let setting = deviceSettings[deviceInfo] else { continue }
     
-    if anyErrors {
-        // LOCALIZE all:
-        let contact = "vidconvtoggle@jjc1138.net"
-        
-        print(toStream: &stderr)
-        print(String.localizedStringWithFormat("Please contact %@ with the above error information.", contact),
-            toStream: &stderr)
-        exit(1)
-    }
+    print("\(deviceInfo): \(setting ? "on" : "off")")
+}
+
+var anyErrors = false
+for deviceInfo in deviceErrors.keys() {
+    guard let error = deviceErrors[deviceInfo] else { continue }
+    
+    anyErrors = true
+    print(describeError(error, forDevice: deviceInfo), toStream: &stderr)
+}
+
+if anyErrors {
+    // LOCALIZE all:
+    let contact = "vidconvtoggle@jjc1138.net"
+    
+    print(toStream: &stderr)
+    print(String.localizedStringWithFormat("Please contact %@ with the above error information.", contact),
+        toStream: &stderr)
+    exit(1)
 }
