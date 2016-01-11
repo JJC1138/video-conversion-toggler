@@ -167,9 +167,11 @@ class FetchStatusOperation: NSOperation {
     }
 }
 
-let operation = FetchStatusOperation(deviceInfo: DeviceInfo(hostname: Process.arguments[1]))
-operation.start()
-operation.waitUntilFinished()
+var operationQueue = NSOperationQueue()
+
+operationQueue.addOperation(FetchStatusOperation(deviceInfo: DeviceInfo(hostname: Process.arguments[1])))
+
+operationQueue.waitUntilAllOperationsAreFinished()
 
 do {
     let deviceInfos = deviceStatuses.devices()
