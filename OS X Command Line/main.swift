@@ -116,12 +116,12 @@ class FetchStatusOperation: NSOperation {
         let configPageURL = NSURL(string: "http://\(deviceInfo.hostname)/SETUP/VIDEO/d_video.asp")!
         
         session.dataTaskWithURL(configPageURL, completionHandler: {
-            data, response, e in
+            data, response, error in
             
             defer { dispatch_semaphore_signal(complete) }
             
-            if let e = e {
-                self.error = AppError(kind: .CouldNotAccessWebInterface, nsError: e)
+            if let error = error {
+                self.error = AppError(kind: .CouldNotAccessWebInterface, nsError: error)
                 return
             }
             
@@ -133,12 +133,6 @@ class FetchStatusOperation: NSOperation {
             
             guard response.statusCode == 200 else {
                 self.error = AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode)
-                return
-            }
-            
-            guard let data = data else {
-                // I'm not sure if this is possible, but the docs aren't explicit.
-                self.error = AppError(kind: .WebInterfaceNotAsExpected, info: "No data received")
                 return
             }
             
