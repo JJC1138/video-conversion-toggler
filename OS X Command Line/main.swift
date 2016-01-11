@@ -9,12 +9,12 @@ struct AppError : ErrorType {
         case SubmittingChangeFailed
     }
     let kind: Kind
-    let message: String?
+    let info: String?
     let nsError: NSError?
     let unexpectedHTTPStatus: Int?
-    init(kind: Kind, message: String? = nil, nsError: NSError? = nil, unexpectedHTTPStatus: Int? = nil) {
+    init(kind: Kind, info: String? = nil, nsError: NSError? = nil, unexpectedHTTPStatus: Int? = nil) {
         self.kind = kind
-        self.message = message
+        self.info = info
         self.nsError = nsError
         self.unexpectedHTTPStatus = unexpectedHTTPStatus
     }
@@ -81,7 +81,7 @@ func describeError(deviceInfo: String) -> String? {
     var errorInfo = [String]()
     
     errorInfo.append(String.localizedStringWithFormat(errorDescriptionFormat, deviceInfo))
-    if let e = error.message { errorInfo.append(e) }
+    if let e = error.info { errorInfo.append(e) }
     if let e = error.nsError { errorInfo.append(e.localizedDescription) }
     if let e = error.unexpectedHTTPStatus { errorInfo.append(String.localizedStringWithFormat("HTTP status %d", e)) }
     
@@ -130,14 +130,14 @@ session.dataTaskWithURL(configPageURL, completionHandler: {
     
     guard let data = data else {
         // I'm not sure if this is possible, but the docs aren't explicit.
-        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, message: "No data received"))
+        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "No data received"))
         return
     }
     
     let doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
     
     guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
-        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, message: "Couldn't find setting input element"))
+        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element"))
         return
     }
     
