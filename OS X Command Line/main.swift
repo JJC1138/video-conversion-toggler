@@ -121,6 +121,7 @@ class FetchStatusOperation: NSOperation {
             
             if let error = error {
                 deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .CouldNotAccessWebInterface, nsError: error))
+                return
             }
             
             guard let response = response as? NSHTTPURLResponse else {
