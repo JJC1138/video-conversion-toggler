@@ -7,6 +7,7 @@ struct AppError : ErrorType {
         case CouldNotAccessWebInterface
         case WebInterfaceNotAsExpected
         case SubmittingChangeFailed
+        case SettingDidNotChange
     }
     let kind: Kind
     let info: String?
@@ -73,6 +74,8 @@ func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String 
             return "Found device %@ but web interface wasn't as expected."
         case .SubmittingChangeFailed:
             return "Found device %@ and accessed web interface but changing setting failed."
+        case .SettingDidNotChange:
+            return "Found device %@ and tried to change setting, but it didn't update. Is the device switched off?"
         }
     }()
     
@@ -104,6 +107,7 @@ let session: NSURLSession = {
 class FetchStatusOperation: NSOperation {
     
     let deviceInfo: DeviceInfo
+    var result: DeviceStatus?
     
     init(deviceInfo: DeviceInfo) {
         self.deviceInfo = deviceInfo
@@ -120,46 +124,120 @@ class FetchStatusOperation: NSOperation {
             defer { dispatch_semaphore_signal(complete) }
             
             if let error = error {
-                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .CouldNotAccessWebInterface, nsError: error))
+                self.result = .Error(AppError(kind: .CouldNotAccessWebInterface, nsError: error))
                 return
             }
             
             guard let response = response as? NSHTTPURLResponse else {
                 // I'm not sure if this is possible, but the docs aren't explicit.
-                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .CouldNotAccessWebInterface))
+                self.result = .Error(AppError(kind: .CouldNotAccessWebInterface))
                 return
             }
             
             guard response.statusCode == 200 else {
-                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode))
+                self.result = .Error(AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode))
                 return
             }
             
             guard let data = data else {
                 // I'm not sure if this is possible, but the docs aren't explicit.
-                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "No data received"))
+                self.result = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "No data received"))
                 return
             }
             
             let doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
             
             guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
-                deviceStatuses[self.deviceInfo] = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element"))
+                self.result = .Error(AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element"))
                 return
             }
             
             let conversionWasOn = conversionElement.attributes["checked"] != nil
             
-            deviceStatuses[self.deviceInfo] = .SettingRetrieved(conversionWasOn)
+            self.result = .SettingRetrieved(conversionWasOn)
         }).resume()
         
         dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
     }
+    
+}
+
+class SetSettingOperation: NSOperation {
+    
+    let deviceInfo: DeviceInfo
+    let setting: Bool
+    var error: AppError?
+    
+    init(deviceInfo: DeviceInfo, setting: Bool) {
+        self.deviceInfo = deviceInfo
+        self.setting = setting
+    }
+    
+    override func main() {
+        // FIXME implement
+    }
+    
+}
+
+class ToggleSettingOperation: NSOperation {
+    
+    let deviceInfo: DeviceInfo
+    var result: DeviceStatus?
+    
+    init(deviceInfo: DeviceInfo) {
+        self.deviceInfo = deviceInfo
+    }
+    
+    override func main() {
+        let fetch1 = FetchStatusOperation(deviceInfo: deviceInfo)
+        fetch1.start()
+        fetch1.waitUntilFinished()
+        
+        guard let setting1: Bool = {
+            switch fetch1.result! {
+            case .Error(let e):
+                result = .Error(e)
+                return nil
+            case .SettingRetrieved(let setting):
+                return setting
+            }
+            }() else { return }
+        
+        let set = SetSettingOperation(deviceInfo: deviceInfo, setting: !setting1)
+        set.start()
+        set.waitUntilFinished()
+        if let e = set.error {
+            result = .Error(e)
+            return
+        }
+        
+        let fetch2 = FetchStatusOperation(deviceInfo: deviceInfo)
+        fetch2.start()
+        fetch2.waitUntilFinished()
+        
+        guard let setting2: Bool = {
+            switch fetch2.result! {
+            case .Error(let e):
+                result = .Error(e)
+                return nil
+            case .SettingRetrieved(let setting):
+                return setting
+            }
+            }() else { return }
+        
+        if (setting1 == setting2) {
+            result = .Error(AppError(kind: .SettingDidNotChange))
+            return
+        }
+        
+        result = .SettingRetrieved(setting2)
+    }
+
 }
 
 var operationQueue = NSOperationQueue()
 
-operationQueue.addOperation(FetchStatusOperation(deviceInfo: DeviceInfo(hostname: Process.arguments[1])))
+operationQueue.addOperation(ToggleSettingOperation(deviceInfo: DeviceInfo(hostname: Process.arguments[1])))
 
 operationQueue.waitUntilAllOperationsAreFinished()
 
