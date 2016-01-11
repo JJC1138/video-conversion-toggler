@@ -27,33 +27,45 @@ func synced(lock: AnyObject, closure: () -> ()) {
     closure()
 }
 
-struct Errors {
-    private var errors = [String: AppError]()
-    private var errorsLock = NSObject()
-    subscript(deviceInfo: String) -> AppError? {
+enum DeviceStatus {
+    case SettingOn
+    case SettingOff
+    case Error(AppError)
+}
+
+struct DevicesStatuses {
+    private var statuses = [String: DeviceStatus]()
+    private var statusesLock = NSObject()
+    subscript(deviceInfo: String) -> DeviceStatus? {
         get {
-            objc_sync_enter(errorsLock)
-            defer { objc_sync_exit(errorsLock) }
-            return self.errors[deviceInfo]
+            objc_sync_enter(statusesLock)
+            defer { objc_sync_exit(statusesLock) }
+            return self.statuses[deviceInfo]
         }
         set {
-            synced(errorsLock) {
-                self.errors[deviceInfo] = newValue
+            synced(statusesLock) {
+                self.statuses[deviceInfo] = newValue
             }
         }
     }
-    func deviceInfos() -> [String] {
-        objc_sync_enter(errorsLock)
-        defer { objc_sync_exit(errorsLock) }
-        return [String](errors.keys)
+    func devices() -> [String] {
+        objc_sync_enter(statusesLock)
+        defer { objc_sync_exit(statusesLock) }
+        return [String](self.statuses.keys)
     }
 }
-var errors = Errors()
+var deviceStatuses = DevicesStatuses()
 
 func describeError(deviceInfo: String) -> String? {
     // LOCALIZE all strings
+    guard let status = deviceStatuses[deviceInfo] else { return nil }
     
-    guard let error = errors[deviceInfo] else { return nil }
+    guard let error: AppError = {
+        switch status {
+        case .Error(let e): return e
+        default: return nil
+        }
+        }() else { return nil }
     
     let errorDescriptionFormat: String = {
         switch error.kind {
@@ -102,30 +114,30 @@ session.dataTaskWithURL(configPageURL, completionHandler: {
     defer { dispatch_semaphore_signal(complete) }
     
     if let error = error {
-        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface, nsError: error)
+        deviceStatuses[deviceHostname] = .Error(AppError(kind: .CouldNotAccessWebInterface, nsError: error))
     }
     
     guard let response = response as? NSHTTPURLResponse else {
         // I'm not sure if this is possible, but the docs aren't explicit.
-        errors[deviceHostname] = AppError(kind: .CouldNotAccessWebInterface)
+        deviceStatuses[deviceHostname] = .Error(AppError(kind: .CouldNotAccessWebInterface))
         return
     }
     
     guard response.statusCode == 200 else {
-        errors[deviceHostname] = AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode)
+        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode))
         return
     }
     
     guard let data = data else {
         // I'm not sure if this is possible, but the docs aren't explicit.
-        errors[deviceHostname] = AppError(kind: .WebInterfaceNotAsExpected, message: "No data received")
+        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, message: "No data received"))
         return
     }
     
     let doc = HTMLDocument(data: data, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
     
     guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
-        errors[deviceHostname] = AppError(kind: .WebInterfaceNotAsExpected, message: "Couldn't find setting input element")
+        deviceStatuses[deviceHostname] = .Error(AppError(kind: .WebInterfaceNotAsExpected, message: "Couldn't find setting input element"))
         return
     }
     
@@ -138,12 +150,16 @@ session.dataTaskWithURL(configPageURL, completionHandler: {
 dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
 
 do {
-    let deviceInfos = errors.deviceInfos()
+    let deviceInfos = deviceStatuses.devices()
+    var anyErrors = false
     for deviceInfo in deviceInfos {
-        if let errorInfo = describeError(deviceInfo) { print(errorInfo, toStream: &stderr) }
+        if let errorInfo = describeError(deviceInfo) {
+            anyErrors = true
+            print(errorInfo, toStream: &stderr)
+        }
     }
     
-    if !deviceInfos.isEmpty {
+    if anyErrors {
         // LOCALIZE all:
         let contact = "vidconvtoggle@jjc1138.net"
         
