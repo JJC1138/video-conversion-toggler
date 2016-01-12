@@ -16,6 +16,7 @@
 		FC65B2211C45375000B71747 /* HTMLReader.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */; };
 		FCF63DBC1C453814008AEC28 /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC65B21D1C4536EE00B71747 /* HTMLReader.framework */; };
 		FCF63DBD1C453814008AEC28 /* HTMLReader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC65B21D1C4536EE00B71747 /* HTMLReader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FCF63DC11C453C72008AEC28 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC01C453C72008AEC28 /* Utility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,6 +54,7 @@
 		FC65B21B1C45300600B71747 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		FC65B21D1C4536EE00B71747 /* HTMLReader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTMLReader.framework; path = Carthage/Build/Mac/HTMLReader.framework; sourceTree = SOURCE_ROOT; };
 		FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = HTMLReader.framework.dSYM; path = Carthage/Build/Mac/HTMLReader.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		FCF63DC01C453C72008AEC28 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 		FC71103C1C3AA6B1002755E4 = {
 			isa = PBXGroup;
 			children = (
+				FCF63DBF1C453C38008AEC28 /* Common */,
 				FC65B2091C451BF600B71747 /* OS X */,
 				FC7110481C3AA8F6002755E4 /* Products */,
 			);
@@ -97,6 +100,14 @@
 				FC65B2081C451BF600B71747 /* Video Conversion Toggler.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FCF63DBF1C453C38008AEC28 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				FCF63DC01C453C72008AEC28 /* Utility.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,6 +181,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCF63DC11C453C72008AEC28 /* Utility.swift in Sources */,
 				FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */,
 				FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */,
 				FC65B21C1C45300600B71747 /* main.swift in Sources */,

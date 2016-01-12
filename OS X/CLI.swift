@@ -21,13 +21,6 @@ struct AppError : ErrorType {
     }
 }
 
-// From http://stackoverflow.com/a/24103086
-func synced(lock: AnyObject, closure: () -> ()) {
-    objc_sync_enter(lock)
-    defer { objc_sync_exit(lock) }
-    closure()
-}
-
 struct DeviceInfo: Hashable, CustomStringConvertible {
     let hostname: String
     
@@ -36,27 +29,6 @@ struct DeviceInfo: Hashable, CustomStringConvertible {
 }
 func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.hostname == b.hostname }
 
-struct ConcurrentDictionary<Key, Value where Key: Hashable> {
-    private var d = [Key: Value]()
-    private var dLock = NSObject()
-    subscript(k: Key) -> Value? {
-        get {
-            objc_sync_enter(dLock)
-            defer { objc_sync_exit(dLock) }
-            return self.d[k]
-        }
-        set {
-            synced(dLock) {
-                self.d[k] = newValue
-            }
-        }
-    }
-    func keys() -> [Key] {
-        objc_sync_enter(dLock)
-        defer { objc_sync_exit(dLock) }
-        return [Key](self.d.keys)
-    }
-}
 var deviceErrors = ConcurrentDictionary<DeviceInfo, AppError>()
 var deviceSettings = ConcurrentDictionary<DeviceInfo, Bool>()
 
@@ -84,14 +56,6 @@ func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String 
     
     return errorInfo.joinWithSeparator("\n\n")
 }
-
-// From http://stackoverflow.com/a/25226794
-class StandardErrorOutputStream: OutputStreamType {
-    func write(string: String) {
-        NSFileHandle.fileHandleWithStandardError().writeData(string.dataUsingEncoding(NSUTF8StringEncoding)!)
-    }
-}
-var stderr = StandardErrorOutputStream()
 
 let session: NSURLSession = {
     let configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
