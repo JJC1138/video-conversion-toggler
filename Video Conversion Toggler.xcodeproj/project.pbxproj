@@ -34,7 +34,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		FC65B2091C451BF600B71747 /* Video Conversion Toggler */ = {
+		FC65B2091C451BF600B71747 /* OS X */ = {
 			isa = PBXGroup;
 			children = (
 				FC65B20A1C451BF600B71747 /* AppDelegate.swift */,
@@ -43,14 +43,14 @@
 				FC65B2101C451BF600B71747 /* Main.storyboard */,
 				FC65B2131C451BF600B71747 /* Info.plist */,
 			);
-			path = "Video Conversion Toggler";
+			path = "OS X";
 			sourceTree = "<group>";
 		};
 		FC71103C1C3AA6B1002755E4 = {
 			isa = PBXGroup;
 			children = (
 				FC7110491C3AA8F6002755E4 /* OS X Command Line */,
-				FC65B2091C451BF600B71747 /* Video Conversion Toggler */,
+				FC65B2091C451BF600B71747 /* OS X */,
 				FC7110481C3AA8F6002755E4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,9 +74,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FC65B2071C451BF600B71747 /* Video Conversion Toggler */ = {
+		FC65B2071C451BF600B71747 /* Video Conversion Toggler (OS X) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FC65B2141C451BF600B71747 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler" */;
+			buildConfigurationList = FC65B2141C451BF600B71747 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (OS X)" */;
 			buildPhases = (
 				FC65B2041C451BF600B71747 /* Sources */,
 				FC65B2051C451BF600B71747 /* Frameworks */,
@@ -86,7 +86,7 @@
 			);
 			dependencies = (
 			);
-			name = "Video Conversion Toggler";
+			name = "Video Conversion Toggler (OS X)";
 			productName = "Video Conversion Toggler";
 			productReference = FC65B2081C451BF600B71747 /* Video Conversion Toggler.app */;
 			productType = "com.apple.product-type.application";
@@ -118,7 +118,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				FC65B2071C451BF600B71747 /* Video Conversion Toggler */,
+				FC65B2071C451BF600B71747 /* Video Conversion Toggler (OS X) */,
 			);
 		};
 /* End PBXProject section */
@@ -197,13 +197,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "Video Conversion Toggler/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/OS X/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.jjc1138.Video-Conversion-Toggler";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
+				PRODUCT_MODULE_NAME = VideoConversionToggler;
+				PRODUCT_NAME = "Video Conversion Toggler";
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -241,12 +242,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "Video Conversion Toggler/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/OS X/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.jjc1138.Video-Conversion-Toggler";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
+				PRODUCT_MODULE_NAME = VideoConversionToggler;
+				PRODUCT_NAME = "Video Conversion Toggler";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -266,7 +268,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		FC65B2141C451BF600B71747 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler" */ = {
+		FC65B2141C451BF600B71747 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (OS X)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FC65B2151C451BF600B71747 /* Debug */,
