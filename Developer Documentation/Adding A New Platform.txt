@@ -1,9 +1,17 @@
 add target with name "Video Conversion Toggler"
 select project file and expand the "project and targets list" pane on the left of the editor (by clicking the square icon with a line on the left that is on the same header as the "Resource Tags" and "Build Settings" headings)
 in the target list rename the target to "Video Conversion Toggler ([platform])"
-in the "Packaging" section of the target's "Build Settings" tab change "Product Name" to "Video Conversion Toggler" or whatever is appropriate for the platform
-in the same section change "Product Module Name" to "VideoConversionToggler"
-in the same section change "Product Bundle Identifier" to "net.jjc1138.VideoConversonToggler"
+in the "Packaging" section of the target's "Build Settings" tab select the "Levels" option at the top
+ if they're not set already on the project column then set the project settings to
+  "Product Name" to "Video Conversion Toggler"
+  "Product Module Name" to "VideoConversionToggler"
+  "Product Bundle Identifier" to "net.jjc1138.VideoConversonToggler"
+ if the platform we're adding requires different settings for any of those then set them in the target column as appropriate
+  OS X projects can't share the same app ID (and therefore bundle identifier) with versions of the app on other platforms https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/ConfiguringYourApp/ConfiguringYourApp.html#//apple_ref/doc/uid/TP40012582-CH28-SW8
+  watchOS projects bundle IDs have a required format https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/ConfiguringYourApp/ConfiguringYourApp.html#//apple_ref/doc/uid/TP40012582-CH28-SW16
+  tvOS and iOS projects that share the same iTunes Connect app record must have the same app ID https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/ConfiguringYourApp/ConfiguringYourApp.html#//apple_ref/doc/uid/TP40012582-CH28-SW16
+ if any of those settings should match the project settings but are being overridden by target settings then remove the target settings
+  set them to the correct value (to avoid Xcode caching the old wrong one in some places) and then find and remove their lines in the project.pbxproj file
 in Project navigator rename the new "Video Conversion Toggler" group to "[platform]"
 rename the new "Video Conversion Toggler" folder in the project to "[platform]"
 select the [platform] group in the Project navigator and in the Utilities pane on the far right of the window select the File inspector tab

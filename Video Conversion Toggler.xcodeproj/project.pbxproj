@@ -202,9 +202,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
-				PRODUCT_MODULE_NAME = VideoConversionToggler;
-				PRODUCT_NAME = "Video Conversion Toggler";
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler.OSX;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -246,9 +244,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
-				PRODUCT_MODULE_NAME = VideoConversionToggler;
-				PRODUCT_NAME = "Video Conversion Toggler";
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler.OSX;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -256,12 +252,18 @@
 		FC7110411C3AA6B1002755E4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
+				PRODUCT_MODULE_NAME = VideoConversionToggler;
+				PRODUCT_NAME = "Video Conversion Toggler";
 			};
 			name = Debug;
 		};
 		FC7110421C3AA6B1002755E4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
+				PRODUCT_MODULE_NAME = VideoConversionToggler;
+				PRODUCT_NAME = "Video Conversion Toggler";
 			};
 			name = Release;
 		};
@@ -275,6 +277,7 @@
 				FC65B2161C451BF600B71747 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FC7110401C3AA6B1002755E4 /* Build configuration list for PBXProject "Video Conversion Toggler" */ = {
 			isa = XCConfigurationList;
