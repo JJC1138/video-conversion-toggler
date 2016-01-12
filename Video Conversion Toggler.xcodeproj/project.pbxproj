@@ -11,7 +11,8 @@
 		FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20C1C451BF600B71747 /* ViewController.swift */; };
 		FC65B20F1C451BF600B71747 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC65B20E1C451BF600B71747 /* Assets.xcassets */; };
 		FC65B2121C451BF600B71747 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC65B2101C451BF600B71747 /* Main.storyboard */; };
-		FC65B2181C452C9300B71747 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B2171C452C9300B71747 /* main.swift */; };
+		FC65B21A1C452FED00B71747 /* CLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B2191C452FED00B71747 /* CLI.swift */; };
+		FC65B21C1C45300600B71747 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B21B1C45300600B71747 /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,7 +22,8 @@
 		FC65B20E1C451BF600B71747 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC65B2111C451BF600B71747 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FC65B2131C451BF600B71747 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FC65B2171C452C9300B71747 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		FC65B2191C452FED00B71747 /* CLI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CLI.swift; sourceTree = "<group>"; };
+		FC65B21B1C45300600B71747 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,7 +40,8 @@
 		FC65B2091C451BF600B71747 /* OS X */ = {
 			isa = PBXGroup;
 			children = (
-				FC65B2171C452C9300B71747 /* main.swift */,
+				FC65B21B1C45300600B71747 /* main.swift */,
+				FC65B2191C452FED00B71747 /* CLI.swift */,
 				FC65B20A1C451BF600B71747 /* AppDelegate.swift */,
 				FC65B20C1C451BF600B71747 /* ViewController.swift */,
 				FC65B20E1C451BF600B71747 /* Assets.xcassets */,
@@ -135,7 +138,8 @@
 			files = (
 				FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */,
 				FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */,
-				FC65B2181C452C9300B71747 /* main.swift in Sources */,
+				FC65B21C1C45300600B71747 /* main.swift in Sources */,
+				FC65B21A1C452FED00B71747 /* CLI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
