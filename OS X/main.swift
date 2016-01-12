@@ -1,6 +1,7 @@
 import Foundation
 
-import HTMLReader
+// FIXME uncomment:
+//import HTMLReader
 
 struct AppError : ErrorType {
     enum Kind {
@@ -136,14 +137,16 @@ class FetchStatusOperation: NSOperation {
                 return
             }
             
-            let doc = HTMLDocument(data: data!, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
-            
-            guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
-                self.error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
-                return
-            }
-            
-            let conversionWasOn = conversionElement.attributes["checked"] != nil
+            // FIXME uncomment:
+//            let doc = HTMLDocument(data: data!, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
+//            
+//            guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
+//                self.error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
+//                return
+//            }
+//            
+//            let conversionWasOn = conversionElement.attributes["checked"] != nil
+            let conversionWasOn = true // FIXME remove
             
             self.result = conversionWasOn
         }).resume()
