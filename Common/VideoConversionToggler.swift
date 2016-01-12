@@ -124,8 +124,7 @@ class SetSettingOperation: NSOperation {
     override func main() {
         let complete = dispatch_semaphore_create(0)!
         
-        // FIXME add parameters:
-        af.request(.POST, "http://\(deviceInfo.hostname)/SETUP/VIDEO/s_video.asp").validate().responseData {
+        af.request(.POST, "http://\(deviceInfo.hostname)/SETUP/VIDEO/s_video.asp", parameters: ["radioVideoConvMode": self.setting ? "ON" : "OFF"]).validate().responseData {
             response in
             
             defer { dispatch_semaphore_signal(complete) }
