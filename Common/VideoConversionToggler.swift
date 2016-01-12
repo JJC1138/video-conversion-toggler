@@ -1,5 +1,6 @@
 import Foundation
 
+import Alamofire
 import HTMLReader
 
 struct AppError : ErrorType {
@@ -12,12 +13,10 @@ struct AppError : ErrorType {
     let kind: Kind
     let info: String?
     let nsError: NSError?
-    let unexpectedHTTPStatus: Int?
-    init(kind: Kind, info: String? = nil, nsError: NSError? = nil, unexpectedHTTPStatus: Int? = nil) {
+    init(kind: Kind, info: String? = nil, nsError: NSError? = nil) {
         self.kind = kind
         self.info = info
         self.nsError = nsError
-        self.unexpectedHTTPStatus = unexpectedHTTPStatus
     }
 }
 
@@ -52,17 +51,15 @@ func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String 
     errorInfo.append(String.localizedStringWithFormat(errorDescriptionFormat, String(deviceInfo)))
     if let e = error.info { errorInfo.append(e) }
     if let e = error.nsError { errorInfo.append(e.localizedDescription) }
-    if let e = error.unexpectedHTTPStatus { errorInfo.append(String.localizedStringWithFormat("HTTP status %d", e)) }
     
     return errorInfo.joinWithSeparator("\n\n")
 }
 
-let session: NSURLSession = {
+let af = Alamofire.Manager(configuration: {
     let configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
     configuration.timeoutIntervalForRequest = 5
-    
-    return NSURLSession(configuration: configuration)
-}()
+    return configuration
+    }())
 
 class FetchStatusOperation: NSOperation {
     
@@ -77,30 +74,17 @@ class FetchStatusOperation: NSOperation {
     override func main() {
         let complete = dispatch_semaphore_create(0)!
         
-        let configPageURL = NSURL(string: "http://\(deviceInfo.hostname)/SETUP/VIDEO/d_video.asp")!
-        
-        session.dataTaskWithURL(configPageURL, completionHandler: {
-            data, response, error in
+        af.request(.GET, "http://\(deviceInfo.hostname)/SETUP/VIDEO/d_video.asp").validate().responseData {
+            response in
             
             defer { dispatch_semaphore_signal(complete) }
             
-            if let error = error {
+            if let error = response.result.error {
                 self.error = AppError(kind: .CouldNotAccessWebInterface, nsError: error)
                 return
             }
             
-            guard let response = response as? NSHTTPURLResponse else {
-                // I'm not sure if this is possible, but the docs aren't explicit.
-                self.error = AppError(kind: .CouldNotAccessWebInterface)
-                return
-            }
-            
-            guard response.statusCode == 200 else {
-                self.error = AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode)
-                return
-            }
-            
-            let doc = HTMLDocument(data: data!, contentTypeHeader: response.allHeaderFields["Content-Type"] as! String?)
+            let doc = HTMLDocument(data: response.data!, contentTypeHeader: response.response?.allHeaderFields["Content-Type"] as! String?)
             
             guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
                 self.error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
@@ -110,7 +94,7 @@ class FetchStatusOperation: NSOperation {
             let conversionWasOn = conversionElement.attributes["checked"] != nil
             
             self.result = conversionWasOn
-        }).resume()
+        }
         
         dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
         
@@ -140,32 +124,17 @@ class SetSettingOperation: NSOperation {
     override func main() {
         let complete = dispatch_semaphore_create(0)!
         
-        let setConfigRequest = NSURLRequest(URL: NSURL(string: "http://\(deviceInfo.hostname)/SETUP/VIDEO/s_video.asp")!)
-        
-        let data = NSData()
-        // FIXME populate data
-        
-        session.uploadTaskWithRequest(setConfigRequest, fromData: data, completionHandler: {
-            data, response, error in
+        // FIXME add parameters:
+        af.request(.POST, "http://\(deviceInfo.hostname)/SETUP/VIDEO/s_video.asp").validate().responseData {
+            response in
             
             defer { dispatch_semaphore_signal(complete) }
             
-            if let error = error {
+            if let error = response.result.error {
                 self.error = AppError(kind: .CouldNotAccessWebInterface, nsError: error)
                 return
             }
-            
-            guard let response = response as? NSHTTPURLResponse else {
-                // I'm not sure if this is possible, but the docs aren't explicit.
-                self.error = AppError(kind: .CouldNotAccessWebInterface)
-                return
-            }
-            
-            guard response.statusCode == 200 else {
-                self.error = AppError(kind: .WebInterfaceNotAsExpected, unexpectedHTTPStatus: response.statusCode)
-                return
-            }
-        }).resume()
+        }
         
         dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
         

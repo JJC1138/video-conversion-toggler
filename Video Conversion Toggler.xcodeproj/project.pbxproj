@@ -18,6 +18,9 @@
 		FCF63DBD1C453814008AEC28 /* HTMLReader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC65B21D1C4536EE00B71747 /* HTMLReader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FCF63DC11C453C72008AEC28 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC01C453C72008AEC28 /* Utility.swift */; };
 		FCF63DC31C453D36008AEC28 /* VideoConversionToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */; };
+		FCF63DCA1C45409B008AEC28 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCF63DC41C454068008AEC28 /* Alamofire.framework */; };
+		FCF63DCB1C45409B008AEC28 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FCF63DC41C454068008AEC28 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FCF63DCC1C4540C5008AEC28 /* Alamofire.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FCF63DC51C454068008AEC28 /* Alamofire.framework.dSYM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +31,7 @@
 			dstSubfolderSpec = 16;
 			files = (
 				FC65B2211C45375000B71747 /* HTMLReader.framework.dSYM in CopyFiles */,
+				FCF63DCC1C4540C5008AEC28 /* Alamofire.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +42,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				FCF63DBD1C453814008AEC28 /* HTMLReader.framework in Embed Frameworks */,
+				FCF63DCB1C45409B008AEC28 /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,6 +62,8 @@
 		FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = HTMLReader.framework.dSYM; path = Carthage/Build/Mac/HTMLReader.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		FCF63DC01C453C72008AEC28 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoConversionToggler.swift; sourceTree = "<group>"; };
+		FCF63DC41C454068008AEC28 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = SOURCE_ROOT; };
+		FCF63DC51C454068008AEC28 /* Alamofire.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Alamofire.framework.dSYM; path = Carthage/Build/Mac/Alamofire.framework.dSYM; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +72,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FCF63DBC1C453814008AEC28 /* HTMLReader.framework in Frameworks */,
+				FCF63DCA1C45409B008AEC28 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,8 +82,10 @@
 		FC65B2091C451BF600B71747 /* OS X */ = {
 			isa = PBXGroup;
 			children = (
-				FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */,
+				FCF63DC41C454068008AEC28 /* Alamofire.framework */,
+				FCF63DC51C454068008AEC28 /* Alamofire.framework.dSYM */,
 				FC65B21D1C4536EE00B71747 /* HTMLReader.framework */,
+				FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */,
 				FC65B21B1C45300600B71747 /* main.swift */,
 				FC65B2191C452FED00B71747 /* CLI.swift */,
 				FC65B20A1C451BF600B71747 /* AppDelegate.swift */,
