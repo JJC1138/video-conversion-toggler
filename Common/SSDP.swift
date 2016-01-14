@@ -10,9 +10,11 @@ import CocoaAsyncSocket
 class DiscoverSSDPDevices: NSOperation {
     
     let serviceType: String
+    let runForSeconds: Int
     
-    init(serviceType: String) {
+    init(serviceType: String, runForSeconds: Int) {
         self.serviceType = serviceType
+        self.runForSeconds = runForSeconds
     }
     
     class Delegate: GCDAsyncUdpSocketDelegate {
@@ -34,10 +36,6 @@ class DiscoverSSDPDevices: NSOperation {
     }
     
     func run() throws {
-        let queue = dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT)
-        let delegate = Delegate()
-        let sock = GCDAsyncUdpSocket(delegate: delegate, delegateQueue: queue)
-        
         let ip = "239.255.255.250"
         let port: UInt16 = 1900
         let message = [
@@ -50,9 +48,12 @@ class DiscoverSSDPDevices: NSOperation {
             "",
             ].joinWithSeparator("\r\n")
         
+        let sock = GCDAsyncUdpSocket(delegate: Delegate(), delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT))
+        
         sock.sendData(message.dataUsingEncoding(NSUTF8StringEncoding), toHost: ip, port: port, withTimeout: -1, tag: 0)
         try sock.beginReceiving()
-        sleep(10) // FIXME remove
+        
+        sleep(UInt32(runForSeconds))
     }
     
 }
