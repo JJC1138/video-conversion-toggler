@@ -7,17 +7,8 @@ import CocoaAsyncSocket
 // and licensed under the Apache License, Version 2.0:
 // http://www.apache.org/licenses/LICENSE-2.0
 
-class DiscoverSSDPDevices: NSOperation {
-    
-    let serviceType: String
-    let runForSeconds: Int
-    
-    init(serviceType: String, runForSeconds: Int) {
-        self.serviceType = serviceType
-        self.runForSeconds = runForSeconds
-    }
-    
-    override func main() {
+func discoverSSDPDevices(serviceType serviceType: String, runForSeconds: Int) -> () -> Void {
+    return {
         let ip = "239.255.255.250"
         let port: UInt16 = 1900
         let message = [
