@@ -17,15 +17,6 @@ class DiscoverSSDPDevices: NSOperation {
         self.runForSeconds = runForSeconds
     }
     
-    class Delegate: GCDAsyncUdpSocketDelegate {
-        
-        @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
-            print("received packet") // FIXME remove
-            // FIXME implement
-        }
-        
-    }
-    
     override func main() {
         do {
             try run()
@@ -46,11 +37,21 @@ class DiscoverSSDPDevices: NSOperation {
             "MX: 3",
             "",
             "",
-            ].joinWithSeparator("\r\n")
+            ].joinWithSeparator("\r\n").dataUsingEncoding(NSUTF8StringEncoding)
         
-        let sock = GCDAsyncUdpSocket(delegate: Delegate(), delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT))
+        class Delegate: GCDAsyncUdpSocketDelegate {
+            
+            @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
+                print("received packet") // FIXME remove
+                // FIXME implement
+            }
+            
+        }
         
-        sock.sendData(message.dataUsingEncoding(NSUTF8StringEncoding), toHost: ip, port: port, withTimeout: -1, tag: 0)
+        let delegate = Delegate()
+        let sock = GCDAsyncUdpSocket(delegate: delegate, delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT))
+        
+        sock.sendData(message, toHost: ip, port: port, withTimeout: -1, tag: 0)
         try sock.beginReceiving()
         
         sleep(UInt32(runForSeconds))
