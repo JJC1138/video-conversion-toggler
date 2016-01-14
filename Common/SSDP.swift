@@ -8,19 +8,6 @@ import CocoaAsyncSocket
 // http://www.apache.org/licenses/LICENSE-2.0
 
 public func discoverSSDPDevices(serviceType serviceType: String) {
-    let maximumResponseWaitingTimeSeconds = 1
-    let ip = "239.255.255.250"
-    let port: UInt16 = 1900
-    let searchMessage = [
-        "M-SEARCH * HTTP/1.1",
-        "HOST: \(ip):\(port)",
-        "MAN: \"ssdp:discover\"",
-        "ST: \(serviceType)",
-        "MX: \(maximumResponseWaitingTimeSeconds)",
-        "",
-        "",
-        ].joinWithSeparator("\r\n").dataUsingEncoding(NSUTF8StringEncoding)
-    
     class Delegate: GCDAsyncUdpSocketDelegate {
         @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
             let responseMessage = CFHTTPMessageCreateEmpty(nil, false).takeRetainedValue()
@@ -38,6 +25,21 @@ public func discoverSSDPDevices(serviceType serviceType: String) {
     
     let delegate = Delegate() // We have to keep a reference to this so it can't be inlined in the call below.
     let sock = GCDAsyncUdpSocket(delegate: delegate, delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT))
+    
+    let maximumResponseWaitingTimeSeconds = 1
+    let ip = "239.255.255.250"
+    let port: UInt16 = 1900
+    
+    // We can't use CFHTTPMessageCreateRequest(_:_:_:_:) to create this request because M-SEARCH isn't a real HTTP/1.1 method and that function says it only accepts those methods specified by the chosen HTTP version:
+    let searchMessage = [
+        "M-SEARCH * HTTP/1.1",
+        "HOST: \(ip):\(port)",
+        "MAN: \"ssdp:discover\"",
+        "ST: \(serviceType)",
+        "MX: \(maximumResponseWaitingTimeSeconds)",
+        "",
+        "",
+        ].joinWithSeparator("\r\n").dataUsingEncoding(NSUTF8StringEncoding)
     
     sock.sendData(searchMessage, toHost: ip, port: port, withTimeout: -1, tag: 0)
     try! sock.beginReceiving()
