@@ -48,8 +48,8 @@ public func discoverSSDPDevices(serviceType serviceType: String) {
         "M-SEARCH * HTTP/1.1",
         "HOST: \(ip):\(port)",
         "MAN: \"ssdp:discover\"",
-        "ST: \(serviceType)",
         "MX: \(maximumResponseWaitingTimeSeconds)",
+        "ST: \(serviceType)",
         "",
         "",
         ].joinWithSeparator("\r\n").dataUsingEncoding(NSUTF8StringEncoding)
