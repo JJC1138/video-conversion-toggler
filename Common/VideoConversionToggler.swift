@@ -142,34 +142,24 @@ class SetSettingOperation: NSOperation {
     
 }
 
-class ToggleSettingOperation: NSOperation {
+func toggleSetting(deviceInfo: DeviceInfo) {
+    let fetch1 = FetchStatusOperation(deviceInfo: deviceInfo)
+    fetch1.start()
+    fetch1.waitUntilFinished()
+    guard let setting1 = fetch1.result else { return }
     
-    let deviceInfo: DeviceInfo
+    let set = SetSettingOperation(deviceInfo: deviceInfo, setting: !setting1)
+    set.start()
+    set.waitUntilFinished()
+    guard set.error == nil else { return }
     
-    init(deviceInfo: DeviceInfo) {
-        self.deviceInfo = deviceInfo
+    let fetch2 = FetchStatusOperation(deviceInfo: deviceInfo)
+    fetch2.start()
+    fetch2.waitUntilFinished()
+    guard let setting2 = fetch2.result else { return }
+    
+    if (setting1 == setting2) {
+        deviceErrors[deviceInfo] = AppError(kind: .SettingDidNotChange)
+        return
     }
-    
-    override func main() {
-        let fetch1 = FetchStatusOperation(deviceInfo: self.deviceInfo)
-        fetch1.start()
-        fetch1.waitUntilFinished()
-        guard let setting1 = fetch1.result else { return }
-        
-        let set = SetSettingOperation(deviceInfo: self.deviceInfo, setting: !setting1)
-        set.start()
-        set.waitUntilFinished()
-        guard set.error == nil else { return }
-        
-        let fetch2 = FetchStatusOperation(deviceInfo: self.deviceInfo)
-        fetch2.start()
-        fetch2.waitUntilFinished()
-        guard let setting2 = fetch2.result else { return }
-        
-        if (setting1 == setting2) {
-            deviceErrors[self.deviceInfo] = AppError(kind: .SettingDidNotChange)
-            return
-        }
-    }
-    
 }
