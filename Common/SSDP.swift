@@ -7,7 +7,7 @@ import CocoaAsyncSocket
 // and licensed under the Apache License, Version 2.0:
 // http://www.apache.org/licenses/LICENSE-2.0
 
-public struct SSDPResponse: CustomStringConvertible {
+public struct SSDPResponse: CustomStringConvertible, Hashable {
     public let location: String
     public let st: String
     public let usn: String
@@ -15,11 +15,22 @@ public struct SSDPResponse: CustomStringConvertible {
     public var description: String {
         return "\(location) \(st) \(usn)"
     }
+    public var hashValue: Int {
+        return description.hashValue
+    }
+}
+public func == (lhs: SSDPResponse, rhs: SSDPResponse) -> Bool {
+    return
+        lhs.location == rhs.location &&
+        lhs.st == rhs.st &&
+        lhs.usn == rhs.usn &&
+        lhs.extraHeaders == rhs.extraHeaders
 }
 
 public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate: SSDPResponse -> Void) {
     class SocketDelegate: GCDAsyncUdpSocketDelegate {
         let responseDelegate: SSDPResponse -> Void
+        var responses = Set<SSDPResponse>()
         init(responseDelegate: SSDPResponse -> Void) { self.responseDelegate = responseDelegate }
         @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
             let responseMessage = CFHTTPMessageCreateEmpty(nil, false).takeRetainedValue()
@@ -34,12 +45,16 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
             guard let usn = headers.removeValueForKey("USN") else { return }
             
             let response = SSDPResponse(location: location, st: st, usn: usn, extraHeaders: headers)
+            // Services often respond more than once to a single request so skip duplicates:
+            guard !responses.contains(response) else { return }
+            
+            responses.insert(response)
             responseDelegate(response)
         }
     }
     
     let socketDelegate = SocketDelegate(responseDelegate: delegate) // We have to keep a reference to this so it can't be inlined in the call below.
-    let sock = GCDAsyncUdpSocket(delegate: socketDelegate, delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT))
+    let sock = GCDAsyncUdpSocket(delegate: socketDelegate, delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_SERIAL))
     
     let maximumResponseWaitingTimeSeconds = 1
     let ip = "239.255.255.250"
