@@ -7,6 +7,16 @@ import CocoaAsyncSocket
 // and licensed under the Apache License, Version 2.0:
 // http://www.apache.org/licenses/LICENSE-2.0
 
+public struct SSDPResponse: CustomStringConvertible {
+    public let location: String
+    public let st: String
+    public let usn: String
+    public let extraHeaders: [String: String]
+    public var description: String {
+        return "\(location) \(st) \(usn)"
+    }
+}
+
 public func discoverSSDPDevices(serviceType serviceType: String) {
     class Delegate: GCDAsyncUdpSocketDelegate {
         @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
@@ -16,10 +26,13 @@ public func discoverSSDPDevices(serviceType serviceType: String) {
             guard let originalHeaders = CFHTTPMessageCopyAllHeaderFields(responseMessage)?.takeRetainedValue() as Dictionary? else { return }
             var headers = [String: String]()
             for (k, v) in originalHeaders { headers[(k as! String).uppercaseString] = (v as! String) }
-            guard headers["LOCATION"] != nil && headers["ST"] != nil && headers["USN"] != nil else { return }
             
-            // FIXME Do something useful with headers. Maybe populate a struct with the required parts and an 'extraHeaders' dictionary.
-            print(headers["LOCATION"]) // FIXME remove
+            guard let location = headers.removeValueForKey("LOCATION") else { return }
+            guard let st = headers.removeValueForKey("ST") else { return }
+            guard let usn = headers.removeValueForKey("USN") else { return }
+            
+            let response = SSDPResponse(location: location, st: st, usn: usn, extraHeaders: headers)
+            print(response) // FIXME remove
         }
     }
     
