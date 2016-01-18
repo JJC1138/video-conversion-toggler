@@ -8,7 +8,7 @@ import CocoaAsyncSocket
 // http://www.apache.org/licenses/LICENSE-2.0
 
 public struct SSDPResponse: CustomStringConvertible, Hashable {
-    public let location: String
+    public let location: NSURL
     public let st: String
     public let usn: String
     public let extraHeaders: [String: String]
@@ -40,7 +40,10 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
             var headers = [String: String]()
             for (k, v) in originalHeaders { headers[(k as! String).uppercaseString] = (v as! String) }
             
-            guard let location = headers.removeValueForKey("LOCATION") else { return }
+            guard let location: NSURL = {
+                guard let s = headers.removeValueForKey("LOCATION") else { return nil }
+                return NSURL(string: s)
+            }() else { return }
             guard let st = headers.removeValueForKey("ST") else { return }
             guard let usn = headers.removeValueForKey("USN") else { return }
             

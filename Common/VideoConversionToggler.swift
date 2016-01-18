@@ -170,7 +170,11 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
     
     discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { ssdpResponse in
         locationFetches.addOperation(NSBlockOperation {
+            let complete = dispatch_semaphore_create(0)!
+            
             af.request(.GET, ssdpResponse.location).validate().responseData { httpResponse in
+                defer { dispatch_semaphore_signal(complete) }
+                
                 guard let xml: XMLDocument = {
                     guard let data = httpResponse.data else { return nil }
                     return try? XMLDocument(data: data)
@@ -181,12 +185,14 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
                 // FIXME show user error if the device looks like we should be able to support it but the following fails:
                 guard let presentationURLTag = device.firstChild(tag: "presentationURL") else { return }
                 
-                guard let presentationURL = NSURL(string: presentationURLTag.stringValue) else { return }
+                guard let presentationURL = NSURL(string: presentationURLTag.stringValue, relativeToURL: ssdpResponse.location) else { return }
                 
                 let deviceInfo = DeviceInfo(baseURL: presentationURL)
                 
                 delegate(deviceInfo)
             }
+            
+            dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
         })
     }
     
