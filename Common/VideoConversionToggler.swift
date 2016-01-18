@@ -1,6 +1,7 @@
 import Foundation
 
 import Alamofire
+import Fuzi
 import HTMLReader
 
 struct AppError : ErrorType {
@@ -21,12 +22,12 @@ struct AppError : ErrorType {
 }
 
 struct DeviceInfo: Hashable, CustomStringConvertible {
-    let hostname: String
+    let baseURL: NSURL
     
-    var hashValue: Int { return hostname.hashValue }
-    var description: String { return hostname }
+    var hashValue: Int { return baseURL.hashValue }
+    var description: String { return String(baseURL) }
 }
-func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.hostname == b.hostname }
+func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.baseURL == b.baseURL }
 
 var deviceErrors = ConcurrentDictionary<DeviceInfo, AppError>()
 var deviceSettings = ConcurrentDictionary<DeviceInfo, Bool>()
@@ -74,7 +75,7 @@ class FetchStatusOperation: NSOperation {
     override func main() {
         let complete = dispatch_semaphore_create(0)!
         
-        af.request(.GET, "http://\(deviceInfo.hostname)/SETUP/VIDEO/d_video.asp").validate().responseData {
+        af.request(.GET, NSURL(string: "SETUP/VIDEO/d_video.asp", relativeToURL: deviceInfo.baseURL)!).validate().responseData {
             response in
             
             defer { dispatch_semaphore_signal(complete) }
@@ -124,7 +125,7 @@ class SetSettingOperation: NSOperation {
     override func main() {
         let complete = dispatch_semaphore_create(0)!
         
-        af.request(.POST, "http://\(deviceInfo.hostname)/SETUP/VIDEO/s_video.asp", parameters: ["radioVideoConvMode": setting ? "ON" : "OFF"]).validate().responseData {
+        af.request(.POST, NSURL(string: "SETUP/VIDEO/s_video.asp", relativeToURL: deviceInfo.baseURL)!, parameters: ["radioVideoConvMode": setting ? "ON" : "OFF"]).validate().responseData {
             response in
             
             defer { dispatch_semaphore_signal(complete) }
@@ -169,9 +170,22 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
     
     discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { ssdpResponse in
         locationFetches.addOperation(NSBlockOperation {
-            af.request(.GET, ssdpResponse.location).validate().responseString { httpResponse in
-                guard let serviceDescriptionXML = httpResponse.result.value else { return }
-                delegate(DeviceInfo(hostname: serviceDescriptionXML)) // FIXME remove
+            af.request(.GET, ssdpResponse.location).validate().responseData { httpResponse in
+                guard let xml: XMLDocument = {
+                    guard let data = httpResponse.data else { return nil }
+                    return try? XMLDocument(data: data)
+                    }() else { return }
+                
+                guard let device = xml.root?.firstChild(tag: "device") else { return }
+                
+                // FIXME show user error if the device looks like we should be able to support it but the following fails:
+                guard let presentationURLTag = device.firstChild(tag: "presentationURL") else { return }
+                
+                guard let presentationURL = NSURL(string: presentationURLTag.stringValue) else { return }
+                
+                let deviceInfo = DeviceInfo(baseURL: presentationURL)
+                
+                delegate(deviceInfo)
             }
         })
     }
