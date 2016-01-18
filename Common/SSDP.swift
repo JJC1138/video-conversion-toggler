@@ -17,8 +17,10 @@ public struct SSDPResponse: CustomStringConvertible {
     }
 }
 
-public func discoverSSDPServices(type serviceType: String = "ssdp:all") {
-    class Delegate: GCDAsyncUdpSocketDelegate {
+public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate: SSDPResponse -> Void) {
+    class SocketDelegate: GCDAsyncUdpSocketDelegate {
+        let responseDelegate: SSDPResponse -> Void
+        init(responseDelegate: SSDPResponse -> Void) { self.responseDelegate = responseDelegate }
         @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
             let responseMessage = CFHTTPMessageCreateEmpty(nil, false).takeRetainedValue()
             guard CFHTTPMessageAppendBytes(responseMessage, UnsafePointer(data.bytes), data.length) else { return }
@@ -32,12 +34,12 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all") {
             guard let usn = headers.removeValueForKey("USN") else { return }
             
             let response = SSDPResponse(location: location, st: st, usn: usn, extraHeaders: headers)
-            print(response) // FIXME remove
+            responseDelegate(response)
         }
     }
     
-    let delegate = Delegate() // We have to keep a reference to this so it can't be inlined in the call below.
-    let sock = GCDAsyncUdpSocket(delegate: delegate, delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT))
+    let socketDelegate = SocketDelegate(responseDelegate: delegate) // We have to keep a reference to this so it can't be inlined in the call below.
+    let sock = GCDAsyncUdpSocket(delegate: socketDelegate, delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_CONCURRENT))
     
     let maximumResponseWaitingTimeSeconds = 1
     let ip = "239.255.255.250"
