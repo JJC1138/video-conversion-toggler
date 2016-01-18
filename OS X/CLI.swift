@@ -24,8 +24,9 @@ func runRunLoopUntilAllOperationsAreFinished(onQueue queue: NSOperationQueue) {
 func cli() {
     let operationQueue = NSOperationQueue()
     
-    operationQueue.addOperation(NSBlockOperation { toggleSetting(DeviceInfo(hostname: Process.arguments[2])) })
+//    operationQueue.addOperation(NSBlockOperation { toggleSetting(DeviceInfo(hostname: Process.arguments[2])) }) // FIXME remove
 //    operationQueue.addOperation(NSBlockOperation { discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { print($0) } }) // FIXME uncomment or remove
+    operationQueue.addOperation(NSBlockOperation { discoverCompatibleDevices { print($0) } }) // FIXME remove
     
     runRunLoopUntilAllOperationsAreFinished(onQueue: operationQueue)
     

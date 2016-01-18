@@ -163,3 +163,18 @@ func toggleSetting(deviceInfo: DeviceInfo) {
         return
     }
 }
+
+func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
+    let locationFetches = NSOperationQueue()
+    
+    discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { ssdpResponse in
+        locationFetches.addOperation(NSBlockOperation {
+            af.request(.GET, ssdpResponse.location).validate().responseString { httpResponse in
+                guard let serviceDescriptionXML = httpResponse.result.value else { return }
+                delegate(DeviceInfo(hostname: serviceDescriptionXML)) // FIXME remove
+            }
+        })
+    }
+    
+    locationFetches.waitUntilAllOperationsAreFinished()
+}
