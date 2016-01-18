@@ -22,10 +22,11 @@ struct AppError : ErrorType {
 }
 
 struct DeviceInfo: Hashable, CustomStringConvertible {
+    let name: String
     let baseURL: NSURL
     
     var hashValue: Int { return baseURL.hashValue }
-    var description: String { return String(baseURL) }
+    var description: String { return name }
 }
 func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.baseURL == b.baseURL }
 
@@ -180,14 +181,19 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
                     return try? XMLDocument(data: data)
                     }() else { return }
                 
-                guard let device = xml.root?.firstChild(tag: "device") else { return }
+                guard let deviceTag = xml.root?.firstChild(tag: "device") else { return }
                 
-                // FIXME show user error if the device looks like we should be able to support it but the following fails:
-                guard let presentationURLTag = device.firstChild(tag: "presentationURL") else { return }
+                guard let manufacturer = deviceTag.firstChild(tag: "manufacturer")?.stringValue else { return }
+                
+                guard ["Denon", "Marantz"].contains(manufacturer) else { return }
+                
+                guard let presentationURLTag = deviceTag.firstChild(tag: "presentationURL") else { return }
                 
                 guard let presentationURL = NSURL(string: presentationURLTag.stringValue, relativeToURL: ssdpResponse.location) else { return }
                 
-                let deviceInfo = DeviceInfo(baseURL: presentationURL)
+                guard let friendlyName = deviceTag.firstChild(tag: "friendlyName")?.stringValue else { return }
+                
+                let deviceInfo = DeviceInfo(name: friendlyName, baseURL: presentationURL)
                 
                 delegate(deviceInfo)
             }
