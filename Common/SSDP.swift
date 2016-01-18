@@ -17,7 +17,7 @@ public struct SSDPResponse: CustomStringConvertible {
     }
 }
 
-public func discoverSSDPDevices(serviceType serviceType: String) {
+public func discoverSSDPServices(type serviceType: String = "ssdp:all") {
     class Delegate: GCDAsyncUdpSocketDelegate {
         @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
             let responseMessage = CFHTTPMessageCreateEmpty(nil, false).takeRetainedValue()
