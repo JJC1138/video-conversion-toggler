@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FC4225AC1C4D506200A0E99D /* Fuzi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC4225A81C4D505700A0E99D /* Fuzi.framework */; };
+		FC4225AD1C4D506200A0E99D /* Fuzi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC4225A81C4D505700A0E99D /* Fuzi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FC4225AE1C4D5BAF00A0E99D /* Fuzi.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC4225A91C4D505700A0E99D /* Fuzi.framework.dSYM */; };
 		FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20A1C451BF600B71747 /* AppDelegate.swift */; };
 		FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20C1C451BF600B71747 /* ViewController.swift */; };
 		FC65B20F1C451BF600B71747 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC65B20E1C451BF600B71747 /* Assets.xcassets */; };
@@ -37,6 +40,7 @@
 				FC65B2211C45375000B71747 /* HTMLReader.framework.dSYM in CopyFiles */,
 				FCF63DCC1C4540C5008AEC28 /* Alamofire.framework.dSYM in CopyFiles */,
 				FCEAE3CC1C47F80200DD195E /* CocoaAsyncSocket.framework.dSYM in CopyFiles */,
+				FC4225AE1C4D5BAF00A0E99D /* Fuzi.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +50,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				FC4225AD1C4D506200A0E99D /* Fuzi.framework in Embed Frameworks */,
 				FCEAE3CB1C47F7F300DD195E /* CocoaAsyncSocket.framework in Embed Frameworks */,
 				FCF63DBD1C453814008AEC28 /* HTMLReader.framework in Embed Frameworks */,
 				FCF63DCB1C45409B008AEC28 /* Alamofire.framework in Embed Frameworks */,
@@ -56,6 +61,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FC4225A81C4D505700A0E99D /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/Mac/Fuzi.framework; sourceTree = SOURCE_ROOT; };
+		FC4225A91C4D505700A0E99D /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/Mac/Fuzi.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		FC65B2081C451BF600B71747 /* Video Conversion Toggler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Conversion Toggler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC65B20A1C451BF600B71747 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FC65B20C1C451BF600B71747 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -80,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC4225AC1C4D506200A0E99D /* Fuzi.framework in Frameworks */,
 				FCEAE3CA1C47F7F300DD195E /* CocoaAsyncSocket.framework in Frameworks */,
 				FCF63DBC1C453814008AEC28 /* HTMLReader.framework in Frameworks */,
 				FCF63DCA1C45409B008AEC28 /* Alamofire.framework in Frameworks */,
@@ -98,6 +106,8 @@
 				FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */,
 				FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */,
 				FCEAE3C91C47F7E800DD195E /* CocoaAsyncSocket.framework.dSYM */,
+				FC4225A81C4D505700A0E99D /* Fuzi.framework */,
+				FC4225A91C4D505700A0E99D /* Fuzi.framework.dSYM */,
 				FC65B21B1C45300600B71747 /* main.swift */,
 				FC65B2191C452FED00B71747 /* CLI.swift */,
 				FC65B20A1C451BF600B71747 /* AppDelegate.swift */,
@@ -332,6 +342,7 @@
 		FC7110411C3AA6B1002755E4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
 				PRODUCT_MODULE_NAME = VideoConversionToggler;
 				PRODUCT_NAME = "Video Conversion Toggler";
@@ -341,6 +352,7 @@
 		FC7110421C3AA6B1002755E4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
 				PRODUCT_MODULE_NAME = VideoConversionToggler;
 				PRODUCT_NAME = "Video Conversion Toggler";

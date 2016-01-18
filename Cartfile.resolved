@@ -1,2 +1,4 @@
-github "Alamofire/Alamofire" "3.1.4"
+github "Alamofire/Alamofire" "3.1.5"
+github "robbiehanson/CocoaAsyncSocket" "6e018ddf7c456106f898efae66ea5e5c94737a96"
+github "cezheng/Fuzi" "0.3.0"
 github "nolanw/HTMLReader" "v0.9.3"
