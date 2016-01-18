@@ -98,12 +98,12 @@ class FetchStatusOperation: NSOperation {
         
         dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
         
-        if let result = self.result { deviceSettings[self.deviceInfo] = result }
-        if let error = self.error {
-            deviceErrors[self.deviceInfo] = error
-            if self.result == nil {
+        if let result = result { deviceSettings[deviceInfo] = result }
+        if let error = error {
+            deviceErrors[deviceInfo] = error
+            if result == nil {
                 // We couldn't retrieve it properly, so any previously stored value might well be wrong. We should remove it to avoid showing potentially wrong information.
-                deviceSettings[self.deviceInfo] = nil
+                deviceSettings[deviceInfo] = nil
             }
         }
     }
@@ -124,7 +124,7 @@ class SetSettingOperation: NSOperation {
     override func main() {
         let complete = dispatch_semaphore_create(0)!
         
-        af.request(.POST, "http://\(deviceInfo.hostname)/SETUP/VIDEO/s_video.asp", parameters: ["radioVideoConvMode": self.setting ? "ON" : "OFF"]).validate().responseData {
+        af.request(.POST, "http://\(deviceInfo.hostname)/SETUP/VIDEO/s_video.asp", parameters: ["radioVideoConvMode": setting ? "ON" : "OFF"]).validate().responseData {
             response in
             
             defer { dispatch_semaphore_signal(complete) }
@@ -137,7 +137,7 @@ class SetSettingOperation: NSOperation {
         
         dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
         
-        if let error = self.error { deviceErrors[self.deviceInfo] = error }
+        if let error = error { deviceErrors[deviceInfo] = error }
     }
     
 }

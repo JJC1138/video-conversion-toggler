@@ -14,7 +14,7 @@ struct ConcurrentDictionary<Key, Value where Key: Hashable> {
         get {
             objc_sync_enter(dLock)
             defer { objc_sync_exit(dLock) }
-            return self.d[k]
+            return d[k]
         }
         set {
             synced(dLock) {
@@ -25,7 +25,7 @@ struct ConcurrentDictionary<Key, Value where Key: Hashable> {
     func keys() -> [Key] {
         objc_sync_enter(dLock)
         defer { objc_sync_exit(dLock) }
-        return [Key](self.d.keys)
+        return [Key](d.keys)
     }
 }
 
