@@ -21,12 +21,13 @@ struct AppError : ErrorType {
     }
 }
 
-struct DeviceInfo: Hashable, CustomStringConvertible {
+struct DeviceInfo: Hashable, CustomStringConvertible, CustomDebugStringConvertible {
     let name: String
     let baseURL: NSURL
     
     var hashValue: Int { return baseURL.hashValue }
     var description: String { return name }
+    var debugDescription: String { return "\(name) <\(baseURL)>" }
 }
 func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.baseURL == b.baseURL }
 
@@ -44,7 +45,7 @@ func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String 
     
     var errorInfo = [String]()
     
-    errorInfo.append(localString(format: errorDescriptionFormat, String(deviceInfo)))
+    errorInfo.append(localString(format: errorDescriptionFormat, deviceInfo.debugDescription))
     if let e = error.info { errorInfo.append(e) }
     if let e = error.nsError { errorInfo.append(e.localizedDescription) }
     
