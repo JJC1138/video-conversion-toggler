@@ -54,11 +54,7 @@ func cli() {
     }
     
     if anyErrors {
-        let contact = "vidconvtoggle@jjc1138.net"
-        
-        print(toStream: &stderr)
-        print(localString(format: localString("Please contact %@ with the above error information."), contact),
-            toStream: &stderr)
+        print("\n\(errorContactInstruction())", toStream: &stderr)
         exit(1)
     }
 }

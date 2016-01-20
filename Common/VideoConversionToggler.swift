@@ -198,3 +198,8 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
     
     locationFetches.waitUntilAllOperationsAreFinished()
 }
+
+func errorContactInstruction() -> String {
+    let contact = "vidconvtoggle@jjc1138.net"
+    return localString(format: localString("Please contact %@ with the above error information."), contact)
+}
