@@ -44,7 +44,7 @@ func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String 
     
     var errorInfo = [String]()
     
-    errorInfo.append(String.localizedStringWithFormat(errorDescriptionFormat, String(deviceInfo)))
+    errorInfo.append(localString(format: errorDescriptionFormat, String(deviceInfo)))
     if let e = error.info { errorInfo.append(e) }
     if let e = error.nsError { errorInfo.append(e.localizedDescription) }
     
