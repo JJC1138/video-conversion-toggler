@@ -34,17 +34,11 @@ var deviceErrors = ConcurrentDictionary<DeviceInfo, AppError>()
 var deviceSettings = ConcurrentDictionary<DeviceInfo, Bool>()
 
 func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String {
-    // LOCALIZE all strings
     let errorDescriptionFormat: String = {
+        // Using a switch here allows the compiler to catch the error if we don't specify all possible values:
         switch error.kind {
-        case .CouldNotAccessWebInterface:
-            return "Found device %@ but couldn't access web interface."
-        case .WebInterfaceNotAsExpected:
-            return "Found device %@ but web interface wasn't as expected."
-        case .SubmittingChangeFailed:
-            return "Found device %@ and accessed web interface but changing setting failed."
-        case .SettingDidNotChange:
-            return "Found device %@ and tried to change setting, but it didn't update. That can happen if the device is switched off, so please check if it is on."
+        case .CouldNotAccessWebInterface, .WebInterfaceNotAsExpected, .SubmittingChangeFailed, .SettingDidNotChange:
+            return localString("AppError.Kind.\(error.kind)")
         }
     }()
     

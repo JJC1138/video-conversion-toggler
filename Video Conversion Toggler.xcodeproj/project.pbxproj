@@ -17,6 +17,7 @@
 		FC65B21A1C452FED00B71747 /* CLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B2191C452FED00B71747 /* CLI.swift */; };
 		FC65B21C1C45300600B71747 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B21B1C45300600B71747 /* main.swift */; };
 		FC65B2211C45375000B71747 /* HTMLReader.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */; };
+		FCA711271C4E930900B8AA10 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
 		FCEAE3C71C47F0F500DD195E /* SSDP.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* SSDP.swift */; };
 		FCEAE3CA1C47F7F300DD195E /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */; };
 		FCEAE3CB1C47F7F300DD195E /* CocoaAsyncSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -73,6 +74,7 @@
 		FC65B21B1C45300600B71747 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		FC65B21D1C4536EE00B71747 /* HTMLReader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTMLReader.framework; path = Carthage/Build/Mac/HTMLReader.framework; sourceTree = SOURCE_ROOT; };
 		FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = HTMLReader.framework.dSYM; path = Carthage/Build/Mac/HTMLReader.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		FCA711281C4E930900B8AA10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FCEAE3C61C47F0F500DD195E /* SSDP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDP.swift; sourceTree = "<group>"; };
 		FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/Mac/CocoaAsyncSocket.framework; sourceTree = SOURCE_ROOT; };
 		FCEAE3C91C47F7E800DD195E /* CocoaAsyncSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = CocoaAsyncSocket.framework.dSYM; path = Carthage/Build/Mac/CocoaAsyncSocket.framework.dSYM; sourceTree = SOURCE_ROOT; };
@@ -142,6 +144,7 @@
 				FCF63DC01C453C72008AEC28 /* Utility.swift */,
 				FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */,
 				FCEAE3C61C47F0F500DD195E /* SSDP.swift */,
+				FCA711291C4E930900B8AA10 /* Localizable.strings */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -206,6 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC65B20F1C451BF600B71747 /* Assets.xcassets in Resources */,
+				FCA711271C4E930900B8AA10 /* Localizable.strings in Resources */,
 				FC65B2121C451BF600B71747 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,6 +240,14 @@
 				FC65B2111C451BF600B71747 /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		FCA711291C4E930900B8AA10 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FCA711281C4E930900B8AA10 /* Base */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

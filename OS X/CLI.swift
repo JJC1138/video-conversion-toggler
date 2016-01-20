@@ -22,6 +22,9 @@ func runRunLoopUntilAllOperationsAreFinished(onQueue queue: NSOperationQueue) {
 }
 
 func cli() {
+    // Just looking up this key does something magical to enable the checking behaviour if it should be enabled, and to make pseudo-language support work:
+    NSUserDefaults.standardUserDefaults().boolForKey("NSShowNonLocalizedStrings")
+    
     let operationQueue = NSOperationQueue()
     
 //    operationQueue.addOperation(NSBlockOperation { toggleSetting(DeviceInfo(hostname: Process.arguments[2])) })
@@ -51,11 +54,10 @@ func cli() {
     }
     
     if anyErrors {
-        // LOCALIZE all:
         let contact = "vidconvtoggle@jjc1138.net"
         
         print(toStream: &stderr)
-        print(String.localizedStringWithFormat("Please contact %@ with the above error information.", contact),
+        print(String.localizedStringWithFormat(localString("Please contact %@ with the above error information."), contact),
             toStream: &stderr)
         exit(1)
     }

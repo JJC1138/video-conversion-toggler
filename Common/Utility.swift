@@ -36,3 +36,7 @@ class StandardErrorOutputStream: OutputStreamType {
     }
 }
 var stderr = StandardErrorOutputStream()
+
+func localString(key: String, fromTable table: String? = nil) -> String {
+    return NSBundle.mainBundle().localizedStringForKey(key, value: nil, table: table)
+}
