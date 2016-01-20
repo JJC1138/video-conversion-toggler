@@ -57,7 +57,7 @@ func cli() {
         let contact = "vidconvtoggle@jjc1138.net"
         
         print(toStream: &stderr)
-        print(String.localizedStringWithFormat(localString("Please contact %@ with the above error information."), contact),
+        print(localString(format: localString("Please contact %@ with the above error information."), contact),
             toStream: &stderr)
         exit(1)
     }
