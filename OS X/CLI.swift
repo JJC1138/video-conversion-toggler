@@ -42,7 +42,7 @@ func cli() {
     for deviceInfo in deviceSettings.keys() {
         guard let setting = deviceSettings[deviceInfo] else { continue }
         
-        print("\(deviceInfo): \(setting ? "on" : "off")")
+        print("\(deviceInfo): \(localString(setting ? "on" : "off"))")
     }
     
     var anyErrors = false
