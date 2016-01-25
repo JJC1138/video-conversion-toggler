@@ -3,6 +3,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -26,7 +27,7 @@
                                         <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="for Denon™ and Marantz™ AV Receivers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q8z-GB-Xbp">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="for Denon™ and Marantz™ AV Receivers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q8z-GB-Xbp">
                                         <rect key="frame" x="71" y="83" width="548" height="36"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -50,14 +51,24 @@ Please contact vidconvtoggle@jjc1138.net with the above error information.</stri
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="40" sectionFooterHeight="40" translatesAutoresizingMaskIntoConstraints="NO" id="RGk-4h-8Xy" userLabel="Devices">
+                                <rect key="frame" x="616" y="275" width="689" height="330"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="330" id="yvz-bL-GNE"/>
+                                </constraints>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="CHw-ht-nMR" secondAttribute="bottom" constant="108" id="Qlg-72-ucm"/>
                             <constraint firstItem="CHw-ht-nMR" firstAttribute="width" relation="greaterThanOrEqual" secondItem="Q6M-aj-jEt" secondAttribute="width" id="Vyi-11-vWC"/>
+                            <constraint firstItem="RGk-4h-8Xy" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="XAP-wj-axR"/>
                             <constraint firstItem="CHw-ht-nMR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="YHw-Ub-YZE"/>
+                            <constraint firstItem="RGk-4h-8Xy" firstAttribute="centerY" secondItem="wfy-db-euE" secondAttribute="top" multiplier="0.407" id="eu8-co-ymC"/>
                             <constraint firstItem="Q6M-aj-jEt" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="108" id="mag-LK-E6v"/>
                             <constraint firstItem="Q6M-aj-jEt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="192" id="tFO-3Y-je6"/>
+                            <constraint firstItem="RGk-4h-8Xy" firstAttribute="width" secondItem="Q6M-aj-jEt" secondAttribute="width" id="wyt-8d-mih"/>
                             <constraint firstItem="Q6M-aj-jEt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xbV-Ga-dRo"/>
                         </constraints>
                     </view>
