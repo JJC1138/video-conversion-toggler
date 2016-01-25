@@ -11,9 +11,10 @@ in the "Packaging" section of the target's "Build Settings" tab select the "Leve
   watchOS projects bundle IDs have a required format https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/ConfiguringYourApp/ConfiguringYourApp.html#//apple_ref/doc/uid/TP40012582-CH28-SW16
   tvOS and iOS projects that share the same iTunes Connect app record must have the same app ID https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/ConfiguringYourApp/ConfiguringYourApp.html#//apple_ref/doc/uid/TP40012582-CH28-SW16
  if any of those settings should match the project settings but are being overridden by target settings then remove the target settings
-  set them to the correct value (to avoid Xcode caching the old wrong one in some places) and then find and remove their lines in the project.pbxproj file
+  click the bad setting and then press backspace key
 in Project navigator rename the new "Video Conversion Toggler" group to "[platform]"
 rename the new "Video Conversion Toggler" folder in the project to "[platform]"
 select the [platform] group in the Project navigator and in the Utilities pane on the far right of the window select the File inspector tab
 click the folder icon below the old folder name listed as the Location, and select the new folder name
-select project file again and in the "General" tab at the top in the "Identity" section click "Choose Info.plist File…" and select the Info.plist in the new platform folder
+select project file again and in the "General" tab at the top in the "Identity" section for the new target click "Choose Info.plist File…" and select the Info.plist in the new platform folder
+go to "Product"/"Scheme"/"Manage Schemes…" menu item and rename the new scheme for the new platform to "Video Conversion Toggler ([platform])"
