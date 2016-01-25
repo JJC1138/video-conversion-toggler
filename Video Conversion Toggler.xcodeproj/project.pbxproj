@@ -18,6 +18,10 @@
 		FC524F2F1C56694100AA9294 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC524F2B1C56693100AA9294 /* CocoaAsyncSocket.framework */; };
 		FC524F301C56694100AA9294 /* Fuzi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC524F2C1C56693100AA9294 /* Fuzi.framework */; };
 		FC524F311C56694100AA9294 /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC524F2D1C56693100AA9294 /* HTMLReader.framework */; };
+		FC524F341C566A6F00AA9294 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC01C453C72008AEC28 /* Utility.swift */; };
+		FC524F351C566A7100AA9294 /* VideoConversionToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */; };
+		FC524F361C566A7400AA9294 /* SSDP.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* SSDP.swift */; };
+		FC524F371C566A7700AA9294 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
 		FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20A1C451BF600B71747 /* AppDelegate.swift */; };
 		FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20C1C451BF600B71747 /* ViewController.swift */; };
 		FC65B20F1C451BF600B71747 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC65B20E1C451BF600B71747 /* Assets.xcassets */; };
@@ -278,6 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC2C18DF1C5656300024C7FF /* Assets.xcassets in Resources */,
+				FC524F371C566A7700AA9294 /* Localizable.strings in Resources */,
 				FC2C18DD1C5656300024C7FF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -320,8 +325,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC524F351C566A7100AA9294 /* VideoConversionToggler.swift in Sources */,
 				FC2C18DA1C5656300024C7FF /* ViewController.swift in Sources */,
 				FC2C18D81C5656300024C7FF /* AppDelegate.swift in Sources */,
+				FC524F341C566A6F00AA9294 /* Utility.swift in Sources */,
+				FC524F361C566A7400AA9294 /* SSDP.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
