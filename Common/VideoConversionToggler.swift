@@ -204,3 +204,15 @@ func errorContactInstruction() -> String {
     let contact = "vidconvtoggle@jjc1138.net"
     return localString(format: localString("Please contact %@ with the above error information."), contact)
 }
+
+class PeriodicallyFetchAllStatuses: NSOperation {
+    
+    override func main() {
+        let fetchQueue = NSOperationQueue()
+        while (!cancelled) {
+            discoverCompatibleDevices { fetchQueue.addOperation(FetchStatusOperation(deviceInfo: $0)) }
+        }
+        fetchQueue.waitUntilAllOperationsAreFinished()
+    }
+    
+}
