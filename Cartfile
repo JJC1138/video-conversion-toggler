@@ -1,4 +1,4 @@
-github "nolanw/HTMLReader"
+github "nolanw/HTMLReader" "master"
 github "Alamofire/Alamofire" ~> 3.0
 github "robbiehanson/CocoaAsyncSocket" "master"
 github "cezheng/Fuzi"

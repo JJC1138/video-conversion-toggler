@@ -14,6 +14,10 @@
 		FC4225AC1C4D506200A0E99D /* Fuzi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC4225A81C4D505700A0E99D /* Fuzi.framework */; };
 		FC4225AD1C4D506200A0E99D /* Fuzi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC4225A81C4D505700A0E99D /* Fuzi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FC4225AE1C4D5BAF00A0E99D /* Fuzi.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC4225A91C4D505700A0E99D /* Fuzi.framework.dSYM */; };
+		FC524F2E1C56694100AA9294 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC524F2A1C56693100AA9294 /* Alamofire.framework */; };
+		FC524F2F1C56694100AA9294 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC524F2B1C56693100AA9294 /* CocoaAsyncSocket.framework */; };
+		FC524F301C56694100AA9294 /* Fuzi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC524F2C1C56693100AA9294 /* Fuzi.framework */; };
+		FC524F311C56694100AA9294 /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC524F2D1C56693100AA9294 /* HTMLReader.framework */; };
 		FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20A1C451BF600B71747 /* AppDelegate.swift */; };
 		FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20C1C451BF600B71747 /* ViewController.swift */; };
 		FC65B20F1C451BF600B71747 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC65B20E1C451BF600B71747 /* Assets.xcassets */; };
@@ -74,6 +78,10 @@
 		FC2C18E01C5656300024C7FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC4225A81C4D505700A0E99D /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/Mac/Fuzi.framework; sourceTree = SOURCE_ROOT; };
 		FC4225A91C4D505700A0E99D /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/Mac/Fuzi.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		FC524F2A1C56693100AA9294 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/tvOS/Alamofire.framework; sourceTree = SOURCE_ROOT; };
+		FC524F2B1C56693100AA9294 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/tvOS/CocoaAsyncSocket.framework; sourceTree = SOURCE_ROOT; };
+		FC524F2C1C56693100AA9294 /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/tvOS/Fuzi.framework; sourceTree = SOURCE_ROOT; };
+		FC524F2D1C56693100AA9294 /* HTMLReader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTMLReader.framework; path = Carthage/Build/tvOS/HTMLReader.framework; sourceTree = SOURCE_ROOT; };
 		FC65B2081C451BF600B71747 /* Video Conversion Toggler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Conversion Toggler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC65B20A1C451BF600B71747 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FC65B20C1C451BF600B71747 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +107,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC524F2E1C56694100AA9294 /* Alamofire.framework in Frameworks */,
+				FC524F2F1C56694100AA9294 /* CocoaAsyncSocket.framework in Frameworks */,
+				FC524F301C56694100AA9294 /* Fuzi.framework in Frameworks */,
+				FC524F311C56694100AA9294 /* HTMLReader.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +131,10 @@
 		FC2C18D61C5656300024C7FF /* tvOS */ = {
 			isa = PBXGroup;
 			children = (
+				FC524F2A1C56693100AA9294 /* Alamofire.framework */,
+				FC524F2B1C56693100AA9294 /* CocoaAsyncSocket.framework */,
+				FC524F2C1C56693100AA9294 /* Fuzi.framework */,
+				FC524F2D1C56693100AA9294 /* HTMLReader.framework */,
 				FC2C18D71C5656300024C7FF /* AppDelegate.swift */,
 				FC2C18D91C5656300024C7FF /* ViewController.swift */,
 				FC2C18DB1C5656300024C7FF /* Main.storyboard */,
@@ -190,6 +206,7 @@
 				FC2C18D11C5656300024C7FF /* Sources */,
 				FC2C18D21C5656300024C7FF /* Frameworks */,
 				FC2C18D31C5656300024C7FF /* Resources */,
+				FC524F321C56694F00AA9294 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -277,6 +294,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		FC524F321C56694F00AA9294 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/tvOS/Alamofire.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/CocoaAsyncSocket.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/Fuzi.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/HTMLReader.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		FC2C18D11C5656300024C7FF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -354,6 +392,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -402,6 +444,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -548,6 +594,7 @@
 				FC2C18E21C5656300024C7FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FC65B2141C451BF600B71747 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (OS X)" */ = {
 			isa = XCConfigurationList;
