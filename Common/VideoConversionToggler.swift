@@ -31,9 +31,6 @@ struct DeviceInfo: Hashable, CustomStringConvertible, CustomDebugStringConvertib
 }
 func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.baseURL == b.baseURL }
 
-var deviceErrors = ConcurrentDictionary<DeviceInfo, AppError>()
-var deviceSettings = ConcurrentDictionary<DeviceInfo, Bool>()
-
 func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String {
     let errorDescriptionFormat: String = {
         // Using a switch here allows the compiler to catch the error if we don't specify all possible values:
@@ -58,107 +55,68 @@ let af = Alamofire.Manager(configuration: {
     return configuration
     }())
 
-class FetchStatusOperation: NSOperation {
+func fetchSetting(deviceInfo: DeviceInfo) throws -> Bool {
+    let complete = dispatch_semaphore_create(0)!
     
-    let deviceInfo: DeviceInfo
     var error: AppError?
     var result: Bool?
     
-    init(deviceInfo: DeviceInfo) {
-        self.deviceInfo = deviceInfo
-    }
-    
-    override func main() {
-        let complete = dispatch_semaphore_create(0)!
+    af.request(.GET, NSURL(string: "SETUP/VIDEO/d_video.asp", relativeToURL: deviceInfo.baseURL)!).validate().responseData {
+        response in
         
-        af.request(.GET, NSURL(string: "SETUP/VIDEO/d_video.asp", relativeToURL: deviceInfo.baseURL)!).validate().responseData {
-            response in
-            
-            defer { dispatch_semaphore_signal(complete) }
-            
-            if let error = response.result.error {
-                self.error = AppError(kind: .CouldNotAccessWebInterface, nsError: error)
-                return
-            }
-            
-            let doc = HTMLDocument(data: response.data!, contentTypeHeader: response.response?.allHeaderFields["Content-Type"] as! String?)
-            
-            guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
-                self.error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
-                return
-            }
-            
-            let conversionWasOn = conversionElement.attributes["checked"] != nil
-            
-            self.result = conversionWasOn
+        defer { dispatch_semaphore_signal(complete) }
+        
+        if let responseError = response.result.error {
+            error = AppError(kind: .CouldNotAccessWebInterface, nsError: responseError)
+            return
         }
         
-        dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+        let doc = HTMLDocument(data: response.data!, contentTypeHeader: response.response?.allHeaderFields["Content-Type"] as! String?)
         
-        if let result = result { deviceSettings[deviceInfo] = result }
-        if let error = error {
-            deviceErrors[deviceInfo] = error
-            if result == nil {
-                // We couldn't retrieve it properly, so any previously stored value might well be wrong. We should remove it to avoid showing potentially wrong information.
-                deviceSettings[deviceInfo] = nil
-            }
+        guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
+            error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
+            return
         }
+        
+        let conversionWasOn = conversionElement.attributes["checked"] != nil
+        
+        result = conversionWasOn
     }
     
+    dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+    
+    if let error = error { throw error }
+    return result!
 }
 
-class SetSettingOperation: NSOperation {
+func setSetting(deviceInfo: DeviceInfo, setting: Bool) throws {
+    let complete = dispatch_semaphore_create(0)!
     
-    let deviceInfo: DeviceInfo
-    let setting: Bool
     var error: AppError?
     
-    init(deviceInfo: DeviceInfo, setting: Bool) {
-        self.deviceInfo = deviceInfo
-        self.setting = setting
-    }
-    
-    override func main() {
-        let complete = dispatch_semaphore_create(0)!
+    af.request(.POST, NSURL(string: "SETUP/VIDEO/s_video.asp", relativeToURL: deviceInfo.baseURL)!, parameters: ["radioVideoConvMode": setting ? "ON" : "OFF"]).validate().responseData {
+        response in
         
-        af.request(.POST, NSURL(string: "SETUP/VIDEO/s_video.asp", relativeToURL: deviceInfo.baseURL)!, parameters: ["radioVideoConvMode": setting ? "ON" : "OFF"]).validate().responseData {
-            response in
-            
-            defer { dispatch_semaphore_signal(complete) }
-            
-            if let error = response.result.error {
-                self.error = AppError(kind: .CouldNotAccessWebInterface, nsError: error)
-                return
-            }
+        defer { dispatch_semaphore_signal(complete) }
+        
+        if let responseError = response.result.error {
+            error = AppError(kind: .CouldNotAccessWebInterface, nsError: responseError)
+            return
         }
-        
-        dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
-        
-        if let error = error { deviceErrors[deviceInfo] = error }
     }
     
+    dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+    
+    if let error = error { throw error }
 }
 
-func toggleSetting(deviceInfo: DeviceInfo) {
-    let fetch1 = FetchStatusOperation(deviceInfo: deviceInfo)
-    fetch1.start()
-    fetch1.waitUntilFinished()
-    guard let setting1 = fetch1.result else { return }
+func toggleSetting(deviceInfo: DeviceInfo) throws -> Bool {
+    let setting1 = try fetchSetting(deviceInfo)
+    try setSetting(deviceInfo, setting: !setting1)
+    let setting2 = try fetchSetting(deviceInfo)
     
-    let set = SetSettingOperation(deviceInfo: deviceInfo, setting: !setting1)
-    set.start()
-    set.waitUntilFinished()
-    guard set.error == nil else { return }
-    
-    let fetch2 = FetchStatusOperation(deviceInfo: deviceInfo)
-    fetch2.start()
-    fetch2.waitUntilFinished()
-    guard let setting2 = fetch2.result else { return }
-    
-    if (setting1 == setting2) {
-        deviceErrors[deviceInfo] = AppError(kind: .SettingDidNotChange)
-        return
-    }
+    if (setting1 == setting2) { throw AppError(kind: .SettingDidNotChange) }
+    return setting2
 }
 
 func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
@@ -205,14 +163,3 @@ func errorContactInstruction() -> String {
     return localString(format: localString("Please contact %@ with the above error information."), contact)
 }
 
-class PeriodicallyFetchAllStatuses: NSOperation {
-    
-    override func main() {
-        let fetchQueue = NSOperationQueue()
-        while (!cancelled) {
-            discoverCompatibleDevices { fetchQueue.addOperation(FetchStatusOperation(deviceInfo: $0)) }
-        }
-        fetchQueue.waitUntilAllOperationsAreFinished()
-    }
-    
-}
