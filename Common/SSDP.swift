@@ -27,11 +27,18 @@ public func == (lhs: SSDPResponse, rhs: SSDPResponse) -> Bool {
         lhs.extraHeaders == rhs.extraHeaders
 }
 
-public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate: SSDPResponse -> Void) {
+public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegateQueue: dispatch_queue_t = dispatch_get_main_queue(), delegate: SSDPResponse -> Void) {
     class SocketDelegate: GCDAsyncUdpSocketDelegate {
+        
         let responseDelegate: SSDPResponse -> Void
+        let responseDelegateQueue: dispatch_queue_t
         var responses = Set<SSDPResponse>()
-        init(responseDelegate: SSDPResponse -> Void) { self.responseDelegate = responseDelegate }
+        
+        init(responseDelegateQueue: dispatch_queue_t, responseDelegate: SSDPResponse -> Void) {
+            self.responseDelegateQueue = responseDelegateQueue
+            self.responseDelegate = responseDelegate
+        }
+        
         @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
             let responseMessage = CFHTTPMessageCreateEmpty(nil, false).takeRetainedValue()
             guard CFHTTPMessageAppendBytes(responseMessage, UnsafePointer(data.bytes), data.length) else { return }
@@ -52,12 +59,13 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
             guard !responses.contains(response) else { return }
             
             responses.insert(response)
-            responseDelegate(response)
+            dispatch_async(responseDelegateQueue) { self.responseDelegate(response) }
         }
+        
     }
     
-    let socketDelegate = SocketDelegate(responseDelegate: delegate) // We have to keep a reference to this so it can't be inlined in the call below.
-    let sock = GCDAsyncUdpSocket(delegate: socketDelegate, delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_SERIAL))
+    let socketDelegate = SocketDelegate(responseDelegateQueue: delegateQueue, responseDelegate: delegate) // We have to keep a reference to this so it can't be inlined in the call below.
+    let sock = GCDAsyncUdpSocket(delegate: socketDelegate, delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_SERIAL)) // The queue has to be serial so that duplicate filtering works.
     
     let maximumResponseWaitingTimeSeconds = 1
     let ip = "239.255.255.250"
