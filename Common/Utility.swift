@@ -21,7 +21,7 @@ func localString(format format: String, _ arguments: CVarArgType...) -> String {
 private let machTimebaseMultiplier: NSTimeInterval = {
     var info = mach_timebase_info()
     mach_timebase_info(&info)
-    return NSTimeInterval(info.numer) / NSTimeInterval(info.denom)
+    return (NSTimeInterval(info.numer) / NSTimeInterval(info.denom)) / 1e9
 }()
 
 func awakeUptime() -> NSTimeInterval {
