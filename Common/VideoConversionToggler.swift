@@ -123,7 +123,7 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
     let locationFetches = NSOperationQueue()
     
     discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { ssdpResponse in
-        locationFetches.addOperation(NSBlockOperation {
+        locationFetches.addOperationWithBlock {
             let complete = dispatch_semaphore_create(0)!
             
             af.request(.GET, ssdpResponse.location).validate().responseData { httpResponse in
@@ -152,7 +152,7 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
             }
             
             dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
-        })
+        }
     }
     
     locationFetches.waitUntilAllOperationsAreFinished()
@@ -179,14 +179,14 @@ class PeriodicallyFetchAllStatuses: NSOperation {
     override func main() {
         let fetchQueue = NSOperationQueue()
         while (!cancelled) {
-            discoverCompatibleDevices { deviceInfo in fetchQueue.addOperation(NSBlockOperation() {
+            discoverCompatibleDevices { deviceInfo in fetchQueue.addOperationWithBlock {
                 do {
                     let setting = try fetchSetting(deviceInfo)
                     self.delegateQueue.addOperationWithBlock { self.fetchResultDelegate(deviceInfo, setting) }
                 } catch let e as AppError {
                     self.delegateQueue.addOperationWithBlock { self.fetchErrorDelegate(deviceInfo, e) }
                 } catch { assert(false) }
-                })
+                }
             }
         }
         fetchQueue.waitUntilAllOperationsAreFinished()

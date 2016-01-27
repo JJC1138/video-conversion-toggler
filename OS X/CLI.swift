@@ -33,25 +33,25 @@ func cli() {
     resultQueue.maxConcurrentOperationCount = 1 // Serialize accesses to the non-thread safe result dictionaries above.
     
     func toggleSettingAndReportResults(deviceInfo: DeviceInfo) {
-        operationQueue.addOperation(NSBlockOperation {
+        operationQueue.addOperationWithBlock {
             do {
                 let result = try toggleSetting(deviceInfo)
-                resultQueue.addOperation(NSBlockOperation { deviceSettings[deviceInfo] = result })
+                resultQueue.addOperationWithBlock { deviceSettings[deviceInfo] = result }
             } catch let e as AppError {
-                resultQueue.addOperation(NSBlockOperation { deviceErrors[deviceInfo] = e })
+                resultQueue.addOperationWithBlock { deviceErrors[deviceInfo] = e }
             } catch {}
-            })
+        }
     }
     
 //    toggleSettingAndReportResults(DeviceInfo(name: "Test Device", baseURL: NSURL(string: "http://192.168.255.207")!))
-//    operationQueue.addOperation(NSBlockOperation { discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { print($0) } })
-    operationQueue.addOperation(NSBlockOperation {
+//    operationQueue.addOperationWithBlock { discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { print($0) } }
+    operationQueue.addOperationWithBlock {
         discoverCompatibleDevices { deviceInfo in
-            operationQueue.addOperation(NSBlockOperation {
+            operationQueue.addOperationWithBlock {
                 toggleSettingAndReportResults(deviceInfo)
-                })
+            }
         }
-        })
+    }
     
     runRunLoopUntilAllOperationsAreFinished(onQueue: operationQueue)
     resultQueue.waitUntilAllOperationsAreFinished()
