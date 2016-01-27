@@ -20,7 +20,7 @@
 		FC524F311C56694100AA9294 /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC524F2D1C56693100AA9294 /* HTMLReader.framework */; };
 		FC524F341C566A6F00AA9294 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC01C453C72008AEC28 /* Utility.swift */; };
 		FC524F351C566A7100AA9294 /* VideoConversionToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */; };
-		FC524F361C566A7400AA9294 /* SSDP.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* SSDP.swift */; };
+		FC524F361C566A7400AA9294 /* TinySSDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */; };
 		FC524F371C566A7700AA9294 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
 		FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20A1C451BF600B71747 /* AppDelegate.swift */; };
 		FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20C1C451BF600B71747 /* ViewController.swift */; };
@@ -30,7 +30,7 @@
 		FC65B21C1C45300600B71747 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B21B1C45300600B71747 /* main.swift */; };
 		FC65B2211C45375000B71747 /* HTMLReader.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */; };
 		FCA711271C4E930900B8AA10 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
-		FCEAE3C71C47F0F500DD195E /* SSDP.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* SSDP.swift */; };
+		FCEAE3C71C47F0F500DD195E /* TinySSDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */; };
 		FCEAE3CA1C47F7F300DD195E /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */; };
 		FCEAE3CB1C47F7F300DD195E /* CocoaAsyncSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FCEAE3CC1C47F80200DD195E /* CocoaAsyncSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FCEAE3C91C47F7E800DD195E /* CocoaAsyncSocket.framework.dSYM */; };
@@ -97,7 +97,7 @@
 		FC65B21D1C4536EE00B71747 /* HTMLReader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTMLReader.framework; path = Carthage/Build/Mac/HTMLReader.framework; sourceTree = SOURCE_ROOT; };
 		FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = HTMLReader.framework.dSYM; path = Carthage/Build/Mac/HTMLReader.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		FCA711281C4E930900B8AA10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		FCEAE3C61C47F0F500DD195E /* SSDP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDP.swift; sourceTree = "<group>"; };
+		FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TinySSDPClient.swift; sourceTree = "<group>"; };
 		FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/Mac/CocoaAsyncSocket.framework; sourceTree = SOURCE_ROOT; };
 		FCEAE3C91C47F7E800DD195E /* CocoaAsyncSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = CocoaAsyncSocket.framework.dSYM; path = Carthage/Build/Mac/CocoaAsyncSocket.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		FCF63DC01C453C72008AEC28 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
@@ -194,7 +194,7 @@
 			children = (
 				FCF63DC01C453C72008AEC28 /* Utility.swift */,
 				FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */,
-				FCEAE3C61C47F0F500DD195E /* SSDP.swift */,
+				FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */,
 				FCA711291C4E930900B8AA10 /* Localizable.strings */,
 			);
 			path = Common;
@@ -329,7 +329,7 @@
 				FC2C18DA1C5656300024C7FF /* ViewController.swift in Sources */,
 				FC2C18D81C5656300024C7FF /* AppDelegate.swift in Sources */,
 				FC524F341C566A6F00AA9294 /* Utility.swift in Sources */,
-				FC524F361C566A7400AA9294 /* SSDP.swift in Sources */,
+				FC524F361C566A7400AA9294 /* TinySSDPClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,7 +339,7 @@
 			files = (
 				FCF63DC11C453C72008AEC28 /* Utility.swift in Sources */,
 				FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */,
-				FCEAE3C71C47F0F500DD195E /* SSDP.swift in Sources */,
+				FCEAE3C71C47F0F500DD195E /* TinySSDPClient.swift in Sources */,
 				FCF63DC31C453D36008AEC28 /* VideoConversionToggler.swift in Sources */,
 				FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */,
 				FC65B21C1C45300600B71747 /* main.swift in Sources */,
