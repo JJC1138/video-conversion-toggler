@@ -3,5 +3,5 @@
 "AppError.Kind.SubmittingChangeFailed" = "Found device %@ and accessed web interface but changing setting failed.";
 "AppError.Kind.SettingDidNotChange" = "Found device %@ and tried to change setting, but it didn't update. That can happen if the device is switched off, so please check if it is on.";
 "Please contact %@ with the above error information." = "Please contact %@ with the above error information.";
-"on" = "on";
-"off" = "off";
+"On" = "On";
+"Off" = "Off";
