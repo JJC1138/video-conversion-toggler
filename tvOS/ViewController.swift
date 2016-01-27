@@ -41,16 +41,12 @@ class ViewController: UIViewController, UITableViewDataSource {
         deviceTable.dataSource = self
         
         let nc = NSNotificationCenter.defaultCenter()
-        nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil, usingBlock: applicationDidBecomeActive)
-        nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil, usingBlock: applicationWillResignActive)
-    }
-    
-    func applicationDidBecomeActive(_: NSNotification) {
-        oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: newFetchError, fetchResultDelegate: newFetchResult))
-    }
-    
-    func applicationWillResignActive(_: NSNotification) {
-        oq.cancelAllOperations()
+        nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in
+            self.oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult))
+        }
+        nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in
+            self.oq.cancelAllOperations()
+        }
     }
     
     // MARK: UITableViewDataSource
