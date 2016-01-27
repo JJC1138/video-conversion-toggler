@@ -27,14 +27,14 @@ public func == (lhs: SSDPResponse, rhs: SSDPResponse) -> Bool {
         lhs.extraHeaders == rhs.extraHeaders
 }
 
-public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegateQueue: dispatch_queue_t = dispatch_get_main_queue(), delegate: SSDPResponse -> Void) {
+public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue(), delegate: SSDPResponse -> Void) {
     class SocketDelegate: GCDAsyncUdpSocketDelegate {
         
         let responseDelegate: SSDPResponse -> Void
-        let responseDelegateQueue: dispatch_queue_t
+        let responseDelegateQueue: NSOperationQueue
         var responses = Set<SSDPResponse>()
         
-        init(responseDelegateQueue: dispatch_queue_t, responseDelegate: SSDPResponse -> Void) {
+        init(responseDelegateQueue: NSOperationQueue, responseDelegate: SSDPResponse -> Void) {
             self.responseDelegateQueue = responseDelegateQueue
             self.responseDelegate = responseDelegate
         }
@@ -59,7 +59,7 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
             guard !responses.contains(response) else { return }
             
             responses.insert(response)
-            dispatch_async(responseDelegateQueue) { self.responseDelegate(response) }
+            responseDelegateQueue.addOperationWithBlock { self.responseDelegate(response) }
         }
         
     }
