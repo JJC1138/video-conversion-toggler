@@ -5,18 +5,28 @@ class ViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var deviceTable: UITableView!
     let oq = NSOperationQueue()
     
+    let tableAnimationType = UITableViewRowAnimation.Automatic
+    func row(index: Int) -> NSIndexPath { return NSIndexPath(forRow: index, inSection: 0) }
+    
     struct DeviceSetting {
         let device: DeviceInfo
         let setting: Bool
     }
     
+    // Only touch these from the main thread:
     var deviceSettings = [DeviceSetting]()
     
     func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
-        // FIXME replace existing entry for this device if present
-        deviceSettings.append(DeviceSetting(device: deviceInfo, setting: setting))
-        // FIXME handle this more precisely:
-        deviceTable.reloadData()
+        if let index = (deviceSettings.indexOf { $0.device == deviceInfo }) {
+            // we already have an entry for this device
+            if deviceSettings[index].setting != setting {
+                deviceSettings[index] = DeviceSetting(device: deviceInfo, setting: setting)
+                deviceTable.reloadRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
+            }
+        } else {
+            deviceSettings.append(DeviceSetting(device: deviceInfo, setting: setting))
+            deviceTable.insertRowsAtIndexPaths([row(deviceSettings.count - 1)], withRowAnimation: tableAnimationType)
+        }
     }
     
     func newFetchError(deviceInfo: DeviceInfo, error: AppError) {
