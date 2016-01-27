@@ -32,7 +32,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     }
     
     func applicationDidBecomeActive(_: NSNotification) {
-        oq.addOperation(PeriodicallyFetchAllStatuses(fetchResultDelegate: newFetchResult, fetchErrorDelegate: newFetchError))
+        oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: newFetchError, fetchResultDelegate: newFetchResult))
     }
     
     func applicationWillResignActive(_: NSNotification) {

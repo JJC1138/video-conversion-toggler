@@ -165,14 +165,16 @@ func errorContactInstruction() -> String {
 
 class PeriodicallyFetchAllStatuses: NSOperation {
     
-    init(fetchResultDelegate: (DeviceInfo, Bool) -> Void, fetchErrorDelegate: (DeviceInfo, AppError) -> Void) {
+    init(delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue(), fetchErrorDelegate: (DeviceInfo, AppError) -> Void, fetchResultDelegate: (DeviceInfo, Bool) -> Void) {
         // FUTURETODO replace with memberwise init when that exists
-        self.fetchResultDelegate = fetchResultDelegate
+        self.delegateQueue = delegateQueue
         self.fetchErrorDelegate = fetchErrorDelegate
+        self.fetchResultDelegate = fetchResultDelegate
     }
     
-    let fetchResultDelegate: (DeviceInfo, Bool) -> Void
+    let delegateQueue: NSOperationQueue
     let fetchErrorDelegate: (DeviceInfo, AppError) -> Void
+    let fetchResultDelegate: (DeviceInfo, Bool) -> Void
     
     override func main() {
         let fetchQueue = NSOperationQueue()
@@ -180,9 +182,9 @@ class PeriodicallyFetchAllStatuses: NSOperation {
             discoverCompatibleDevices { deviceInfo in fetchQueue.addOperation(NSBlockOperation() {
                 do {
                     let setting = try fetchSetting(deviceInfo)
-                    self.fetchResultDelegate(deviceInfo, setting)
+                    self.delegateQueue.addOperationWithBlock { self.fetchResultDelegate(deviceInfo, setting) }
                 } catch let e as AppError {
-                    self.fetchErrorDelegate(deviceInfo, e)
+                    self.delegateQueue.addOperationWithBlock { self.fetchErrorDelegate(deviceInfo, e) }
                 } catch { assert(false) }
                 })
             }
