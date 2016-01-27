@@ -4,6 +4,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var deviceTable: UITableView!
     let oq = NSOperationQueue()
+    var removeOldResultsAndErrorsTimer: NSTimer?
     
     let tableAnimationType = UITableViewRowAnimation.Automatic
     func row(index: Int) -> NSIndexPath { return NSIndexPath(forRow: index, inSection: 0) }
@@ -37,15 +38,44 @@ class ViewController: UIViewController, UITableViewDataSource {
         // FIXME handle errors
     }
     
+    func removeOldResultsAndErrors() {
+        let now = awakeUptime()
+        let oldestAllowedResultTime = now - 5
+        
+        var newSettings = [DeviceSetting]()
+        var rowsToDelete = [NSIndexPath]()
+        for (index, setting) in deviceSettings.enumerate() {
+            if (setting.retrieved >= oldestAllowedResultTime) {
+                newSettings.append(setting)
+            } else {
+                rowsToDelete.append(row(index))
+            }
+        }
+        
+        if (rowsToDelete.count > 0) {
+            deviceSettings = newSettings
+            deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
+        }
+        
+        // FIXME remove old errors
+    }
+    
     override func viewDidLoad() {
         deviceTable.dataSource = self
         
         let nc = NSNotificationCenter.defaultCenter()
         nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in
             self.oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult))
+            self.removeOldResultsAndErrorsTimer = {
+                // FUTURETODO Use the non-string selector initialization syntax when SE-0022 is implemented:
+                let t = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "removeOldResultsAndErrors", userInfo: nil, repeats: true)
+                t.tolerance = 3
+                return t
+            }()
         }
         nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in
             self.oq.cancelAllOperations()
+            if let removeOldResultsAndErrorsTimer = self.removeOldResultsAndErrorsTimer { removeOldResultsAndErrorsTimer.invalidate() }
         }
     }
     
