@@ -163,3 +163,31 @@ func errorContactInstruction() -> String {
     return localString(format: localString("Please contact %@ with the above error information."), contact)
 }
 
+class PeriodicallyFetchAllStatuses: NSOperation {
+    
+    init(fetchResultDelegate: (DeviceInfo, Bool) -> Void, fetchErrorDelegate: (DeviceInfo, AppError) -> Void) {
+        // FUTURETODO replace with memberwise init when that exists
+        self.fetchResultDelegate = fetchResultDelegate
+        self.fetchErrorDelegate = fetchErrorDelegate
+    }
+    
+    let fetchResultDelegate: (DeviceInfo, Bool) -> Void
+    let fetchErrorDelegate: (DeviceInfo, AppError) -> Void
+    
+    override func main() {
+        let fetchQueue = NSOperationQueue()
+        while (!cancelled) {
+            discoverCompatibleDevices { deviceInfo in fetchQueue.addOperation(NSBlockOperation() {
+                do {
+                    let setting = try fetchSetting(deviceInfo)
+                    self.fetchResultDelegate(deviceInfo, setting)
+                } catch let e as AppError {
+                    self.fetchErrorDelegate(deviceInfo, e)
+                } catch { assert(false) }
+                })
+            }
+        }
+        fetchQueue.waitUntilAllOperationsAreFinished()
+    }
+    
+}

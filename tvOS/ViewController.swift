@@ -4,25 +4,13 @@ class ViewController: UIViewController {
     
     let oq = NSOperationQueue()
     
-    class PeriodicallyFetchAllStatuses: NSOperation {
-        
-        override func main() {
-            let fetchQueue = NSOperationQueue()
-            while (!cancelled) {
-                discoverCompatibleDevices { deviceInfo in fetchQueue.addOperation(NSBlockOperation() {
-                    do {
-                        let setting = try fetchSetting(deviceInfo)
-                        // FIXME handle results
-                        print("\(deviceInfo): \(setting)") // FIXME remove
-                    } catch let e as AppError {
-                        // FIXME handle errors
-                    } catch {}
-                    })
-                }
-            }
-            fetchQueue.waitUntilAllOperationsAreFinished()
-        }
-        
+    func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
+        // FIXME implement
+        print("\(deviceInfo): \(setting)") // FIXME remove
+    }
+    
+    func newFetchError(deviceInfo: DeviceInfo, error: AppError) {
+        // FIXME handle errors
     }
     
     override func viewDidLoad() {
@@ -32,7 +20,7 @@ class ViewController: UIViewController {
     }
     
     func applicationDidBecomeActive(_: NSNotification) {
-        oq.addOperation(PeriodicallyFetchAllStatuses())
+        oq.addOperation(PeriodicallyFetchAllStatuses(fetchResultDelegate: newFetchResult, fetchErrorDelegate: newFetchError))
     }
     
     func applicationWillResignActive(_: NSNotification) {
