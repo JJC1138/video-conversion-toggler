@@ -27,3 +27,12 @@ private let machTimebaseMultiplier: NSTimeInterval = {
 func awakeUptime() -> NSTimeInterval {
     return NSTimeInterval(mach_absolute_time()) * machTimebaseMultiplier
 }
+
+extension SequenceType {
+    func all(@noescape predicate: (Self.Generator.Element) throws -> Bool) rethrows -> Bool {
+        for i in self {
+            if !(try predicate(i)) { return false }
+        }
+        return true
+    }
+}

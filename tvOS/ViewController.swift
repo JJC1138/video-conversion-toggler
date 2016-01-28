@@ -42,22 +42,26 @@ class ViewController: UIViewController, UITableViewDataSource {
         let now = awakeUptime()
         let oldestAllowedResultTime = now - 5
         
+        func isCurrent(setting: DeviceSetting) -> Bool { return setting.retrieved >= oldestAllowedResultTime }
+        
+        if deviceSettings.all(isCurrent) { return }
+        
         var newSettings = [DeviceSetting]()
         var rowsToDelete = [NSIndexPath]()
         for (index, setting) in deviceSettings.enumerate() {
-            if (setting.retrieved >= oldestAllowedResultTime) {
+            if isCurrent(setting) {
                 newSettings.append(setting)
             } else {
                 rowsToDelete.append(row(index))
             }
         }
         
-        if (rowsToDelete.count > 0) {
-            deviceSettings = newSettings
-            deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
-        }
+        assert(rowsToDelete.count > 0)
         
-        // FIXME remove old errors
+        deviceSettings = newSettings
+        deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
+        
+        // FIXME remove old errors (and don't early exit from the all(isCurrent) check above)
     }
     
     override func viewDidLoad() {
