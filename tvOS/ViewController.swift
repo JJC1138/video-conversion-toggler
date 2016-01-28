@@ -81,6 +81,14 @@ class ViewController: UIViewController, UITableViewDataSource {
             self.oq.cancelAllOperations()
             if let removeOldResultsAndErrorsTimer = self.removeOldResultsAndErrorsTimer { removeOldResultsAndErrorsTimer.invalidate() }
         }
+        
+        func uppercaseAllLabelsInHierarchy(view: UIView) {
+            if let label = view as? UILabel, text = label.text {
+                label.text = text.uppercaseStringWithLocale(NSLocale.currentLocale())
+            }
+            for subview in view.subviews { uppercaseAllLabelsInHierarchy(subview) }
+        }
+        uppercaseAllLabelsInHierarchy(deviceTable.tableHeaderView!)
     }
     
     // MARK: UITableViewDataSource
