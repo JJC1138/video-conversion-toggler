@@ -5,7 +5,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var deviceTable: UITableView!
     @IBOutlet weak var errorLabel: UILabel!
     let oq = NSOperationQueue()
-    var removeOldResultsAndErrorsTimer: NSTimer?
+    var removeOldResultsTimer: NSTimer?
     
     let tableAnimationType = UITableViewRowAnimation.Automatic
     let headerFadeTime = NSTimeInterval(1)
@@ -20,7 +20,6 @@ class ViewController: UIViewController, UITableViewDataSource {
     struct Error {
         let device: DeviceInfo
         let error: AppError
-        let retrieved: NSTimeInterval
     }
     
     // Only touch these from the main thread:
@@ -55,7 +54,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     }
     
     func newFetchError(deviceInfo: DeviceInfo, error: AppError) {
-        let newError = Error(device: deviceInfo, error: error, retrieved: awakeUptime())
+        let newError = Error(device: deviceInfo, error: error)
         
         if let index = (errors.indexOf { $0.device == deviceInfo }) {
             // We already have an error for this device.
@@ -66,40 +65,29 @@ class ViewController: UIViewController, UITableViewDataSource {
         updateErrorText()
     }
     
-    func removeOldResultsAndErrors() {
+    func removeOldResults() {
         let now = awakeUptime()
         let oldestAllowedTime = now - 5
         
-        do {
-            func isCurrent(setting: DeviceSetting) -> Bool { return setting.retrieved >= oldestAllowedTime }
-            
-            if !deviceSettings.all(isCurrent) {
-                var newSettings = [DeviceSetting]()
-                var rowsToDelete = [NSIndexPath]()
-                for (index, setting) in deviceSettings.enumerate() {
-                    if isCurrent(setting) {
-                        newSettings.append(setting)
-                    } else {
-                        rowsToDelete.append(row(index))
-                    }
-                }
-                
-                assert(rowsToDelete.count > 0)
-                
-                deviceSettings = newSettings
-                deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
-                if deviceSettings.count == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
+        func isCurrent(setting: DeviceSetting) -> Bool { return setting.retrieved >= oldestAllowedTime }
+        
+        if deviceSettings.all(isCurrent) { return }
+        
+        var newSettings = [DeviceSetting]()
+        var rowsToDelete = [NSIndexPath]()
+        for (index, setting) in deviceSettings.enumerate() {
+            if isCurrent(setting) {
+                newSettings.append(setting)
+            } else {
+                rowsToDelete.append(row(index))
             }
         }
         
-        do {
-            func isCurrent(error: Error) -> Bool { return error.retrieved >= oldestAllowedTime }
-            
-            if !errors.all(isCurrent) {
-                errors = errors.filter(isCurrent)
-                updateErrorText()
-            }
-        }
+        assert(rowsToDelete.count > 0)
+        
+        deviceSettings = newSettings
+        deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
+        if deviceSettings.count == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
     }
     
     override func viewDidLoad() {
@@ -108,16 +96,18 @@ class ViewController: UIViewController, UITableViewDataSource {
         let nc = NSNotificationCenter.defaultCenter()
         nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in
             self.oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult))
-            self.removeOldResultsAndErrorsTimer = {
+            self.removeOldResultsTimer = {
                 // FUTURETODO Use the non-string selector initialization syntax when SE-0022 is implemented:
-                let t = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "removeOldResultsAndErrors", userInfo: nil, repeats: true)
+                let t = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "removeOldResults", userInfo: nil, repeats: true)
                 t.tolerance = 3
                 return t
             }()
         }
         nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in
             self.oq.cancelAllOperations()
-            if let removeOldResultsAndErrorsTimer = self.removeOldResultsAndErrorsTimer { removeOldResultsAndErrorsTimer.invalidate() }
+            if let removeOldResultsTimer = self.removeOldResultsTimer { removeOldResultsTimer.invalidate() }
+            self.errors = []
+            self.updateErrorText()
         }
         
         do { // tweak table header presentation:
