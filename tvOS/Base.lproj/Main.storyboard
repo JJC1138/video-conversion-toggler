@@ -34,34 +34,20 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="999" verticalCompressionResistancePriority="999" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CHw-ht-nMR" userLabel="Errors">
-                                <rect key="frame" x="510" y="420" width="900" height="552"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="999" verticalCompressionResistancePriority="999" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CHw-ht-nMR" userLabel="Errors">
+                                <rect key="frame" x="510" y="972" width="900" height="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="900" id="zfm-cG-y8S"/>
                                 </constraints>
-                                <string key="text">Found device Jon's Hi-Fi &lt;http://192.168.255.207&gt; and tried to change setting, but it didn't update. That can happen if the device is switched off, so please check if it is on.
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-Please contact vidconvtoggle@jjc1138.net with the above error information.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="40" sectionFooterHeight="40" translatesAutoresizingMaskIntoConstraints="NO" id="RGk-4h-8Xy" userLabel="Devices">
-                                <rect key="frame" x="616" y="275" width="689" height="137"/>
+                                <rect key="frame" x="616" y="275" width="689" height="689"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="height" priority="1" constant="10000" id="4Id-rW-b45"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="137" id="yvz-bL-GNE"/>
                                 </constraints>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="Vuj-WJ-Sit">
