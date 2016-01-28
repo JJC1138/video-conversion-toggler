@@ -106,6 +106,8 @@ class ViewController: UIViewController, UITableViewDataSource {
         nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in
             self.oq.cancelAllOperations()
             if let removeOldResultsTimer = self.removeOldResultsTimer { removeOldResultsTimer.invalidate() }
+        }
+        nc.addObserverForName(UIApplicationDidEnterBackgroundNotification, object: nil, queue: nil) { _ in
             self.errors = []
             self.updateErrorText()
         }
