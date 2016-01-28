@@ -82,13 +82,18 @@ class ViewController: UIViewController, UITableViewDataSource {
             if let removeOldResultsAndErrorsTimer = self.removeOldResultsAndErrorsTimer { removeOldResultsAndErrorsTimer.invalidate() }
         }
         
-        func uppercaseAllLabelsInHierarchy(view: UIView) {
-            if let label = view as? UILabel, text = label.text {
-                label.text = text.uppercaseStringWithLocale(NSLocale.currentLocale())
+        do { // tweak table header presentation:
+            func uppercaseAllLabelsInHierarchy(view: UIView) {
+                if let label = view as? UILabel, text = label.text {
+                    label.text = text.uppercaseStringWithLocale(NSLocale.currentLocale())
+                }
+                for subview in view.subviews { uppercaseAllLabelsInHierarchy(subview) }
             }
-            for subview in view.subviews { uppercaseAllLabelsInHierarchy(subview) }
+            let header = deviceTable.tableHeaderView!
+            uppercaseAllLabelsInHierarchy(header)
+            let headerFrame = header.frame
+            header.frame = CGRect(origin: headerFrame.origin, size: CGSize(width: headerFrame.size.width, height: 52))
         }
-        uppercaseAllLabelsInHierarchy(deviceTable.tableHeaderView!)
     }
     
     // MARK: UITableViewDataSource
