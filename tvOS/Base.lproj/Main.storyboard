@@ -118,6 +118,7 @@
                     </view>
                     <connections>
                         <outlet property="deviceTable" destination="RGk-4h-8Xy" id="t4f-74-4DQ"/>
+                        <outlet property="errorLabel" destination="CHw-ht-nMR" id="fBZ-IN-uNe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

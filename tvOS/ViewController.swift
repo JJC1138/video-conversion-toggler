@@ -3,6 +3,7 @@ import UIKit
 class ViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var deviceTable: UITableView!
+    @IBOutlet weak var errorLabel: UILabel!
     let oq = NSOperationQueue()
     var removeOldResultsAndErrorsTimer: NSTimer?
     
@@ -16,8 +17,15 @@ class ViewController: UIViewController, UITableViewDataSource {
         let retrieved: NSTimeInterval
     }
     
+    struct Error {
+        let device: DeviceInfo
+        let error: AppError
+        let retrieved: NSTimeInterval
+    }
+    
     // Only touch these from the main thread:
     var deviceSettings = [DeviceSetting]()
+    var errors = [Error]()
     
     func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
         let newSetting = DeviceSetting(device: deviceInfo, setting: setting, retrieved: awakeUptime())
@@ -36,35 +44,62 @@ class ViewController: UIViewController, UITableViewDataSource {
         }
     }
     
+    func updateErrorText() {
+        errorLabel.text = {
+            if self.errors.count > 0 {
+                return (self.errors.map { describeError($0.error, forDevice: $0.device) }).joinWithSeparator("\n\n") + "\n\(errorContactInstruction())"
+            } else {
+                return ""
+            }
+        }()
+    }
+    
     func newFetchError(deviceInfo: DeviceInfo, error: AppError) {
-        // FIXME handle errors
+        let newError = Error(device: deviceInfo, error: error, retrieved: awakeUptime())
+        
+        if let index = (errors.indexOf { $0.device == deviceInfo }) {
+            // We already have an error for this device.
+            errors[index] = newError
+        } else {
+            errors.append(newError)
+        }
+        updateErrorText()
     }
     
     func removeOldResultsAndErrors() {
         let now = awakeUptime()
-        let oldestAllowedResultTime = now - 5
+        let oldestAllowedTime = now - 5
         
-        func isCurrent(setting: DeviceSetting) -> Bool { return setting.retrieved >= oldestAllowedResultTime }
-        
-        if deviceSettings.all(isCurrent) { return }
-        
-        var newSettings = [DeviceSetting]()
-        var rowsToDelete = [NSIndexPath]()
-        for (index, setting) in deviceSettings.enumerate() {
-            if isCurrent(setting) {
-                newSettings.append(setting)
-            } else {
-                rowsToDelete.append(row(index))
+        do {
+            func isCurrent(setting: DeviceSetting) -> Bool { return setting.retrieved >= oldestAllowedTime }
+            
+            if !deviceSettings.all(isCurrent) {
+                var newSettings = [DeviceSetting]()
+                var rowsToDelete = [NSIndexPath]()
+                for (index, setting) in deviceSettings.enumerate() {
+                    if isCurrent(setting) {
+                        newSettings.append(setting)
+                    } else {
+                        rowsToDelete.append(row(index))
+                    }
+                }
+                
+                assert(rowsToDelete.count > 0)
+                
+                deviceSettings = newSettings
+                deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
+                if deviceSettings.count == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
             }
         }
         
-        assert(rowsToDelete.count > 0)
-        
-        deviceSettings = newSettings
-        deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
-        if deviceSettings.count == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
-        
-        // FIXME remove old errors (and don't early exit from the all(isCurrent) check above)
+        do {
+            func isCurrent(error: Error) -> Bool { return error.retrieved >= oldestAllowedTime }
+            
+            if !errors.all(isCurrent) {
+                errors = errors.filter(isCurrent)
+                updateErrorText()
+            }
+        }
     }
     
     override func viewDidLoad() {
