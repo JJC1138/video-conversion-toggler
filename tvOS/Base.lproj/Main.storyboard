@@ -58,17 +58,17 @@ Please contact vidconvtoggle@jjc1138.net with the above error information.</stri
                                     <constraint firstAttribute="height" constant="330" id="yvz-bL-GNE"/>
                                 </constraints>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="Vuj-WJ-Sit">
-                                    <rect key="frame" x="0.0" y="0.0" width="689" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="689" height="72"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="01u-Ul-W8J" userLabel="Leading Label">
-                                            <rect key="frame" x="20" y="0.0" width="94" height="36"/>
+                                            <rect key="frame" x="20" y="20" width="94" height="36"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="30"/>
                                             <color key="textColor" white="0.0" alpha="0.4009428879310345" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video Conversion" textAlignment="natural" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qlQ-cP-sUL" userLabel="Trailing Label">
-                                            <rect key="frame" x="426" y="0.0" width="243" height="36"/>
+                                            <rect key="frame" x="426" y="20" width="243" height="36"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="30"/>
                                             <color key="textColor" white="0.0" alpha="0.40094288789999999" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -77,13 +77,13 @@ Please contact vidconvtoggle@jjc1138.net with the above error information.</stri
                                     <constraints>
                                         <constraint firstItem="01u-Ul-W8J" firstAttribute="leading" secondItem="Vuj-WJ-Sit" secondAttribute="leading" constant="20" symbolic="YES" id="cVi-LB-m7R"/>
                                         <constraint firstItem="qlQ-cP-sUL" firstAttribute="baseline" secondItem="01u-Ul-W8J" secondAttribute="baseline" id="hl1-UJ-P5j"/>
-                                        <constraint firstItem="01u-Ul-W8J" firstAttribute="top" secondItem="Vuj-WJ-Sit" secondAttribute="top" id="m1i-CT-mVb"/>
+                                        <constraint firstItem="01u-Ul-W8J" firstAttribute="top" secondItem="Vuj-WJ-Sit" secondAttribute="top" constant="20" symbolic="YES" id="m1i-CT-mVb"/>
                                         <constraint firstAttribute="trailing" secondItem="qlQ-cP-sUL" secondAttribute="trailing" constant="20" symbolic="YES" id="vYu-Q2-rH8"/>
                                     </constraints>
                                 </view>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Device" textLabel="Yhv-Fq-wyq" detailTextLabel="7TZ-zT-TFG" style="IBUITableViewCellStyleValue1" id="qkf-Rc-R6U">
-                                        <rect key="frame" x="0.0" y="98" width="689" height="66"/>
+                                        <rect key="frame" x="0.0" y="126" width="689" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qkf-Rc-R6U" id="Ory-PF-fyy">
                                             <rect key="frame" x="0.0" y="0.0" width="673" height="66"/>

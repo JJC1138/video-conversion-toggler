@@ -89,10 +89,7 @@ class ViewController: UIViewController, UITableViewDataSource {
                 }
                 for subview in view.subviews { uppercaseAllLabelsInHierarchy(subview) }
             }
-            let header = deviceTable.tableHeaderView!
-            uppercaseAllLabelsInHierarchy(header)
-            let headerFrame = header.frame
-            header.frame = CGRect(origin: headerFrame.origin, size: CGSize(width: headerFrame.size.width, height: 52))
+            uppercaseAllLabelsInHierarchy(deviceTable.tableHeaderView!)
         }
     }
     
