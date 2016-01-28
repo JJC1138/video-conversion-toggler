@@ -7,6 +7,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     var removeOldResultsAndErrorsTimer: NSTimer?
     
     let tableAnimationType = UITableViewRowAnimation.Automatic
+    let headerFadeTime = NSTimeInterval(1)
     func row(index: Int) -> NSIndexPath { return NSIndexPath(forRow: index, inSection: 0) }
     
     struct DeviceSetting {
@@ -31,6 +32,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         } else {
             deviceSettings.append(newSetting)
             deviceTable.insertRowsAtIndexPaths([row(deviceSettings.count - 1)], withRowAnimation: tableAnimationType)
+            if deviceSettings.count == 1 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 1 } }
         }
     }
     
@@ -60,6 +62,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         
         deviceSettings = newSettings
         deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
+        if deviceSettings.count == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
         
         // FIXME remove old errors (and don't early exit from the all(isCurrent) check above)
     }
@@ -89,7 +92,9 @@ class ViewController: UIViewController, UITableViewDataSource {
                 }
                 for subview in view.subviews { uppercaseAllLabelsInHierarchy(subview) }
             }
-            uppercaseAllLabelsInHierarchy(deviceTable.tableHeaderView!)
+            let header = deviceTable.tableHeaderView!
+            uppercaseAllLabelsInHierarchy(header)
+            header.alpha = 0
         }
     }
     
