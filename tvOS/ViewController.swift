@@ -99,5 +99,16 @@ class ViewController: UIViewController, UITableViewDataSource {
         cell.detailTextLabel!.text = localString(deviceSetting.setting ? "On" : "Off")
         return cell
     }
+
+    // HIG-compliance housekeeping that would be done by UITableViewController:
+    // https://developer.apple.com/library/tvos/documentation/UserExperience/Conceptual/TableView_iPhone/TableViewAndDataModel/TableViewAndDataModel.html
+    override func viewWillAppear(_: Bool) {
+        if let selectedRows = deviceTable.indexPathsForSelectedRows {
+            for row in selectedRows { deviceTable.deselectRowAtIndexPath(row, animated: false) }
+        }
+    }
+    override func viewDidAppear(_: Bool) {
+        deviceTable.flashScrollIndicators()
+    }
     
 }
