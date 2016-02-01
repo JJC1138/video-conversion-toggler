@@ -78,6 +78,12 @@ func fetchSetting(deviceInfo: DeviceInfo) throws -> Bool {
             return
         }
         
+        // TESTING uncomment to produce intermittent errors:
+//        guard Int(awakeUptime()) % 3 != 0 else {
+//            error = AppError(kind: .WebInterfaceNotAsExpected, info: "Fake test error")
+//            return
+//        }
+        
         let conversionWasOn = conversionElement.attributes["checked"] != nil
         
         result = conversionWasOn
