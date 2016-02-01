@@ -172,7 +172,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         return cell
     }
 
-    // HIG-compliance housekeeping that would be done by UITableViewController:
+    // HIG-compliance housekeeping like that which is done by UITableViewController:
     // https://developer.apple.com/library/tvos/documentation/UserExperience/Conceptual/TableView_iPhone/TableViewAndDataModel/TableViewAndDataModel.html
     override func viewWillAppear(_: Bool) {
         if let selectedRows = deviceTable.indexPathsForSelectedRows {
