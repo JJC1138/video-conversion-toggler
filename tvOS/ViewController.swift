@@ -171,6 +171,17 @@ class ViewController: UIViewController, UITableViewDataSource {
         }
     }
     
+    // HIG-compliance housekeeping like that which is done by UITableViewController:
+    // https://developer.apple.com/library/tvos/documentation/UserExperience/Conceptual/TableView_iPhone/TableViewAndDataModel/TableViewAndDataModel.html
+    override func viewWillAppear(_: Bool) {
+        if let selectedRows = deviceTable.indexPathsForSelectedRows {
+            for row in selectedRows { deviceTable.deselectRowAtIndexPath(row, animated: false) }
+        }
+    }
+    override func viewDidAppear(_: Bool) {
+        deviceTable.flashScrollIndicators()
+    }
+    
     // MARK: UITableViewDataSource
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -186,17 +197,6 @@ class ViewController: UIViewController, UITableViewDataSource {
         cell.textLabel!.text = deviceSetting.device.description
         cell.detailTextLabel!.text = localString(deviceSetting.setting ? "On" : "Off")
         return cell
-    }
-
-    // HIG-compliance housekeeping like that which is done by UITableViewController:
-    // https://developer.apple.com/library/tvos/documentation/UserExperience/Conceptual/TableView_iPhone/TableViewAndDataModel/TableViewAndDataModel.html
-    override func viewWillAppear(_: Bool) {
-        if let selectedRows = deviceTable.indexPathsForSelectedRows {
-            for row in selectedRows { deviceTable.deselectRowAtIndexPath(row, animated: false) }
-        }
-    }
-    override func viewDidAppear(_: Bool) {
-        deviceTable.flashScrollIndicators()
     }
     
 }
