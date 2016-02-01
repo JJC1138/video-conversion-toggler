@@ -62,8 +62,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func newFetchError(deviceInfo: DeviceInfo, error: AppError) {
+        newOperationError(deviceInfo, error: error, operation: .FetchSetting)
+        
+        // We haven't fetched the setting successfully and any previous setting we fetched might be out of date so remove it to avoid confusing users with possibly incorrect information:
+        removeSettingFor(deviceInfo)
+    }
+    
+    func newOperationError(deviceInfo: DeviceInfo, error: AppError, operation: Operation) {
         lastTimeADeviceWasSeen = awakeUptime()
-        let newError = Error(device: deviceInfo, error: error, cause: .FetchSetting)
+        let newError = Error(device: deviceInfo, error: error, cause: operation)
         
         if let index = (errors.indexOf { $0.device == deviceInfo }) {
             // We already have an error for this device.
@@ -72,9 +79,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             errors.append(newError)
         }
         updateErrorText()
-        
-        // We haven't fetched the setting successfully and any previous setting we fetched might be out of date so remove it to avoid confusing users with possibly incorrect information:
-        removeSettingFor(deviceInfo)
     }
     
     func updateErrorText() {
@@ -138,7 +142,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let nc = NSNotificationCenter.defaultCenter()
         nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in
             self.lastTimeADeviceWasSeen = awakeUptime()
-            self.oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult))
+            self.oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: { di, e in self.newOperationError(di, error: e, operation: .FetchSetting) } , fetchResultDelegate: self.newFetchResult))
             self.removeOldResultsTimer = {
                 // FUTURETODO Use the non-string selector initialization syntax when SE-0022 is implemented:
                 let t = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "removeOldResults", userInfo: nil, repeats: true)
@@ -209,7 +213,38 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let newDeviceSetting = DeviceSetting(device: selectedDeviceSetting.device, setting: !selectedDeviceSetting.setting, retrieved: awakeUptime())
         self.deviceSettings[deviceSettingsIndex] = newDeviceSetting
         self.deviceTable.reloadRowsAtIndexPaths([indexPath], withRowAnimation: self.tableAnimationType)
-        // FIXME actually toggle with a ToggleTo operation
+        
+        // It's useful for the user if we clear out any errors from previous attempts now, because we're about to try again. If the old error just stayed on screen and was replaced by the same error then it would be harder to tell what had happened.
+        removeErrorFor(selectedDeviceSetting.device, forOperation: .Toggle)
+        updateErrorText()
+        
+        oq.addOperationWithBlock {
+            let deviceInfo = selectedDeviceSetting.device
+            let wantedSetting = !selectedDeviceSetting.setting
+            let delegateQueue = NSOperationQueue.mainQueue()
+            
+            do {
+                try setSetting(deviceInfo, setting: wantedSetting)
+            } catch let e as AppError {
+                delegateQueue.addOperationWithBlock { self.newOperationError(deviceInfo, error: e, operation: .Toggle) }
+                return
+            } catch { assert(false) }
+            
+            guard let newSetting: Bool = {
+                do {
+                    let newSetting = try fetchSetting(deviceInfo)
+                    delegateQueue.addOperationWithBlock { self.newFetchResult(deviceInfo, setting: newSetting) }
+                    return newSetting
+                } catch let e as AppError {
+                    delegateQueue.addOperationWithBlock { self.newFetchError(deviceInfo, error: e) }
+                } catch { assert(false) }
+                return nil
+                }() else { return }
+            
+            if newSetting != wantedSetting {
+                delegateQueue.addOperationWithBlock { self.newOperationError(deviceInfo, error: AppError(kind: .SettingDidNotChange), operation: .Toggle) }
+            }
+        }
     }
     
 }
