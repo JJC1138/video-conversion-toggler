@@ -1,6 +1,6 @@
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var deviceTable: UITableView!
     @IBOutlet weak var errorLabel: UILabel!
@@ -135,8 +135,6 @@ class ViewController: UIViewController, UITableViewDataSource {
     }
     
     override func viewDidLoad() {
-        deviceTable.dataSource = self
-        
         let nc = NSNotificationCenter.defaultCenter()
         nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in
             self.lastTimeADeviceWasSeen = awakeUptime()
@@ -197,6 +195,21 @@ class ViewController: UIViewController, UITableViewDataSource {
         cell.textLabel!.text = deviceSetting.device.description
         cell.detailTextLabel!.text = localString(deviceSetting.setting ? "On" : "Off")
         return cell
+    }
+    
+    // MARK: UITableViewDelegate
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        assert(indexPath.section == 0)
+        let deviceSettingsIndex = indexPath.row
+        let selectedDeviceSetting = self.deviceSettings[deviceSettingsIndex]
+        
+        let newDeviceSetting = DeviceSetting(device: selectedDeviceSetting.device, setting: !selectedDeviceSetting.setting, retrieved: awakeUptime())
+        self.deviceSettings[deviceSettingsIndex] = newDeviceSetting
+        self.deviceTable.reloadRowsAtIndexPaths([indexPath], withRowAnimation: self.tableAnimationType)
+        // FIXME actually toggle with a ToggleTo operation
     }
     
 }
