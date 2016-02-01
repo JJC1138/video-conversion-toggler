@@ -17,9 +17,15 @@ class ViewController: UIViewController, UITableViewDataSource {
         let retrieved: NSTimeInterval
     }
     
+    enum Operation {
+        case FetchSetting
+        case Toggle
+    }
+    
     struct Error {
         let device: DeviceInfo
         let error: AppError
+        let cause: Operation
     }
     
     // Only touch these from the main thread:
@@ -41,20 +47,20 @@ class ViewController: UIViewController, UITableViewDataSource {
             deviceTable.insertRowsAtIndexPaths([row(deviceSettings.count - 1)], withRowAnimation: tableAnimationType)
             if deviceSettings.count == 1 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 1 } }
         }
+        
+        removeErrorFor(deviceInfo, forOperation: .FetchSetting)
     }
     
-    func updateErrorText() {
-        errorLabel.text = {
-            if self.errors.count > 0 {
-                return (self.errors.map { describeError($0.error, forDevice: $0.device) }).joinWithSeparator("\n\n") + "\n\(errorContactInstruction())"
-            } else {
-                return ""
-            }
-        }()
+    func removeErrorFor(device: DeviceInfo, forOperation operation: Operation) {
+        if let i = errors.indexOf({ $0.device == device && $0.cause == operation }) {
+            // We previously had an error with this device when performing this operation, but it has succeeded now so whatever was causing the error is presumably now fixed.
+            errors.removeAtIndex(i)
+            updateErrorText()
+        }
     }
     
     func newFetchError(deviceInfo: DeviceInfo, error: AppError) {
-        let newError = Error(device: deviceInfo, error: error)
+        let newError = Error(device: deviceInfo, error: error, cause: .FetchSetting)
         
         if let index = (errors.indexOf { $0.device == deviceInfo }) {
             // We already have an error for this device.
@@ -63,6 +69,27 @@ class ViewController: UIViewController, UITableViewDataSource {
             errors.append(newError)
         }
         updateErrorText()
+        
+        // We haven't fetched the setting successfully and any previous setting we fetched might be out of date so remove it to avoid confusing users with possibly incorrect information:
+        removeSettingFor(deviceInfo)
+    }
+    
+    func updateErrorText() {
+        errorLabel.text = {
+            if self.errors.count > 0 {
+                return (self.errors.map { describeError($0.error, forDevice: $0.device) }).joinWithSeparator("\n\n") + "\n\n\(errorContactInstruction())"
+            } else {
+                return ""
+            }
+            }()
+    }
+    
+    func removeSettingFor(device: DeviceInfo) {
+        if let i = deviceSettings.indexOf( { $0.device == device } ) {
+            deviceSettings.removeAtIndex(i)
+            deviceTable.deleteRowsAtIndexPaths([row(i)], withRowAnimation: tableAnimationType)
+            hideTableHeaderIfNecessary()
+        }
     }
     
     func removeOldResults() {
@@ -87,6 +114,9 @@ class ViewController: UIViewController, UITableViewDataSource {
         
         deviceSettings = newSettings
         deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
+    }
+    
+    func hideTableHeaderIfNecessary() {
         if deviceSettings.count == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
     }
     
