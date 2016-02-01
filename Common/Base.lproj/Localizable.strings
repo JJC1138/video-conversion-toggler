@@ -3,5 +3,6 @@
 "AppError.Kind.SubmittingChangeFailed" = "Found device %@ and accessed web interface but changing setting failed.";
 "AppError.Kind.SettingDidNotChange" = "Found device %@ and tried to change setting, but it didn't update. That can happen if the device is switched off, so please check if it is on.";
 "Please contact %@ with the above error information." = "Please contact %@ with the above error information.";
+"No devices found." = "No compatible devices were found. Please check that your device is on. If you have a Denon or Marantz AVR accessible on your network that has a web interface with the option to turn video conversion on or off then please contact %@ so I can try to add compatibility with it.";
 "On" = "On";
 "Off" = "Off";

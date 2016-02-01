@@ -31,8 +31,10 @@ class ViewController: UIViewController, UITableViewDataSource {
     // Only touch these from the main thread:
     var deviceSettings = [DeviceSetting]()
     var errors = [Error]()
+    var lastTimeADeviceWasSeen = NSTimeInterval()
     
     func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
+        lastTimeADeviceWasSeen = awakeUptime()
         let newSetting = DeviceSetting(device: deviceInfo, setting: setting, retrieved: awakeUptime())
         
         if let index = (deviceSettings.indexOf { $0.device == deviceInfo }) {
@@ -49,17 +51,18 @@ class ViewController: UIViewController, UITableViewDataSource {
         }
         
         removeErrorFor(deviceInfo, forOperation: .FetchSetting)
+        updateErrorText()
     }
     
     func removeErrorFor(device: DeviceInfo, forOperation operation: Operation) {
         if let i = errors.indexOf({ $0.device == device && $0.cause == operation }) {
             // We previously had an error with this device when performing this operation, but it has succeeded now so whatever was causing the error is presumably now fixed.
             errors.removeAtIndex(i)
-            updateErrorText()
         }
     }
     
     func newFetchError(deviceInfo: DeviceInfo, error: AppError) {
+        lastTimeADeviceWasSeen = awakeUptime()
         let newError = Error(device: deviceInfo, error: error, cause: .FetchSetting)
         
         if let index = (errors.indexOf { $0.device == deviceInfo }) {
@@ -79,9 +82,17 @@ class ViewController: UIViewController, UITableViewDataSource {
             if self.errors.count > 0 {
                 return (self.errors.map { describeError($0.error, forDevice: $0.device) }).joinWithSeparator("\n\n") + "\n\n\(errorContactInstruction())"
             } else {
-                return ""
+                if weHaventSeenADeviceInAWhile() {
+                    return noDevicesContactInstruction()
+                } else {
+                    return ""
+                }
             }
             }()
+    }
+    
+    func weHaventSeenADeviceInAWhile() -> Bool {
+        return deviceSettings.isEmpty && errors.isEmpty && (awakeUptime() - lastTimeADeviceWasSeen) >= 5
     }
     
     func removeSettingFor(device: DeviceInfo) {
@@ -98,22 +109,25 @@ class ViewController: UIViewController, UITableViewDataSource {
         
         func isCurrent(setting: DeviceSetting) -> Bool { return setting.retrieved >= oldestAllowedTime }
         
-        if deviceSettings.all(isCurrent) { return }
-        
-        var newSettings = [DeviceSetting]()
-        var rowsToDelete = [NSIndexPath]()
-        for (index, setting) in deviceSettings.enumerate() {
-            if isCurrent(setting) {
-                newSettings.append(setting)
-            } else {
-                rowsToDelete.append(row(index))
+        if !deviceSettings.all(isCurrent) {
+            var newSettings = [DeviceSetting]()
+            var rowsToDelete = [NSIndexPath]()
+            for (index, setting) in deviceSettings.enumerate() {
+                if isCurrent(setting) {
+                    newSettings.append(setting)
+                } else {
+                    rowsToDelete.append(row(index))
+                }
             }
+            
+            assert(rowsToDelete.count > 0)
+            
+            deviceSettings = newSettings
+            deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
+            hideTableHeaderIfNecessary()
         }
         
-        assert(rowsToDelete.count > 0)
-        
-        deviceSettings = newSettings
-        deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
+        if weHaventSeenADeviceInAWhile() { updateErrorText() }
     }
     
     func hideTableHeaderIfNecessary() {
@@ -125,6 +139,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         
         let nc = NSNotificationCenter.defaultCenter()
         nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in
+            self.lastTimeADeviceWasSeen = awakeUptime()
             self.oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult))
             self.removeOldResultsTimer = {
                 // FUTURETODO Use the non-string selector initialization syntax when SE-0022 is implemented:
@@ -139,6 +154,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         }
         nc.addObserverForName(UIApplicationDidEnterBackgroundNotification, object: nil, queue: nil) { _ in
             self.errors = []
+            self.lastTimeADeviceWasSeen = awakeUptime()
             self.updateErrorText()
         }
         

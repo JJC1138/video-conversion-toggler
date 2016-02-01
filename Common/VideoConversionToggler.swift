@@ -164,9 +164,14 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
     locationFetches.waitUntilAllOperationsAreFinished()
 }
 
+let contact = "vidconvtoggle@jjc1138.net"
+
 func errorContactInstruction() -> String {
-    let contact = "vidconvtoggle@jjc1138.net"
     return localString(format: localString("Please contact %@ with the above error information."), contact)
+}
+
+func noDevicesContactInstruction() -> String {
+    return localString(format: localString("No devices found."), contact)
 }
 
 class PeriodicallyFetchAllStatuses: NSOperation {
