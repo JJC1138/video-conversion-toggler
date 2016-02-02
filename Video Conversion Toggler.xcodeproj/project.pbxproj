@@ -27,6 +27,10 @@
 		FC5F10A51C60FF0800A317DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC5F10A31C60FF0800A317DE /* Main.storyboard */; };
 		FC5F10A71C60FF0800A317DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC5F10A61C60FF0800A317DE /* Assets.xcassets */; };
 		FC5F10AA1C60FF0800A317DE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC5F10A81C60FF0800A317DE /* LaunchScreen.storyboard */; };
+		FC5F10B31C6104F200A317DE /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC5F10AF1C6104C300A317DE /* Alamofire.framework */; };
+		FC5F10B41C6104F200A317DE /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC5F10B01C6104C300A317DE /* CocoaAsyncSocket.framework */; };
+		FC5F10B51C6104F200A317DE /* Fuzi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC5F10B11C6104C300A317DE /* Fuzi.framework */; };
+		FC5F10B61C6104F200A317DE /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC5F10B21C6104C300A317DE /* HTMLReader.framework */; };
 		FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20A1C451BF600B71747 /* AppDelegate.swift */; };
 		FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20C1C451BF600B71747 /* ViewController.swift */; };
 		FC65B20F1C451BF600B71747 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC65B20E1C451BF600B71747 /* Assets.xcassets */; };
@@ -98,6 +102,10 @@
 		FC5F10A61C60FF0800A317DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC5F10A91C60FF0800A317DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FC5F10AB1C60FF0800A317DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC5F10AF1C6104C300A317DE /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = SOURCE_ROOT; };
+		FC5F10B01C6104C300A317DE /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = SOURCE_ROOT; };
+		FC5F10B11C6104C300A317DE /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = SOURCE_ROOT; };
+		FC5F10B21C6104C300A317DE /* HTMLReader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTMLReader.framework; path = Carthage/Build/iOS/HTMLReader.framework; sourceTree = SOURCE_ROOT; };
 		FC65B2081C451BF600B71747 /* Video Conversion Toggler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Conversion Toggler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC65B20A1C451BF600B71747 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FC65B20C1C451BF600B71747 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -134,6 +142,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC5F10B31C6104F200A317DE /* Alamofire.framework in Frameworks */,
+				FC5F10B41C6104F200A317DE /* CocoaAsyncSocket.framework in Frameworks */,
+				FC5F10B51C6104F200A317DE /* Fuzi.framework in Frameworks */,
+				FC5F10B61C6104F200A317DE /* HTMLReader.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,6 +182,10 @@
 		FC5F109E1C60FF0800A317DE /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				FC5F10AF1C6104C300A317DE /* Alamofire.framework */,
+				FC5F10B01C6104C300A317DE /* CocoaAsyncSocket.framework */,
+				FC5F10B11C6104C300A317DE /* Fuzi.framework */,
+				FC5F10B21C6104C300A317DE /* HTMLReader.framework */,
 				FC5F109F1C60FF0800A317DE /* AppDelegate.swift */,
 				FC5F10A11C60FF0800A317DE /* ViewController.swift */,
 				FC5F10A31C60FF0800A317DE /* Main.storyboard */,
@@ -262,6 +278,7 @@
 				FC5F10991C60FF0800A317DE /* Sources */,
 				FC5F109A1C60FF0800A317DE /* Frameworks */,
 				FC5F109B1C60FF0800A317DE /* Resources */,
+				FC5F10B71C61053500A317DE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -375,6 +392,24 @@
 				"$(SRCROOT)/Carthage/Build/tvOS/CocoaAsyncSocket.framework",
 				"$(SRCROOT)/Carthage/Build/tvOS/Fuzi.framework",
 				"$(SRCROOT)/Carthage/Build/tvOS/HTMLReader.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			showEnvVarsInLog = 0;
+		};
+		FC5F10B71C61053500A317DE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Fuzi.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/HTMLReader.framework",
 			);
 			outputPaths = (
 			);
@@ -587,6 +622,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -635,6 +674,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
