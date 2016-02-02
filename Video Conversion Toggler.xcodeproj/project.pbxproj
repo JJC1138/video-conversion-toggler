@@ -22,6 +22,11 @@
 		FC524F351C566A7100AA9294 /* VideoConversionToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */; };
 		FC524F361C566A7400AA9294 /* TinySSDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */; };
 		FC524F371C566A7700AA9294 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
+		FC5F10A01C60FF0800A317DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5F109F1C60FF0800A317DE /* AppDelegate.swift */; };
+		FC5F10A21C60FF0800A317DE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5F10A11C60FF0800A317DE /* ViewController.swift */; };
+		FC5F10A51C60FF0800A317DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC5F10A31C60FF0800A317DE /* Main.storyboard */; };
+		FC5F10A71C60FF0800A317DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC5F10A61C60FF0800A317DE /* Assets.xcassets */; };
+		FC5F10AA1C60FF0800A317DE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC5F10A81C60FF0800A317DE /* LaunchScreen.storyboard */; };
 		FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20A1C451BF600B71747 /* AppDelegate.swift */; };
 		FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20C1C451BF600B71747 /* ViewController.swift */; };
 		FC65B20F1C451BF600B71747 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC65B20E1C451BF600B71747 /* Assets.xcassets */; };
@@ -86,6 +91,13 @@
 		FC524F2B1C56693100AA9294 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/tvOS/CocoaAsyncSocket.framework; sourceTree = SOURCE_ROOT; };
 		FC524F2C1C56693100AA9294 /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/tvOS/Fuzi.framework; sourceTree = SOURCE_ROOT; };
 		FC524F2D1C56693100AA9294 /* HTMLReader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTMLReader.framework; path = Carthage/Build/tvOS/HTMLReader.framework; sourceTree = SOURCE_ROOT; };
+		FC5F109D1C60FF0800A317DE /* Video Conversion Toggler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Conversion Toggler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC5F109F1C60FF0800A317DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FC5F10A11C60FF0800A317DE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FC5F10A41C60FF0800A317DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FC5F10A61C60FF0800A317DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FC5F10A91C60FF0800A317DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		FC5F10AB1C60FF0800A317DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC65B2081C451BF600B71747 /* Video Conversion Toggler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Conversion Toggler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC65B20A1C451BF600B71747 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FC65B20C1C451BF600B71747 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +127,13 @@
 				FC524F2F1C56694100AA9294 /* CocoaAsyncSocket.framework in Frameworks */,
 				FC524F301C56694100AA9294 /* Fuzi.framework in Frameworks */,
 				FC524F311C56694100AA9294 /* HTMLReader.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC5F109A1C60FF0800A317DE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +167,19 @@
 			path = tvOS;
 			sourceTree = "<group>";
 		};
+		FC5F109E1C60FF0800A317DE /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				FC5F109F1C60FF0800A317DE /* AppDelegate.swift */,
+				FC5F10A11C60FF0800A317DE /* ViewController.swift */,
+				FC5F10A31C60FF0800A317DE /* Main.storyboard */,
+				FC5F10A61C60FF0800A317DE /* Assets.xcassets */,
+				FC5F10A81C60FF0800A317DE /* LaunchScreen.storyboard */,
+				FC5F10AB1C60FF0800A317DE /* Info.plist */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
 		FC65B2091C451BF600B71747 /* OS X */ = {
 			isa = PBXGroup;
 			children = (
@@ -176,6 +208,7 @@
 				FCF63DBF1C453C38008AEC28 /* Common */,
 				FC65B2091C451BF600B71747 /* OS X */,
 				FC2C18D61C5656300024C7FF /* tvOS */,
+				FC5F109E1C60FF0800A317DE /* iOS */,
 				FC7110481C3AA8F6002755E4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -185,6 +218,7 @@
 			children = (
 				FC65B2081C451BF600B71747 /* Video Conversion Toggler.app */,
 				FC2C18D51C5656300024C7FF /* Video Conversion Toggler.app */,
+				FC5F109D1C60FF0800A317DE /* Video Conversion Toggler.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -221,6 +255,23 @@
 			productReference = FC2C18D51C5656300024C7FF /* Video Conversion Toggler.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FC5F109C1C60FF0800A317DE /* Video Conversion Toggler (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC5F10AE1C60FF0800A317DE /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (iOS)" */;
+			buildPhases = (
+				FC5F10991C60FF0800A317DE /* Sources */,
+				FC5F109A1C60FF0800A317DE /* Frameworks */,
+				FC5F109B1C60FF0800A317DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Video Conversion Toggler (iOS)";
+			productName = "Video Conversion Toggler";
+			productReference = FC5F109D1C60FF0800A317DE /* Video Conversion Toggler.app */;
+			productType = "com.apple.product-type.application";
+		};
 		FC65B2071C451BF600B71747 /* Video Conversion Toggler (OS X) */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FC65B2141C451BF600B71747 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (OS X)" */;
@@ -252,6 +303,9 @@
 					FC2C18D41C5656300024C7FF = {
 						CreatedOnToolsVersion = 7.2;
 					};
+					FC5F109C1C60FF0800A317DE = {
+						CreatedOnToolsVersion = 7.2;
+					};
 					FC65B2071C451BF600B71747 = {
 						CreatedOnToolsVersion = 7.2;
 					};
@@ -272,6 +326,7 @@
 			targets = (
 				FC65B2071C451BF600B71747 /* Video Conversion Toggler (OS X) */,
 				FC2C18D41C5656300024C7FF /* Video Conversion Toggler (tvOS) */,
+				FC5F109C1C60FF0800A317DE /* Video Conversion Toggler (iOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -284,6 +339,16 @@
 				FC2C18DF1C5656300024C7FF /* Assets.xcassets in Resources */,
 				FC524F371C566A7700AA9294 /* Localizable.strings in Resources */,
 				FC2C18DD1C5656300024C7FF /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC5F109B1C60FF0800A317DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC5F10AA1C60FF0800A317DE /* LaunchScreen.storyboard in Resources */,
+				FC5F10A71C60FF0800A317DE /* Assets.xcassets in Resources */,
+				FC5F10A51C60FF0800A317DE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,6 +398,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FC5F10991C60FF0800A317DE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC5F10A21C60FF0800A317DE /* ViewController.swift in Sources */,
+				FC5F10A01C60FF0800A317DE /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FC65B2041C451BF600B71747 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -356,6 +430,22 @@
 				FC2C18DC1C5656300024C7FF /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		FC5F10A31C60FF0800A317DE /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FC5F10A41C60FF0800A317DE /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		FC5F10A81C60FF0800A317DE /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FC5F10A91C60FF0800A317DE /* Base */,
+			);
+			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 		FC65B2101C451BF600B71747 /* Main.storyboard */ = {
@@ -470,6 +560,95 @@
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FC5F10AC1C60FF0800A317DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FC5F10AD1C60FF0800A317DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -603,6 +782,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		FC5F10AE1C60FF0800A317DE /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC5F10AC1C60FF0800A317DE /* Debug */,
+				FC5F10AD1C60FF0800A317DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		FC65B2141C451BF600B71747 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (OS X)" */ = {
 			isa = XCConfigurationList;
