@@ -4,6 +4,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     @IBOutlet weak var deviceTable: UITableView!
     @IBOutlet weak var errorLabel: UILabel!
+    @IBOutlet var tableFillConstraint: NSLayoutConstraint!
     let oq = NSOperationQueue()
     var removeOldResultsTimer: NSTimer?
     
@@ -93,6 +94,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 }
             }
             }()
+        
+        let errorLabelShouldBeVisible = !errorLabel.text!.isEmpty
+        let errorLabelIsVisible = !tableFillConstraint.active
+        
+        if errorLabelShouldBeVisible != errorLabelIsVisible {
+            tableFillConstraint.active = !errorLabelShouldBeVisible
+        }
     }
     
     func weHaventSeenADeviceInAWhile() -> Bool {
