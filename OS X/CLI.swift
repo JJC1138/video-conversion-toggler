@@ -74,4 +74,9 @@ func cli() {
         print("\n\(errorContactInstruction())", toStream: &stderr)
         exit(1)
     }
+    
+    if !anyErrors && deviceSettings.isEmpty {
+        print(noDevicesContactInstruction(), toStream: &stderr)
+        exit(2)
+    }
 }
