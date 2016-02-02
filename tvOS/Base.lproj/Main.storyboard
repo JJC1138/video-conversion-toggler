@@ -47,7 +47,6 @@
                                 <rect key="frame" x="616" y="275" width="689" height="689"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" priority="1" constant="10000" id="4Id-rW-b45"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="137" id="yvz-bL-GNE"/>
                                 </constraints>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="Vuj-WJ-Sit">
@@ -114,6 +113,7 @@
                             <constraint firstItem="CHw-ht-nMR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="YHw-Ub-YZE"/>
                             <constraint firstItem="RGk-4h-8Xy" firstAttribute="top" secondItem="Q6M-aj-jEt" secondAttribute="bottom" constant="48" id="bjS-dV-dso"/>
                             <constraint firstItem="CHw-ht-nMR" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RGk-4h-8Xy" secondAttribute="bottom" constant="8" symbolic="YES" id="eb5-0k-kNJ"/>
+                            <constraint firstItem="RGk-4h-8Xy" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" priority="1" id="gAN-rH-Wsd"/>
                             <constraint firstItem="Q6M-aj-jEt" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="108" id="mag-LK-E6v"/>
                             <constraint firstItem="Q6M-aj-jEt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="192" id="tFO-3Y-je6"/>
                             <constraint firstItem="RGk-4h-8Xy" firstAttribute="width" secondItem="Q6M-aj-jEt" secondAttribute="width" id="wyt-8d-mih"/>
