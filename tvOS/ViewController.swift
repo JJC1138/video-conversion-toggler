@@ -148,7 +148,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 let t = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "removeOldResults", userInfo: nil, repeats: true)
                 t.tolerance = 3
                 return t
-            }()
+                }()
         }
         nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in
             self.oq.cancelAllOperations()
