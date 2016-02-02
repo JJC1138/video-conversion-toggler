@@ -22,8 +22,6 @@
 		FC524F351C566A7100AA9294 /* VideoConversionToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */; };
 		FC524F361C566A7400AA9294 /* TinySSDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */; };
 		FC524F371C566A7700AA9294 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
-		FC5F10A01C60FF0800A317DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5F109F1C60FF0800A317DE /* AppDelegate.swift */; };
-		FC5F10A21C60FF0800A317DE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5F10A11C60FF0800A317DE /* ViewController.swift */; };
 		FC5F10A51C60FF0800A317DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC5F10A31C60FF0800A317DE /* Main.storyboard */; };
 		FC5F10A71C60FF0800A317DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC5F10A61C60FF0800A317DE /* Assets.xcassets */; };
 		FC5F10AA1C60FF0800A317DE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC5F10A81C60FF0800A317DE /* LaunchScreen.storyboard */; };
@@ -31,6 +29,12 @@
 		FC5F10B41C6104F200A317DE /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC5F10B01C6104C300A317DE /* CocoaAsyncSocket.framework */; };
 		FC5F10B51C6104F200A317DE /* Fuzi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC5F10B11C6104C300A317DE /* Fuzi.framework */; };
 		FC5F10B61C6104F200A317DE /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC5F10B21C6104C300A317DE /* HTMLReader.framework */; };
+		FC5F10B81C61122400A317DE /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC01C453C72008AEC28 /* Utility.swift */; };
+		FC5F10B91C61122400A317DE /* VideoConversionToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */; };
+		FC5F10BA1C61122400A317DE /* TinySSDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */; };
+		FC5F10BB1C61122700A317DE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
+		FC5F10BC1C611C7900A317DE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2C18D91C5656300024C7FF /* ViewController.swift */; };
+		FC5F10BD1C611CE600A317DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2C18D71C5656300024C7FF /* AppDelegate.swift */; };
 		FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20A1C451BF600B71747 /* AppDelegate.swift */; };
 		FC65B20D1C451BF600B71747 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B20C1C451BF600B71747 /* ViewController.swift */; };
 		FC65B20F1C451BF600B71747 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC65B20E1C451BF600B71747 /* Assets.xcassets */; };
@@ -96,8 +100,6 @@
 		FC524F2C1C56693100AA9294 /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/tvOS/Fuzi.framework; sourceTree = SOURCE_ROOT; };
 		FC524F2D1C56693100AA9294 /* HTMLReader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTMLReader.framework; path = Carthage/Build/tvOS/HTMLReader.framework; sourceTree = SOURCE_ROOT; };
 		FC5F109D1C60FF0800A317DE /* Video Conversion Toggler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Conversion Toggler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FC5F109F1C60FF0800A317DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		FC5F10A11C60FF0800A317DE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		FC5F10A41C60FF0800A317DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FC5F10A61C60FF0800A317DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC5F10A91C60FF0800A317DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -186,8 +188,6 @@
 				FC5F10B01C6104C300A317DE /* CocoaAsyncSocket.framework */,
 				FC5F10B11C6104C300A317DE /* Fuzi.framework */,
 				FC5F10B21C6104C300A317DE /* HTMLReader.framework */,
-				FC5F109F1C60FF0800A317DE /* AppDelegate.swift */,
-				FC5F10A11C60FF0800A317DE /* ViewController.swift */,
 				FC5F10A31C60FF0800A317DE /* Main.storyboard */,
 				FC5F10A61C60FF0800A317DE /* Assets.xcassets */,
 				FC5F10A81C60FF0800A317DE /* LaunchScreen.storyboard */,
@@ -364,6 +364,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC5F10AA1C60FF0800A317DE /* LaunchScreen.storyboard in Resources */,
+				FC5F10BB1C61122700A317DE /* Localizable.strings in Resources */,
 				FC5F10A71C60FF0800A317DE /* Assets.xcassets in Resources */,
 				FC5F10A51C60FF0800A317DE /* Main.storyboard in Resources */,
 			);
@@ -437,8 +438,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC5F10A21C60FF0800A317DE /* ViewController.swift in Sources */,
-				FC5F10A01C60FF0800A317DE /* AppDelegate.swift in Sources */,
+				FC5F10BC1C611C7900A317DE /* ViewController.swift in Sources */,
+				FC5F10B91C61122400A317DE /* VideoConversionToggler.swift in Sources */,
+				FC5F10BA1C61122400A317DE /* TinySSDPClient.swift in Sources */,
+				FC5F10BD1C611CE600A317DE /* AppDelegate.swift in Sources */,
+				FC5F10B81C61122400A317DE /* Utility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
