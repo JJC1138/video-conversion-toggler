@@ -19,11 +19,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6pk-QP-Oxj" userLabel="Devices">
-                                <rect key="frame" x="0.0" y="28" width="600" height="10000"/>
+                                <rect key="frame" x="0.0" y="28" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="10000" id="gbS-Sw-IBL"/>
-                                </constraints>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="IpQ-pu-vkT">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="22"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -88,6 +85,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="6pk-QP-Oxj" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="Dpw-4o-hY0"/>
                             <constraint firstItem="fZd-9v-0MH" firstAttribute="top" secondItem="6pk-QP-Oxj" secondAttribute="bottom" priority="999" constant="8" symbolic="YES" id="L0S-ah-CZQ"/>
                             <constraint firstItem="6pk-QP-Oxj" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="OKr-Ah-lT8"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="fZd-9v-0MH" secondAttribute="bottom" constant="8" symbolic="YES" id="QgZ-8p-6nE"/>
@@ -100,7 +98,7 @@
                     <connections>
                         <outlet property="deviceTable" destination="6pk-QP-Oxj" id="Hmz-yx-ao9"/>
                         <outlet property="errorLabel" destination="fZd-9v-0MH" id="5WX-yq-mor"/>
-                        <outlet property="tableFillConstraint" destination="gbS-Sw-IBL" id="Kk5-ed-QVu"/>
+                        <outlet property="tableFillConstraint" destination="Dpw-4o-hY0" id="z5g-Cc-fi6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
