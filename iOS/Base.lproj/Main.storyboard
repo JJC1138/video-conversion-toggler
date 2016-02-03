@@ -55,13 +55,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2F-iN-UFa" userLabel="Name">
-                                                    <rect key="frame" x="15" y="11" width="102" height="21"/>
+                                                    <rect key="frame" x="15" y="11" width="511" height="21"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9I9-vn-Gbe">
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9I9-vn-Gbe">
                                                     <rect key="frame" x="534" y="6" width="51" height="31"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                                     <connections>
@@ -72,6 +72,7 @@
                                             <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                             <constraints>
                                                 <constraint firstItem="9I9-vn-Gbe" firstAttribute="centerY" secondItem="buW-C2-XR2" secondAttribute="centerY" id="4dN-7q-KUg"/>
+                                                <constraint firstItem="9I9-vn-Gbe" firstAttribute="leading" secondItem="L2F-iN-UFa" secondAttribute="trailing" constant="8" symbolic="YES" id="6yE-wZ-RgQ"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="9I9-vn-Gbe" secondAttribute="trailing" constant="9" id="7DF-pa-fVR"/>
                                                 <constraint firstItem="L2F-iN-UFa" firstAttribute="centerY" secondItem="buW-C2-XR2" secondAttribute="centerY" id="Afn-zb-ppL"/>
                                                 <constraint firstItem="L2F-iN-UFa" firstAttribute="leading" secondItem="buW-C2-XR2" secondAttribute="leadingMargin" constant="7" id="HNd-5i-Oby"/>
