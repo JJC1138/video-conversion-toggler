@@ -194,6 +194,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         deviceTable.flashScrollIndicators()
     }
     
+    @IBAction func deviceSwitchChanged(deviceSwitch: UISwitch) {
+        toggleDeviceAtIndexPath(deviceTable.indexPathWithSubview(deviceSwitch)!)
+    }
+    
     // MARK: UITableViewDataSource
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -206,8 +210,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let deviceSetting = deviceSettings[indexPath.row]
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Device", forIndexPath: indexPath)
-        cell.textLabel!.text = deviceSetting.device.description
-        cell.detailTextLabel!.text = localString(deviceSetting.setting ? "On" : "Off")
+        
+        if let cell = cell as? DeviceTableViewCell {
+            tableView.allowsSelection = false
+            cell.nameLabel.text = deviceSetting.device.description
+            cell.settingSwitch.on = deviceSetting.setting
+        } else {
+            cell.textLabel!.text = deviceSetting.device.description
+            cell.detailTextLabel!.text = localString(deviceSetting.setting ? "On" : "Off")
+        }
+        
         return cell
     }
     
@@ -215,7 +227,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
+        toggleDeviceAtIndexPath(indexPath)
+    }
+    
+    func toggleDeviceAtIndexPath(indexPath: NSIndexPath) {
         assert(indexPath.section == 0)
         let deviceSettingsIndex = indexPath.row
         let selectedDeviceSetting = self.deviceSettings[deviceSettingsIndex]

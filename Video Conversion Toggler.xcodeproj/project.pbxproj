@@ -42,6 +42,10 @@
 		FC65B21A1C452FED00B71747 /* CLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B2191C452FED00B71747 /* CLI.swift */; };
 		FC65B21C1C45300600B71747 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B21B1C45300600B71747 /* main.swift */; };
 		FC65B2211C45375000B71747 /* HTMLReader.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */; };
+		FC6A47A91C62404600677864 /* DeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */; };
+		FC6A47AA1C62404600677864 /* DeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */; };
+		FC6A47AC1C624A8400677864 /* UIKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47AB1C624A8400677864 /* UIKitUtility.swift */; };
+		FC6A47AD1C624A8400677864 /* UIKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47AB1C624A8400677864 /* UIKitUtility.swift */; };
 		FCA711271C4E930900B8AA10 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
 		FCEAE3C71C47F0F500DD195E /* TinySSDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */; };
 		FCEAE3CA1C47F7F300DD195E /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */; };
@@ -118,6 +122,8 @@
 		FC65B21B1C45300600B71747 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		FC65B21D1C4536EE00B71747 /* HTMLReader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTMLReader.framework; path = Carthage/Build/Mac/HTMLReader.framework; sourceTree = SOURCE_ROOT; };
 		FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = HTMLReader.framework.dSYM; path = Carthage/Build/Mac/HTMLReader.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableViewCell.swift; sourceTree = "<group>"; };
+		FC6A47AB1C624A8400677864 /* UIKitUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitUtility.swift; sourceTree = "<group>"; };
 		FCA711281C4E930900B8AA10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TinySSDPClient.swift; sourceTree = "<group>"; };
 		FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/Mac/CocoaAsyncSocket.framework; sourceTree = SOURCE_ROOT; };
@@ -192,6 +198,8 @@
 				FC5F10A61C60FF0800A317DE /* Assets.xcassets */,
 				FC5F10A81C60FF0800A317DE /* LaunchScreen.storyboard */,
 				FC5F10AB1C60FF0800A317DE /* Info.plist */,
+				FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */,
+				FC6A47AB1C624A8400677864 /* UIKitUtility.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -426,7 +434,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC6A47AC1C624A8400677864 /* UIKitUtility.swift in Sources */,
 				FC524F351C566A7100AA9294 /* VideoConversionToggler.swift in Sources */,
+				FC6A47A91C62404600677864 /* DeviceTableViewCell.swift in Sources */,
 				FC2C18DA1C5656300024C7FF /* ViewController.swift in Sources */,
 				FC2C18D81C5656300024C7FF /* AppDelegate.swift in Sources */,
 				FC524F341C566A6F00AA9294 /* Utility.swift in Sources */,
@@ -438,7 +448,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC6A47AD1C624A8400677864 /* UIKitUtility.swift in Sources */,
 				FC5F10BC1C611C7900A317DE /* ViewController.swift in Sources */,
+				FC6A47AA1C62404600677864 /* DeviceTableViewCell.swift in Sources */,
 				FC5F10B91C61122400A317DE /* VideoConversionToggler.swift in Sources */,
 				FC5F10BA1C61122400A317DE /* TinySSDPClient.swift in Sources */,
 				FC5F10BD1C611CE600A317DE /* AppDelegate.swift in Sources */,
@@ -837,6 +849,7 @@
 				FC5F10AD1C60FF0800A317DE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FC65B2141C451BF600B71747 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (OS X)" */ = {
 			isa = XCConfigurationList;
