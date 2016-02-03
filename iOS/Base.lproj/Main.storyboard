@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="N3T-wC-6XU">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -7,9 +7,26 @@
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Navigation Controller-->
+        <scene sceneID="BU5-HH-HJ1">
+            <objects>
+                <navigationController id="N3T-wC-6XU" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Clu-f3-2hH">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="mmU-GV-ELP"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="upb-VU-wzV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-915" y="386"/>
+        </scene>
+        <!--Video Conversion Toggler-->
         <scene sceneID="tne-QT-ifu">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="VideoConversionToggler" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
@@ -20,20 +37,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6pk-QP-Oxj" userLabel="Devices">
-                                <rect key="frame" x="0.0" y="20" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="IpQ-pu-vkT">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
+                                    <rect key="frame" x="0.0" y="64" width="600" height="22"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAZ-HL-PDu" userLabel="Leading Label">
-                                            <rect key="frame" x="14" y="15" width="40" height="15"/>
+                                            <rect key="frame" x="14" y="7" width="40" height="15"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                             <color key="textColor" white="0.0" alpha="0.40094288789999999" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video Conversion" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VJD-8a-Z3i" userLabel="Trailing Label">
-                                            <rect key="frame" x="482" y="15" width="104" height="15"/>
+                                            <rect key="frame" x="482" y="7" width="104" height="15"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                             <color key="textColor" white="0.0" alpha="0.40094288789999999" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -48,7 +65,7 @@
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Device" id="2Zc-Ag-yvd" customClass="DeviceTableViewCell" customModule="VideoConversionToggler" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="58" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="114" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2Zc-Ag-yvd" id="buW-C2-XR2">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -99,22 +116,22 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="6pk-QP-Oxj" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="Dpw-4o-hY0"/>
+                            <constraint firstItem="6pk-QP-Oxj" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Inu-gq-mdb"/>
                             <constraint firstItem="fZd-9v-0MH" firstAttribute="top" secondItem="6pk-QP-Oxj" secondAttribute="bottom" priority="999" constant="8" symbolic="YES" id="L0S-ah-CZQ"/>
                             <constraint firstItem="6pk-QP-Oxj" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="OKr-Ah-lT8"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="fZd-9v-0MH" secondAttribute="bottom" constant="8" symbolic="YES" id="QgZ-8p-6nE"/>
                             <constraint firstItem="fZd-9v-0MH" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.9" id="XsB-eo-wgE"/>
-                            <constraint firstItem="6pk-QP-Oxj" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="rwV-jU-xIQ"/>
                             <constraint firstItem="6pk-QP-Oxj" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wAI-Lc-8Tw"/>
                             <constraint firstItem="fZd-9v-0MH" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="x69-oE-YrE"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Video Conversion Toggler" id="HpB-3n-GNV"/>
                     <connections>
                         <outlet property="deviceTable" destination="6pk-QP-Oxj" id="Hmz-yx-ao9"/>
                         <outlet property="errorLabel" destination="fZd-9v-0MH" id="5WX-yq-mor"/>
                         <outlet property="tableFillConstraint" destination="Dpw-4o-hY0" id="z5g-Cc-fi6"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="565" y="386"/>
         </scene>

@@ -150,16 +150,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     override func viewDidLoad() {
         let nc = NSNotificationCenter.defaultCenter()
-        nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in
-            self.lastTimeADeviceWasSeen = awakeUptime()
-            self.oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: { di, e in self.newOperationError(di, error: e, operation: .FetchSetting) } , fetchResultDelegate: self.newFetchResult))
-            self.removeOldResultsTimer = {
+        func applicationDidBecomeActive() {
+            lastTimeADeviceWasSeen = awakeUptime()
+            oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: { di, e in self.newOperationError(di, error: e, operation: .FetchSetting) } , fetchResultDelegate: self.newFetchResult))
+            removeOldResultsTimer = {
                 // FUTURETODO Use the non-string selector initialization syntax when SE-0022 is implemented:
                 let t = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "removeOldResults", userInfo: nil, repeats: true)
                 t.tolerance = 3
                 return t
                 }()
         }
+        nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in applicationDidBecomeActive() }
         nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in
             self.oq.cancelAllOperations()
             if let removeOldResultsTimer = self.removeOldResultsTimer { removeOldResultsTimer.invalidate() }
@@ -180,6 +181,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             let header = deviceTable.tableHeaderView!
             uppercaseAllLabelsInHierarchy(header)
             header.alpha = 0
+        }
+        
+        if navigationController != nil {
+            // If we're in a navigation controller then we've missed the first UIApplicationDidBecomeActiveNotification already so just call the function now:
+            applicationDidBecomeActive()
         }
     }
     
