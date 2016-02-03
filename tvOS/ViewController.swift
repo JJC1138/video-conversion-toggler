@@ -194,9 +194,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         deviceTable.flashScrollIndicators()
     }
     
+    #if !os(tvOS)
     @IBAction func deviceSwitchChanged(deviceSwitch: UISwitch) {
-        toggleDeviceAtIndexPath(deviceTable.indexPathWithSubview(deviceSwitch)!)
+    toggleDeviceAtIndexPath(deviceTable.indexPathWithSubview(deviceSwitch)!)
     }
+    #endif
     
     // MARK: UITableViewDataSource
     
@@ -211,14 +213,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Device", forIndexPath: indexPath)
         
-        if let cell = cell as? DeviceTableViewCell {
-            tableView.allowsSelection = false
-            cell.nameLabel.text = deviceSetting.device.description
-            cell.settingSwitch.on = deviceSetting.setting
-        } else {
+        #if os(tvOS)
             cell.textLabel!.text = deviceSetting.device.description
             cell.detailTextLabel!.text = localString(deviceSetting.setting ? "On" : "Off")
-        }
+        #else
+            do {
+                let cell = cell as! DeviceTableViewCell
+                cell.nameLabel.text = deviceSetting.device.description
+                cell.settingSwitch.on = deviceSetting.setting
+            }
+        #endif
         
         return cell
     }

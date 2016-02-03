@@ -42,7 +42,6 @@
 		FC65B21A1C452FED00B71747 /* CLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B2191C452FED00B71747 /* CLI.swift */; };
 		FC65B21C1C45300600B71747 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC65B21B1C45300600B71747 /* main.swift */; };
 		FC65B2211C45375000B71747 /* HTMLReader.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */; };
-		FC6A47A91C62404600677864 /* DeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */; };
 		FC6A47AA1C62404600677864 /* DeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */; };
 		FC6A47AC1C624A8400677864 /* UIKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47AB1C624A8400677864 /* UIKitUtility.swift */; };
 		FC6A47AD1C624A8400677864 /* UIKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47AB1C624A8400677864 /* UIKitUtility.swift */; };
@@ -436,7 +435,6 @@
 			files = (
 				FC6A47AC1C624A8400677864 /* UIKitUtility.swift in Sources */,
 				FC524F351C566A7100AA9294 /* VideoConversionToggler.swift in Sources */,
-				FC6A47A91C62404600677864 /* DeviceTableViewCell.swift in Sources */,
 				FC2C18DA1C5656300024C7FF /* ViewController.swift in Sources */,
 				FC2C18D81C5656300024C7FF /* AppDelegate.swift in Sources */,
 				FC524F341C566A6F00AA9294 /* Utility.swift in Sources */,
