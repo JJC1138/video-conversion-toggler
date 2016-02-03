@@ -37,10 +37,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6pk-QP-Oxj" userLabel="Devices">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="60" y="0.0" width="480" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="480" id="TEY-cB-cGK"/>
+                                </constraints>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="IpQ-pu-vkT">
-                                    <rect key="frame" x="0.0" y="64" width="600" height="22"/>
+                                    <rect key="frame" x="0.0" y="64" width="480" height="22"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAZ-HL-PDu" userLabel="Leading Label">
@@ -50,7 +53,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video Conversion" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VJD-8a-Z3i" userLabel="Trailing Label">
-                                            <rect key="frame" x="482" y="7" width="104" height="15"/>
+                                            <rect key="frame" x="362" y="7" width="104" height="15"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                             <color key="textColor" white="0.0" alpha="0.40094288789999999" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -65,21 +68,21 @@
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Device" id="2Zc-Ag-yvd" customClass="DeviceTableViewCell" customModule="VideoConversionToggler" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="114" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="114" width="480" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2Zc-Ag-yvd" id="buW-C2-XR2">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="480" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2F-iN-UFa" userLabel="Name">
-                                                    <rect key="frame" x="15" y="11" width="511" height="21"/>
+                                                    <rect key="frame" x="15" y="11" width="391" height="21"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9I9-vn-Gbe">
-                                                    <rect key="frame" x="534" y="6" width="51" height="31"/>
+                                                    <rect key="frame" x="414" y="6" width="51" height="31"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                                     <connections>
                                                         <action selector="deviceSwitchChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="6Pm-pn-SyY"/>
@@ -113,12 +116,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="6pk-QP-Oxj" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="Dpw-4o-hY0"/>
                             <constraint firstItem="6pk-QP-Oxj" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Inu-gq-mdb"/>
                             <constraint firstItem="fZd-9v-0MH" firstAttribute="top" secondItem="6pk-QP-Oxj" secondAttribute="bottom" priority="999" constant="8" symbolic="YES" id="L0S-ah-CZQ"/>
-                            <constraint firstItem="6pk-QP-Oxj" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="OKr-Ah-lT8"/>
+                            <constraint firstItem="6pk-QP-Oxj" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" priority="750" id="OKr-Ah-lT8"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="fZd-9v-0MH" secondAttribute="bottom" constant="8" symbolic="YES" id="QgZ-8p-6nE"/>
                             <constraint firstItem="fZd-9v-0MH" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.9" id="XsB-eo-wgE"/>
                             <constraint firstItem="6pk-QP-Oxj" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wAI-Lc-8Tw"/>
