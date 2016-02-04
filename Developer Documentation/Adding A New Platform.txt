@@ -1,6 +1,7 @@
 add target with name "Video Conversion Toggler"
 select project file and expand the "project and targets list" pane on the left of the editor (by clicking the square icon with a line on the left that is on the same header as the "Resource Tags" and "Build Settings" headings)
 in the target list rename the target to "Video Conversion Toggler ([platform])"
+ for a WatchKit extension rename it to "Video Conversion Toggler (watchOS Extension)"
 in the "Packaging" section of the target's "Build Settings" tab select the "Levels" option at the top
  if they're not set already on the project column then set the project settings to
   "Product Name" to "Video Conversion Toggler"
@@ -9,12 +10,19 @@ in the "Packaging" section of the target's "Build Settings" tab select the "Leve
  if the platform we're adding requires different settings for any of those then set them in the target column as appropriate
   OS X projects can't share the same app ID (and therefore bundle identifier) with versions of the app on other platforms https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/ConfiguringYourApp/ConfiguringYourApp.html#//apple_ref/doc/uid/TP40012582-CH28-SW8
   watchOS projects bundle IDs have a required format https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/ConfiguringYourApp/ConfiguringYourApp.html#//apple_ref/doc/uid/TP40012582-CH28-SW16
+   they are set correctly by Xcode based on the app chosen in the "Embed in Companion Application" setting when adding a target to a project with an existing iOS target
   tvOS and iOS projects that share the same iTunes Connect app record must have the same app ID https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/ConfiguringYourApp/ConfiguringYourApp.html#//apple_ref/doc/uid/TP40012582-CH28-SW16
  if any of those settings should match the project settings but are being overridden by target settings then remove the target settings
   click the bad setting and then press backspace key
+for watchOS make a new top-level group in the project called "watchOS"
 in Project navigator rename the new "Video Conversion Toggler" group to "[platform]"
+ for watchOS app or extension, rename it to "App" or "Extension" and move it under the "watchOS" group
+for watchOS make a new top-level folder in the project called "watchOS"
+ set the "watchOS" group's folder to it using the instructions below
 rename the new "Video Conversion Toggler" folder in the project to "[platform]"
+ for watchOS app or extension, rename it to "App" or "Extension" and move it under the "watchOS" folder
 select the [platform] group in the Project navigator and in the Utilities pane on the far right of the window select the File inspector tab
 click the folder icon below the old folder name listed as the Location, and select the new folder name
+ make sure that the Location dropdown is set to "Relative to Group"
 select project file again and in the "General" tab at the top in the "Identity" section for the new target click "Choose Info.plist File…" and select the Info.plist in the new platform folder
 go to "Product"/"Scheme"/"Manage Schemes…" menu item and rename the new scheme for the new platform to "Video Conversion Toggler ([platform])"

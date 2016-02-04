@@ -46,6 +46,13 @@
 		FC6A47AC1C624A8400677864 /* UIKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47AB1C624A8400677864 /* UIKitUtility.swift */; };
 		FC6A47AD1C624A8400677864 /* UIKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47AB1C624A8400677864 /* UIKitUtility.swift */; };
 		FCA711271C4E930900B8AA10 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
+		FCAFD1AD1C63B299009F0CB0 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FCAFD1AB1C63B299009F0CB0 /* Interface.storyboard */; };
+		FCAFD1AF1C63B299009F0CB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCAFD1AE1C63B299009F0CB0 /* Assets.xcassets */; };
+		FCAFD1B61C63B29A009F0CB0 /* Video Conversion Toggler.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FCAFD1B51C63B29A009F0CB0 /* Video Conversion Toggler.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FCAFD1BB1C63B29A009F0CB0 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAFD1BA1C63B29A009F0CB0 /* InterfaceController.swift */; };
+		FCAFD1BD1C63B29A009F0CB0 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAFD1BC1C63B29A009F0CB0 /* ExtensionDelegate.swift */; };
+		FCAFD1BF1C63B29A009F0CB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCAFD1BE1C63B29A009F0CB0 /* Assets.xcassets */; };
+		FCAFD1C31C63B29A009F0CB0 /* Video Conversion Toggler.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FCAFD1A91C63B299009F0CB0 /* Video Conversion Toggler.app */; };
 		FCEAE3C71C47F0F500DD195E /* TinySSDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */; };
 		FCEAE3CA1C47F7F300DD195E /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */; };
 		FCEAE3CB1C47F7F300DD195E /* CocoaAsyncSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -59,6 +66,23 @@
 		FCF63DCC1C4540C5008AEC28 /* Alamofire.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FCF63DC51C454068008AEC28 /* Alamofire.framework.dSYM */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		FCAFD1B71C63B29A009F0CB0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC71103D1C3AA6B1002755E4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCAFD1B41C63B29A009F0CB0;
+			remoteInfo = "Video Conversion Toggler Extension";
+		};
+		FCAFD1C11C63B29A009F0CB0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC71103D1C3AA6B1002755E4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCAFD1A81C63B299009F0CB0;
+			remoteInfo = "Video Conversion Toggler";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		FC65B21F1C45372D00B71747 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -71,6 +95,28 @@
 				FCEAE3CC1C47F80200DD195E /* CocoaAsyncSocket.framework.dSYM in CopyFiles */,
 				FC4225AE1C4D5BAF00A0E99D /* Fuzi.framework.dSYM in CopyFiles */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCAFD1C91C63B29A009F0CB0 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FCAFD1B61C63B29A009F0CB0 /* Video Conversion Toggler.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCAFD1CB1C63B29A009F0CB0 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				FCAFD1C31C63B29A009F0CB0 /* Video Conversion Toggler.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FCF63DBE1C453815008AEC28 /* Embed Frameworks */ = {
@@ -124,6 +170,15 @@
 		FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableViewCell.swift; sourceTree = "<group>"; };
 		FC6A47AB1C624A8400677864 /* UIKitUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitUtility.swift; sourceTree = "<group>"; };
 		FCA711281C4E930900B8AA10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FCAFD1A91C63B299009F0CB0 /* Video Conversion Toggler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Conversion Toggler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCAFD1AC1C63B299009F0CB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		FCAFD1AE1C63B299009F0CB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FCAFD1B01C63B299009F0CB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FCAFD1B51C63B29A009F0CB0 /* Video Conversion Toggler.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Video Conversion Toggler.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCAFD1BA1C63B29A009F0CB0 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		FCAFD1BC1C63B29A009F0CB0 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
+		FCAFD1BE1C63B29A009F0CB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FCAFD1C01C63B29A009F0CB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TinySSDPClient.swift; sourceTree = "<group>"; };
 		FCEAE3C81C47F7E800DD195E /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/Mac/CocoaAsyncSocket.framework; sourceTree = SOURCE_ROOT; };
 		FCEAE3C91C47F7E800DD195E /* CocoaAsyncSocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = CocoaAsyncSocket.framework.dSYM; path = Carthage/Build/Mac/CocoaAsyncSocket.framework.dSYM; sourceTree = SOURCE_ROOT; };
@@ -164,6 +219,13 @@
 				FCEAE3CA1C47F7F300DD195E /* CocoaAsyncSocket.framework in Frameworks */,
 				FCF63DBC1C453814008AEC28 /* HTMLReader.framework in Frameworks */,
 				FCF63DCA1C45409B008AEC28 /* Alamofire.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCAFD1B21C63B29A009F0CB0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,6 +294,7 @@
 				FC65B2091C451BF600B71747 /* OS X */,
 				FC2C18D61C5656300024C7FF /* tvOS */,
 				FC5F109E1C60FF0800A317DE /* iOS */,
+				FCAFD20F1C63B4C0009F0CB0 /* watchOS */,
 				FC7110481C3AA8F6002755E4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -242,8 +305,40 @@
 				FC65B2081C451BF600B71747 /* Video Conversion Toggler.app */,
 				FC2C18D51C5656300024C7FF /* Video Conversion Toggler.app */,
 				FC5F109D1C60FF0800A317DE /* Video Conversion Toggler.app */,
+				FCAFD1A91C63B299009F0CB0 /* Video Conversion Toggler.app */,
+				FCAFD1B51C63B29A009F0CB0 /* Video Conversion Toggler.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FCAFD1AA1C63B299009F0CB0 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				FCAFD1AB1C63B299009F0CB0 /* Interface.storyboard */,
+				FCAFD1AE1C63B299009F0CB0 /* Assets.xcassets */,
+				FCAFD1B01C63B299009F0CB0 /* Info.plist */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		FCAFD1B91C63B29A009F0CB0 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				FCAFD1BA1C63B29A009F0CB0 /* InterfaceController.swift */,
+				FCAFD1BC1C63B29A009F0CB0 /* ExtensionDelegate.swift */,
+				FCAFD1BE1C63B29A009F0CB0 /* Assets.xcassets */,
+				FCAFD1C01C63B29A009F0CB0 /* Info.plist */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		FCAFD20F1C63B4C0009F0CB0 /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				FCAFD1AA1C63B299009F0CB0 /* App */,
+				FCAFD1B91C63B29A009F0CB0 /* Extension */,
+			);
+			path = watchOS;
 			sourceTree = "<group>";
 		};
 		FCF63DBF1C453C38008AEC28 /* Common */ = {
@@ -286,10 +381,12 @@
 				FC5F109A1C60FF0800A317DE /* Frameworks */,
 				FC5F109B1C60FF0800A317DE /* Resources */,
 				FC5F10B71C61053500A317DE /* ShellScript */,
+				FCAFD1CB1C63B29A009F0CB0 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FCAFD1C21C63B29A009F0CB0 /* PBXTargetDependency */,
 			);
 			name = "Video Conversion Toggler (iOS)";
 			productName = "Video Conversion Toggler";
@@ -315,6 +412,40 @@
 			productReference = FC65B2081C451BF600B71747 /* Video Conversion Toggler.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FCAFD1A81C63B299009F0CB0 /* Video Conversion Toggler (watchOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCAFD1CA1C63B29A009F0CB0 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (watchOS)" */;
+			buildPhases = (
+				FCAFD1A71C63B299009F0CB0 /* Resources */,
+				FCAFD1C91C63B29A009F0CB0 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCAFD1B81C63B29A009F0CB0 /* PBXTargetDependency */,
+			);
+			name = "Video Conversion Toggler (watchOS)";
+			productName = "Video Conversion Toggler";
+			productReference = FCAFD1A91C63B299009F0CB0 /* Video Conversion Toggler.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		FCAFD1B41C63B29A009F0CB0 /* Video Conversion Toggler (watchOS Extension) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCAFD1C81C63B29A009F0CB0 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (watchOS Extension)" */;
+			buildPhases = (
+				FCAFD1B11C63B29A009F0CB0 /* Sources */,
+				FCAFD1B21C63B29A009F0CB0 /* Frameworks */,
+				FCAFD1B31C63B29A009F0CB0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Video Conversion Toggler (watchOS Extension)";
+			productName = "Video Conversion Toggler Extension";
+			productReference = FCAFD1B51C63B29A009F0CB0 /* Video Conversion Toggler.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -332,6 +463,12 @@
 					};
 					FC65B2071C451BF600B71747 = {
 						CreatedOnToolsVersion = 7.2;
+					};
+					FCAFD1A81C63B299009F0CB0 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+					FCAFD1B41C63B29A009F0CB0 = {
+						CreatedOnToolsVersion = 7.2.1;
 					};
 				};
 			};
@@ -351,6 +488,8 @@
 				FC65B2071C451BF600B71747 /* Video Conversion Toggler (OS X) */,
 				FC2C18D41C5656300024C7FF /* Video Conversion Toggler (tvOS) */,
 				FC5F109C1C60FF0800A317DE /* Video Conversion Toggler (iOS) */,
+				FCAFD1A81C63B299009F0CB0 /* Video Conversion Toggler (watchOS) */,
+				FCAFD1B41C63B29A009F0CB0 /* Video Conversion Toggler (watchOS Extension) */,
 			);
 		};
 /* End PBXProject section */
@@ -384,6 +523,23 @@
 				FC65B20F1C451BF600B71747 /* Assets.xcassets in Resources */,
 				FCA711271C4E930900B8AA10 /* Localizable.strings in Resources */,
 				FC65B2121C451BF600B71747 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCAFD1A71C63B299009F0CB0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCAFD1AF1C63B299009F0CB0 /* Assets.xcassets in Resources */,
+				FCAFD1AD1C63B299009F0CB0 /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCAFD1B31C63B29A009F0CB0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCAFD1BF1C63B29A009F0CB0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,7 +626,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FCAFD1B11C63B29A009F0CB0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCAFD1BD1C63B29A009F0CB0 /* ExtensionDelegate.swift in Sources */,
+				FCAFD1BB1C63B29A009F0CB0 /* InterfaceController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FCAFD1B81C63B29A009F0CB0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCAFD1B41C63B29A009F0CB0 /* Video Conversion Toggler (watchOS Extension) */;
+			targetProxy = FCAFD1B71C63B29A009F0CB0 /* PBXContainerItemProxy */;
+		};
+		FCAFD1C21C63B29A009F0CB0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCAFD1A81C63B299009F0CB0 /* Video Conversion Toggler (watchOS) */;
+			targetProxy = FCAFD1C11C63B29A009F0CB0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		FC2C18DB1C5656300024C7FF /* Main.storyboard */ = {
@@ -511,6 +689,14 @@
 				FCA711281C4E930900B8AA10 /* Base */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		FCAFD1AB1C63B299009F0CB0 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FCAFD1AC1C63B299009F0CB0 /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -828,6 +1014,188 @@
 			};
 			name = Release;
 		};
+		FCAFD1C41C63B29A009F0CB0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IBSC_MODULE = Video_Conversion_Toggler_Extension;
+				INFOPLIST_FILE = "$(SRCROOT)/watchOS/App/Info.plist";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler.watchkitapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Debug;
+		};
+		FCAFD1C51C63B29A009F0CB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IBSC_MODULE = Video_Conversion_Toggler_Extension;
+				INFOPLIST_FILE = "$(SRCROOT)/watchOS/App/Info.plist";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler.watchkitapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Release;
+		};
+		FCAFD1C61C63B29A009F0CB0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/watchOS/Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler.watchkitapp.watchkitextension;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Debug;
+		};
+		FCAFD1C71C63B29A009F0CB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/watchOS/Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler.watchkitapp.watchkitextension;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -866,6 +1234,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		FCAFD1C81C63B29A009F0CB0 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (watchOS Extension)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCAFD1C61C63B29A009F0CB0 /* Debug */,
+				FCAFD1C71C63B29A009F0CB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		FCAFD1CA1C63B29A009F0CB0 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (watchOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCAFD1C41C63B29A009F0CB0 /* Debug */,
+				FCAFD1C51C63B29A009F0CB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
