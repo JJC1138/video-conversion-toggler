@@ -8,8 +8,19 @@
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="VideoConversionToggler"/>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="VideoConversionToggler">
+                    <items>
+                        <label alignment="center" text="Device" minimumScaleFactor="0.40000000000000002" id="m6F-e0-T8y">
+                            <fontDescription key="font" type="system" pointSize="40"/>
+                        </label>
+                        <switch width="50" height="50" alignment="center" value="YES" id="yXA-mF-us6"/>
+                        <label alignment="center" verticalAlignment="center" hidden="YES" text="Error. See app on phone for details" numberOfLines="0" id="yBE-vy-DMA">
+                            <color key="textColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        </label>
+                    </items>
+                </controller>
             </objects>
+            <point key="canvasLocation" x="565" y="420"/>
         </scene>
     </scenes>
 </document>
