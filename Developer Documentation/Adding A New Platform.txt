@@ -26,3 +26,9 @@ click the folder icon below the old folder name listed as the Location, and sele
  make sure that the Location dropdown is set to "Relative to Group"
 select project file again and in the "General" tab at the top in the "Identity" section for the new target click "Choose Info.plist File…" and select the Info.plist in the new platform folder
 go to "Product"/"Scheme"/"Manage Schemes…" menu item and rename the new scheme for the new platform to "Video Conversion Toggler ([platform])"
+for watchOS
+ open the "watchOS/App/Interface.storyboard" file
+ select the Interface Controller in the hierarchy
+ select the Identity Inspector in the right tab (open it if necessary)
+ in the "Custom Class" section set the Module explicitly to "VideoConversionToggler"
+  (because we've renamed the module it isn't found by the default mechanism that presumably uses Xcode's default naming pattern)
