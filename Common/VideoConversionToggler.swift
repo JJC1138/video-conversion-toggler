@@ -81,8 +81,10 @@ func fetchSetting(deviceInfo: DeviceInfo) throws -> Bool {
             return
         }
         
-        let conversionOnChecked = conversionOnElement.attributes["checked"] != nil
-        let conversionOffChecked = conversionOffElement.attributes["checked"] != nil
+        func isChecked(element: HTMLElement) -> Bool { return element.attributes["checked"] != nil }
+        
+        let conversionOnChecked = isChecked(conversionOnElement)
+        let conversionOffChecked = isChecked(conversionOffElement)
         
         guard conversionOnChecked != conversionOffChecked else {
             error = AppError(kind: .WebInterfaceNotAsExpected, info: "Setting on and off elements had same value")
