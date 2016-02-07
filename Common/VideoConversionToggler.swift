@@ -73,8 +73,19 @@ func fetchSetting(deviceInfo: DeviceInfo) throws -> Bool {
         
         let doc = HTMLDocument(data: response.data!, contentTypeHeader: response.response?.allHeaderFields["Content-Type"] as! String?)
         
-        guard let conversionElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]") else {
+        guard let
+            conversionOnElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]"),
+            conversionOffElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"OFF\"]") else {
+                
             error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
+            return
+        }
+        
+        let conversionOnChecked = conversionOnElement.attributes["checked"] != nil
+        let conversionOffChecked = conversionOffElement.attributes["checked"] != nil
+        
+        guard conversionOnChecked != conversionOffChecked else {
+            error = AppError(kind: .WebInterfaceNotAsExpected, info: "Setting on and off elements had same value")
             return
         }
         
@@ -84,7 +95,7 @@ func fetchSetting(deviceInfo: DeviceInfo) throws -> Bool {
 //            return
 //        }
         
-        let conversionWasOn = conversionElement.attributes["checked"] != nil
+        let conversionWasOn = conversionOnChecked
         
         result = conversionWasOn
     }
