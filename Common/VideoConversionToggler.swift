@@ -56,53 +56,69 @@ let af = Alamofire.Manager(configuration: {
     }())
 
 func fetchSetting(deviceInfo: DeviceInfo) throws -> Bool {
-    let complete = dispatch_semaphore_create(0)!
-    
     var error: AppError?
     var result: Bool?
     
-    af.request(.GET, NSURL(string: "SETUP/VIDEO/d_video.asp", relativeToURL: deviceInfo.baseURL)!).validate().responseData {
-        response in
-        
-        defer { dispatch_semaphore_signal(complete) }
-        
-        if let responseError = response.result.error {
-            error = AppError(kind: .CouldNotAccessWebInterface, nsError: responseError)
-            return
+    do {
+        let complete = dispatch_semaphore_create(0)!
+        // We have to request this page first to initialize something in the web interface. If we don't then the d_video request below can sometimes return a page where neither of the setting's radio buttons are checked.
+        af.request(.GET, NSURL(string: "SETUP/VIDEO/r_video.asp", relativeToURL: deviceInfo.baseURL)!).validate().responseData {
+            response in
+            
+            defer { dispatch_semaphore_signal(complete) }
+            
+            if let responseError = response.result.error {
+                error = AppError(kind: .CouldNotAccessWebInterface, nsError: responseError)
+                return
+            }
         }
-        
-        let doc = HTMLDocument(data: response.data!, contentTypeHeader: response.response?.allHeaderFields["Content-Type"] as! String?)
-        
-        guard let
-            conversionOnElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]"),
-            conversionOffElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"OFF\"]") else {
-                
-            error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
-            return
-        }
-        
-        func isChecked(element: HTMLElement) -> Bool { return element.attributes["checked"] != nil }
-        
-        let conversionOnChecked = isChecked(conversionOnElement)
-        let conversionOffChecked = isChecked(conversionOffElement)
-        
-        guard conversionOnChecked != conversionOffChecked else {
-            error = AppError(kind: .WebInterfaceNotAsExpected, info: "Setting on and off elements had same value")
-            return
-        }
-        
-        // TESTING uncomment to produce intermittent errors:
-//        guard Int(awakeUptime()) % 3 != 0 else {
-//            error = AppError(kind: .WebInterfaceNotAsExpected, info: "Fake test error")
-//            return
-//        }
-        
-        let conversionWasOn = conversionOnChecked
-        
-        result = conversionWasOn
+        dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
     }
     
-    dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+    if error == nil {
+        let complete = dispatch_semaphore_create(0)!
+        af.request(.GET, NSURL(string: "SETUP/VIDEO/d_video.asp", relativeToURL: deviceInfo.baseURL)!).validate().responseData {
+            response in
+            
+            defer { dispatch_semaphore_signal(complete) }
+            
+            if let responseError = response.result.error {
+                error = AppError(kind: .CouldNotAccessWebInterface, nsError: responseError)
+                return
+            }
+            
+            let doc = HTMLDocument(data: response.data!, contentTypeHeader: response.response?.allHeaderFields["Content-Type"] as! String?)
+            
+            guard let
+                conversionOnElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]"),
+                conversionOffElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"OFF\"]") else {
+                    
+                error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
+                return
+            }
+            
+            func isChecked(element: HTMLElement) -> Bool { return element.attributes["checked"] != nil }
+            
+            let conversionOnChecked = isChecked(conversionOnElement)
+            let conversionOffChecked = isChecked(conversionOffElement)
+            
+            guard conversionOnChecked != conversionOffChecked else {
+                error = AppError(kind: .WebInterfaceNotAsExpected, info: "Setting on and off elements had same value")
+                return
+            }
+            
+            // TESTING uncomment to produce intermittent errors:
+//            guard Int(awakeUptime()) % 3 != 0 else {
+//                error = AppError(kind: .WebInterfaceNotAsExpected, info: "Fake test error")
+//                return
+//            }
+            
+            let conversionWasOn = conversionOnChecked
+            
+            result = conversionWasOn
+        }
+        dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+    }
     
     if let error = error { throw error }
     return result!
