@@ -183,8 +183,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             header.alpha = 0
         }
         
-        if navigationController != nil {
-            // If we're in a navigation controller then we've missed the first UIApplicationDidBecomeActiveNotification already so just call the function now:
+        if UIApplication.sharedApplication().applicationState == .Active {
+            // We've missed the first UIApplicationDidBecomeActiveNotification already so just call the function now. This can happen if we're in a navigation controller, for example.
             applicationDidBecomeActive()
         }
     }
