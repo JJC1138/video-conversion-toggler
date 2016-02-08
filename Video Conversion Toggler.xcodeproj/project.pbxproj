@@ -45,6 +45,12 @@
 		FC6A47AA1C62404600677864 /* DeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */; };
 		FC6A47AC1C624A8400677864 /* UIKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47AB1C624A8400677864 /* UIKitUtility.swift */; };
 		FC6A47AD1C624A8400677864 /* UIKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47AB1C624A8400677864 /* UIKitUtility.swift */; };
+		FC96A6851C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC96A6841C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift */; };
+		FC96A6861C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC96A6841C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift */; };
+		FC96A6881C6912B800A7B0A0 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */; };
+		FC96A6891C6912B800A7B0A0 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */; };
+		FC96A68A1C6912B800A7B0A0 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */; };
+		FC96A68B1C6912B800A7B0A0 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */; };
 		FCA711271C4E930900B8AA10 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
 		FCAFD1AD1C63B299009F0CB0 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FCAFD1AB1C63B299009F0CB0 /* Interface.storyboard */; };
 		FCAFD1AF1C63B299009F0CB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCAFD1AE1C63B299009F0CB0 /* Assets.xcassets */; };
@@ -169,6 +175,8 @@
 		FC65B2201C45375000B71747 /* HTMLReader.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = HTMLReader.framework.dSYM; path = Carthage/Build/Mac/HTMLReader.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableViewCell.swift; sourceTree = "<group>"; };
 		FC6A47AB1C624A8400677864 /* UIKitUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitUtility.swift; sourceTree = "<group>"; };
+		FC96A6841C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchCommunicationProtocol.swift; sourceTree = "<group>"; };
+		FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfo.swift; sourceTree = "<group>"; };
 		FCA711281C4E930900B8AA10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FCAFD1A91C63B299009F0CB0 /* Video Conversion Toggler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Conversion Toggler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCAFD1AC1C63B299009F0CB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
@@ -261,6 +269,7 @@
 				FC5F10AB1C60FF0800A317DE /* Info.plist */,
 				FC6A47A81C62404600677864 /* DeviceTableViewCell.swift */,
 				FC6A47AB1C624A8400677864 /* UIKitUtility.swift */,
+				FC96A6841C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -348,6 +357,7 @@
 				FCF63DC21C453D36008AEC28 /* VideoConversionToggler.swift */,
 				FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */,
 				FCA711291C4E930900B8AA10 /* Localizable.strings */,
+				FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -589,6 +599,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC96A6891C6912B800A7B0A0 /* DeviceInfo.swift in Sources */,
 				FC6A47AC1C624A8400677864 /* UIKitUtility.swift in Sources */,
 				FC524F351C566A7100AA9294 /* VideoConversionToggler.swift in Sources */,
 				FC2C18DA1C5656300024C7FF /* ViewController.swift in Sources */,
@@ -606,8 +617,10 @@
 				FC5F10BC1C611C7900A317DE /* ViewController.swift in Sources */,
 				FC6A47AA1C62404600677864 /* DeviceTableViewCell.swift in Sources */,
 				FC5F10B91C61122400A317DE /* VideoConversionToggler.swift in Sources */,
+				FC96A6851C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift in Sources */,
 				FC5F10BA1C61122400A317DE /* TinySSDPClient.swift in Sources */,
 				FC5F10BD1C611CE600A317DE /* AppDelegate.swift in Sources */,
+				FC96A68A1C6912B800A7B0A0 /* DeviceInfo.swift in Sources */,
 				FC5F10B81C61122400A317DE /* Utility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -623,6 +636,7 @@
 				FC65B20B1C451BF600B71747 /* AppDelegate.swift in Sources */,
 				FC65B21C1C45300600B71747 /* main.swift in Sources */,
 				FC65B21A1C452FED00B71747 /* CLI.swift in Sources */,
+				FC96A6881C6912B800A7B0A0 /* DeviceInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,8 +644,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC96A6861C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift in Sources */,
 				FCAFD1BD1C63B29A009F0CB0 /* ExtensionDelegate.swift in Sources */,
 				FCAFD1BB1C63B29A009F0CB0 /* InterfaceController.swift in Sources */,
+				FC96A68B1C6912B800A7B0A0 /* DeviceInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1242,6 +1258,7 @@
 				FCAFD1C71C63B29A009F0CB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FCAFD1CA1C63B29A009F0CB0 /* Build configuration list for PBXNativeTarget "Video Conversion Toggler (watchOS)" */ = {
 			isa = XCConfigurationList;
@@ -1250,6 +1267,7 @@
 				FCAFD1C51C63B29A009F0CB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

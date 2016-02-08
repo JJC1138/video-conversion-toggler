@@ -10,14 +10,35 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="VideoConversionToggler">
                     <items>
-                        <label alignment="center" text="Device" minimumScaleFactor="0.40000000000000002" id="m6F-e0-T8y">
-                            <fontDescription key="font" type="system" pointSize="40"/>
-                        </label>
-                        <switch width="50" height="50" alignment="center" value="YES" id="yXA-mF-us6"/>
-                        <label alignment="center" verticalAlignment="center" hidden="YES" text="Error. See app on phone for details" numberOfLines="0" id="yBE-vy-DMA">
+                        <group width="1" alignment="left" hidden="YES" layout="vertical" id="dMg-hS-HZk" userLabel="Device Info">
+                            <items>
+                                <label alignment="center" text="Device" minimumScaleFactor="0.40000000000000002" id="m6F-e0-T8y">
+                                    <accessibilityTraits key="accessibilityTraits" notEnabled="YES"/>
+                                    <fontDescription key="font" type="system" pointSize="40"/>
+                                </label>
+                                <switch width="50" height="50" alignment="center" value="YES" id="yXA-mF-us6">
+                                    <connections>
+                                        <action selector="switchToggled:" destination="AgC-eL-Hgc" id="AZC-xD-hmG"/>
+                                    </connections>
+                                </switch>
+                            </items>
+                        </group>
+                        <label alignment="center" verticalAlignment="center" hidden="YES" text="Error. See app on phone for details" textAlignment="center" numberOfLines="0" id="yBE-vy-DMA">
+                            <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
                             <color key="textColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         </label>
+                        <label alignment="center" verticalAlignment="center" hidden="YES" text="Your iPhone isn't reachable and this app needs it to work." textAlignment="center" numberOfLines="0" id="26x-nW-9JI">
+                            <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
+                            <color key="textColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        </label>
                     </items>
+                    <connections>
+                        <outlet property="deviceErrorLabel" destination="yBE-vy-DMA" id="10s-g7-afB"/>
+                        <outlet property="deviceInfoGroup" destination="dMg-hS-HZk" id="kaq-aX-Wsh"/>
+                        <outlet property="deviceNameLabel" destination="m6F-e0-T8y" id="ybj-bs-kSE"/>
+                        <outlet property="deviceSettingSwitch" destination="yXA-mF-us6" id="tGs-ce-1AV"/>
+                        <outlet property="phoneUnreachableErrorLabel" destination="26x-nW-9JI" id="SgT-V5-hzv"/>
+                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="565" y="420"/>

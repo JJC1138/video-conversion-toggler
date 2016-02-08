@@ -1,4 +1,7 @@
 import UIKit
+#if !os(tvOS)
+    import WatchConnectivity
+#endif
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -187,7 +190,78 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             // We've missed the first UIApplicationDidBecomeActiveNotification already so just call the function now. This can happen if we're in a navigation controller, for example.
             applicationDidBecomeActive()
         }
+        
+        #if !os(tvOS)
+            if WCSession.isSupported() {
+                let session = WCSession.defaultSession()
+                watchDelegate = WCSD(viewController: self)
+                session.delegate = watchDelegate
+                session.activateSession()
+                print("activated session on phone") // FIXME remove
+            }
+        #endif
     }
+    
+    #if !os(tvOS)
+    class WCSD: NSObject, WCSessionDelegate {
+        
+        init(viewController: ViewController) {
+            self.viewController = viewController
+        }
+        
+        let viewController: ViewController
+        
+        func session(session: WCSession, didReceiveMessage message: [String: AnyObject]) {
+            // Remember that this will be called on a background thread.
+            if message.isEmpty { // a request for an update
+                NSOperationQueue.mainQueue().addOperationWithBlock(self.viewController.watchRequestedUpdate)
+            }
+            session.sendMessage(["msg": "received message on phone in state \(UIApplication.sharedApplication().applicationState == .Active ? "active" : "not active")"], replyHandler: nil, errorHandler: { print($0) }) // FIXME remove
+        }
+        
+    }
+    
+    var watchDelegate: WCSD?
+    
+    func watchRequestedUpdate() {
+        guard UIApplication.sharedApplication().applicationState != .Active else {
+            // We're active so we'll be updating the watch regularly when we get data so there's no need to do anything special now.
+            WCSession.defaultSession().sendMessage(["msg": "skipping update because phone app is active"], replyHandler: nil, errorHandler: nil) // FIXME remove
+            return
+        }
+        
+        // We're in the background so we should run a fetch to update the watch.
+        oq.addOperationWithBlock {
+            let delegateQueue = NSOperationQueue.mainQueue()
+            let fetchQueue = NSOperationQueue()
+            discoverCompatibleDevices { deviceInfo in fetchQueue.addOperationWithBlock {
+                do {
+                    let setting = try fetchSetting(deviceInfo)
+                    delegateQueue.addOperationWithBlock { self.newFetchResult(deviceInfo, setting: setting) }
+                } catch let e as AppError {
+                    delegateQueue.addOperationWithBlock { self.newFetchError(deviceInfo, error: e) }
+                } catch { assert(false) }
+                }
+            }
+            fetchQueue.waitUntilAllOperationsAreFinished()
+            WCSession.defaultSession().sendMessage(["msg": "did an update on behalf of watch"], replyHandler: nil, errorHandler: nil) // FIXME remove
+            delegateQueue.addOperationWithBlock(self.sendStatusToWatch)
+        }
+    }
+    
+    func sendStatusToWatch() {
+        guard WCSession.isSupported() else { return }
+        
+        var status = [String : AnyObject]()
+        if let firstDeviceSetting = deviceSettings.first {
+            status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedDataWithRootObject(DeviceInfoCoding(firstDeviceSetting.device))
+            status[WatchMessageKeys.setting] = firstDeviceSetting.setting
+        }
+        status[WatchMessageKeys.error] = !errors.isEmpty
+        
+        try! WCSession.defaultSession().updateApplicationContext(status)
+    }
+    #endif
     
     // HIG-compliance housekeeping like that which is done by UITableViewController:
     // https://developer.apple.com/library/tvos/documentation/UserExperience/Conceptual/TableView_iPhone/TableViewAndDataModel/TableViewAndDataModel.html

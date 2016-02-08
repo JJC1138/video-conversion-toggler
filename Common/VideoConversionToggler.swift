@@ -21,16 +21,6 @@ struct AppError : ErrorType {
     }
 }
 
-struct DeviceInfo: Hashable, CustomStringConvertible, CustomDebugStringConvertible {
-    let name: String
-    let baseURL: NSURL
-    
-    var hashValue: Int { return baseURL.hashValue }
-    var description: String { return name }
-    var debugDescription: String { return "\(name) <\(baseURL)>" }
-}
-func == (a: DeviceInfo, b: DeviceInfo) -> Bool { return a.baseURL == b.baseURL }
-
 func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String {
     let errorDescriptionFormat: String = {
         // Using a switch here allows the compiler to catch the error if we don't specify all possible values:
