@@ -47,11 +47,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             deviceSettings[index] = newSetting // Update at least the retrieval time whether the setting has changed or not.
             if oldSetting != setting {
                 deviceTable.reloadRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
+                if index == 0 { sendStatusToWatch() }
             }
         } else {
             deviceSettings.append(newSetting)
             deviceTable.insertRowsAtIndexPaths([row(deviceSettings.count - 1)], withRowAnimation: tableAnimationType)
-            if deviceSettings.count == 1 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 1 } }
+            if deviceSettings.count == 1 {
+                UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 1 }
+                sendStatusToWatch()
+            }
         }
         
         removeErrorFor(deviceInfo, forOperation: .FetchSetting)
@@ -86,17 +90,22 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func updateErrorText() {
-        errorLabel.text = {
-            if self.errors.count > 0 {
-                return (self.errors.map { describeError($0.error, forDevice: $0.device) }).joinWithSeparator("\n\n") + "\n\n\(errorContactInstruction())"
-            } else {
-                if weHaventSeenADeviceInAWhile() {
-                    return noDevicesContactInstruction()
+        do {
+            let hasError = { self.errorLabel.text != nil && !self.errorLabel.text!.isEmpty }
+            let hadError = hasError()
+            errorLabel.text = {
+                if self.errors.count > 0 {
+                    return (self.errors.map { describeError($0.error, forDevice: $0.device) }).joinWithSeparator("\n\n") + "\n\n\(errorContactInstruction())"
                 } else {
-                    return ""
+                    if weHaventSeenADeviceInAWhile() {
+                        return noDevicesContactInstruction()
+                    } else {
+                        return ""
+                    }
                 }
-            }
-            }()
+                }()
+            if hadError != hasError() { sendStatusToWatch() }
+        }
         
         if let tableFillConstraint = tableFillConstraint {
             let errorLabelShouldBeVisible = !errorLabel.text!.isEmpty
@@ -117,6 +126,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             deviceSettings.removeAtIndex(i)
             deviceTable.deleteRowsAtIndexPaths([row(i)], withRowAnimation: tableAnimationType)
             hideTableHeaderIfNecessary()
+            if i == 0 { sendStatusToWatch() }
         }
     }
     
@@ -127,6 +137,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         func isCurrent(setting: DeviceSetting) -> Bool { return setting.retrieved >= oldestAllowedTime }
         
         if !deviceSettings.all(isCurrent) {
+            var deletingFirstRow = false
             var newSettings = [DeviceSetting]()
             var rowsToDelete = [NSIndexPath]()
             for (index, setting) in deviceSettings.enumerate() {
@@ -134,6 +145,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     newSettings.append(setting)
                 } else {
                     rowsToDelete.append(row(index))
+                    if index == 0 { deletingFirstRow = true }
                 }
             }
             
@@ -142,6 +154,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             deviceSettings = newSettings
             deviceTable.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: tableAnimationType)
             hideTableHeaderIfNecessary()
+            if (deletingFirstRow) { sendStatusToWatch() }
         }
         
         if weHaventSeenADeviceInAWhile() { updateErrorText() }
@@ -228,9 +241,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         NSOperationQueue.mainQueue().addOperationWithBlock {
             guard UIApplication.sharedApplication().applicationState != .Active else {
-                // We're active so we'll be updating the watch regularly when we get data so there's no need to do anything special now.
+                // We're active and we'll be updating regularly so there's no need to do a special fetch right now.
                 WCSession.defaultSession().sendMessage(["msg": "skipping update because phone app is active"], replyHandler: nil, errorHandler: nil) // FIXME remove
                 
+                self.sendStatusToWatch()
                 UIApplication.sharedApplication().endBackgroundTask(task)
                 return
             }
@@ -320,6 +334,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let newDeviceSetting = DeviceSetting(device: selectedDeviceSetting.device, setting: !selectedDeviceSetting.setting, retrieved: awakeUptime())
         self.deviceSettings[deviceSettingsIndex] = newDeviceSetting
         self.deviceTable.reloadRowsAtIndexPaths([indexPath], withRowAnimation: self.tableAnimationType)
+        if deviceSettingsIndex == 0 { sendStatusToWatch() }
         
         // It's useful for the user if we clear out any errors from previous attempts now, because we're about to try again. If the old error just stayed on screen and was replaced by the same error then it would be harder to tell what had happened.
         removeErrorFor(selectedDeviceSetting.device, forOperation: .Toggle)
