@@ -90,4 +90,6 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
     sock.sendData(searchMessage, toHost: ip, port: port, withTimeout: -1, tag: 0)
     
     sleep(UInt32(maximumResponseWaitingTimeSeconds * 2))
+    
+    sock.close()
 }
