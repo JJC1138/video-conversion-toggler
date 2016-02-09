@@ -45,11 +45,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if let index = (deviceSettings.indexOf { $0.device == deviceInfo }) {
             // We already have an entry for this device.
             let oldSetting = deviceSettings[index].setting
-            deviceSettings[index] = newSetting // Update at least the retrieval time whether the setting has changed or not.
             // We only update an existing entry if there are no toggle operations outstanding. That prevents a confusing situation where you press the switch and it changes, but then changes back because of an old fetch operation result just coming in, and then changes again a moment later to the setting you wanted.
             if oldSetting != setting && toggleOperationsOutstanding[deviceInfo] == 0 {
+                deviceSettings[index] = newSetting
                 deviceTable.reloadRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
                 if index == 0 { sendStatusToWatch() }
+            } else {
+                // Just update the retrieval time:
+                deviceSettings[index] = DeviceSetting(device: deviceInfo, setting: oldSetting, retrieved: lastTimeADeviceWasSeen)
             }
         } else {
             deviceSettings.append(newSetting)
