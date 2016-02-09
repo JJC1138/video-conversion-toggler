@@ -42,6 +42,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         print("on watch session is now \(session.reachable ? "reachable" : "unreachable")") // FIXME remove
         if session.reachable {
             requestAnUpdate()
+            phoneUnreachableErrorLabel.setHidden(true)
         } else {
             deviceInfo = nil
             
