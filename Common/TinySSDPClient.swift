@@ -62,6 +62,11 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
             responseDelegateQueue.addOperationWithBlock { self.responseDelegate(response) }
         }
         
+        @objc func udpSocket(sock: GCDAsyncUdpSocket!, didSendDataWithTag tag: Int) {
+            // We can't begin receiving until the socket is bound and we're doing that implicitly by sending data over it, so this is the right place for this.
+            try! sock.beginReceiving()
+        }
+        
     }
     
     let socketDelegate = SocketDelegate(responseDelegateQueue: delegateQueue, responseDelegate: delegate) // We have to keep a reference to this so it can't be inlined in the call below.
@@ -83,7 +88,6 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
         ].joinWithSeparator("\r\n").dataUsingEncoding(NSUTF8StringEncoding)
     
     sock.sendData(searchMessage, toHost: ip, port: port, withTimeout: -1, tag: 0)
-    try! sock.beginReceiving()
     
     sleep(UInt32(maximumResponseWaitingTimeSeconds * 2))
 }
