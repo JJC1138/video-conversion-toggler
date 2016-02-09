@@ -15,12 +15,9 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     override func willActivate() {
         super.willActivate()
         
-        print("WKInterfaceController.willActivate()") // FIXME remove
-        
         let session = WCSession.defaultSession()
         session.delegate = self
         session.activateSession()
-        print("activated session on watch") // FIXME remove
         // FUTURETODO in watchOS 2.2 WCSession.activateSession() completes asynchronously so we can't count on it be activated already here:
         sessionReachabilityDidChange(session)
         
@@ -39,7 +36,6 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     func sessionReachabilityDidChange(session: WCSession) {
-        print("on watch session is now \(session.reachable ? "reachable" : "unreachable")") // FIXME remove
         if session.reachable {
             requestAnUpdate()
             phoneUnreachableErrorLabel.setHidden(true)
@@ -74,14 +70,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         WCSession.defaultSession().sendMessage(status, replyHandler: nil, errorHandler: sendMessageDidCauseError)
     }
     
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {
-        // Remember that this will be called on a background thread.
-        print("received message on watch: \(message)") // FIXME remove
-    }
-    
     func session(session: WCSession, didReceiveApplicationContext applicationContext: [String : AnyObject]) {
-        print("received application context on watch: \(applicationContext)") // FIXME remove
-        
         deviceErrorLabel.setHidden(!Bool(applicationContext[WatchMessageKeys.error] as! NSNumber))
         
         if let deviceInfoData = applicationContext[WatchMessageKeys.deviceInfo] {

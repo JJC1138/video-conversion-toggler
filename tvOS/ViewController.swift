@@ -212,7 +212,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 watchDelegate = WCSD(viewController: self)
                 session.delegate = watchDelegate
                 session.activateSession()
-                print("activated session on phone") // FIXME remove
             }
         #endif
     }
@@ -241,7 +240,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             } else {
                 assert(false)
             }
-            session.sendMessage(["msg": "received message on phone in state \(UIApplication.sharedApplication().applicationState == .Active ? "active" : "not active")"], replyHandler: nil, errorHandler: { print($0) }) // FIXME remove
         }
         
     }
@@ -254,8 +252,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         NSOperationQueue.mainQueue().addOperationWithBlock {
             guard UIApplication.sharedApplication().applicationState != .Active else {
                 // We're active and we'll be updating regularly so there's no need to do a special fetch right now.
-                WCSession.defaultSession().sendMessage(["msg": "skipping update because phone app is active"], replyHandler: nil, errorHandler: nil) // FIXME remove
-                
                 self.sendStatusToWatch()
                 UIApplication.sharedApplication().endBackgroundTask(task)
                 return
@@ -265,7 +261,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             self.oq.addOperationWithBlock {
                 let delegateQueue = NSOperationQueue.mainQueue()
                 fetchAllStatusesOnce(delegateQueue: delegateQueue, fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult)
-                WCSession.defaultSession().sendMessage(["msg": "did an update on behalf of watch"], replyHandler: nil, errorHandler: nil) // FIXME remove
                 delegateQueue.addOperationWithBlock(self.sendStatusToWatch)
                 
                 UIApplication.sharedApplication().endBackgroundTask(task)
