@@ -71,19 +71,21 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     func session(session: WCSession, didReceiveApplicationContext applicationContext: [String : AnyObject]) {
-        deviceErrorLabel.setHidden(!Bool(applicationContext[WatchMessageKeys.error] as! NSNumber))
-        
-        if let deviceInfoData = applicationContext[WatchMessageKeys.deviceInfo] {
-            let deviceInfo = (NSKeyedUnarchiver.unarchiveObjectWithData(deviceInfoData as! NSData) as! DeviceInfoCoding).deviceInfo
-            let setting = Bool(applicationContext[WatchMessageKeys.setting] as! NSNumber)
+        NSOperationQueue.mainQueue().addOperationWithBlock {
+            self.deviceErrorLabel.setHidden(!Bool(applicationContext[WatchMessageKeys.error] as! NSNumber))
             
-            self.deviceInfo = deviceInfo
-            
-            deviceInfoGroup.setHidden(false)
-            deviceNameLabel.setText(deviceInfo.name)
-            deviceSettingSwitch.setOn(setting)
-        } else {
-            deviceInfoGroup.setHidden(true)
+            if let deviceInfoData = applicationContext[WatchMessageKeys.deviceInfo] {
+                let deviceInfo = (NSKeyedUnarchiver.unarchiveObjectWithData(deviceInfoData as! NSData) as! DeviceInfoCoding).deviceInfo
+                let setting = Bool(applicationContext[WatchMessageKeys.setting] as! NSNumber)
+                
+                self.deviceInfo = deviceInfo
+                
+                self.deviceInfoGroup.setHidden(false)
+                self.deviceNameLabel.setText(deviceInfo.name)
+                self.deviceSettingSwitch.setOn(setting)
+            } else {
+                self.deviceInfoGroup.setHidden(true)
+            }
         }
     }
     
