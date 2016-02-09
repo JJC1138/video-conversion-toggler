@@ -64,7 +64,13 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     @IBAction func switchToggled(value: Bool) {
-        WCSession.defaultSession().sendMessage(["Hi": value], replyHandler: nil, errorHandler: sendMessageDidCauseError) // FIXME implement properly
+        guard let deviceInfo = deviceInfo else { return }
+        
+        var status = [String : AnyObject]()
+        status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedDataWithRootObject(DeviceInfoCoding(deviceInfo))
+        status[WatchMessageKeys.setting] = value
+        
+        WCSession.defaultSession().sendMessage(status, replyHandler: nil, errorHandler: sendMessageDidCauseError)
     }
     
     func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {

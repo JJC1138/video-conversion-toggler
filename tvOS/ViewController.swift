@@ -228,6 +228,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             // Remember that this will be called on a background thread.
             if message.isEmpty { // a request for an update
                 viewController.watchRequestedUpdate()
+            } else if let deviceInfoData = message[WatchMessageKeys.deviceInfo] { // a request for a toggle
+                let deviceInfo = (NSKeyedUnarchiver.unarchiveObjectWithData(deviceInfoData as! NSData) as! DeviceInfoCoding).deviceInfo
+                let setting = Bool(message[WatchMessageKeys.setting] as! NSNumber)
+                
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+                    self.viewController.newFetchResult(deviceInfo, setting: setting) // Update the UI in case we're active or become active soon.
+                    self.viewController.toggleDevice(deviceInfo, toSetting: setting)
+                }
+            } else {
+                assert(false)
             }
             session.sendMessage(["msg": "received message on phone in state \(UIApplication.sharedApplication().applicationState == .Active ? "active" : "not active")"], replyHandler: nil, errorHandler: { print($0) }) // FIXME remove
         }
@@ -336,13 +346,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.deviceTable.reloadRowsAtIndexPaths([indexPath], withRowAnimation: self.tableAnimationType)
         if deviceSettingsIndex == 0 { sendStatusToWatch() }
         
+        toggleDevice(newDeviceSetting.device, toSetting: newDeviceSetting.setting)
+    }
+    
+    func toggleDevice(deviceInfo: DeviceInfo, toSetting wantedSetting: Bool) {
         // It's useful for the user if we clear out any errors from previous attempts now, because we're about to try again. If the old error just stayed on screen and was replaced by the same error then it would be harder to tell what had happened.
-        removeErrorFor(selectedDeviceSetting.device, forOperation: .Toggle)
+        removeErrorFor(deviceInfo, forOperation: .Toggle)
         updateErrorText()
         
         oq.addOperationWithBlock {
-            let deviceInfo = selectedDeviceSetting.device
-            let wantedSetting = !selectedDeviceSetting.setting
             let delegateQueue = NSOperationQueue.mainQueue()
             
             do {
