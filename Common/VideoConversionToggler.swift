@@ -209,17 +209,27 @@ class PeriodicallyFetchAllStatuses: NSOperation {
     override func main() {
         let fetchQueue = NSOperationQueue()
         while (!cancelled) {
-            discoverCompatibleDevices { deviceInfo in fetchQueue.addOperationWithBlock {
-                do {
-                    let setting = try fetchSetting(deviceInfo)
-                    self.delegateQueue.addOperationWithBlock { self.fetchResultDelegate(deviceInfo, setting) }
-                } catch let e as AppError {
-                    self.delegateQueue.addOperationWithBlock { self.fetchErrorDelegate(deviceInfo, e) }
-                } catch { assert(false) }
-                }
-            }
+            fetchAllStatuses(delegateQueue: delegateQueue, fetchQueue: fetchQueue, fetchErrorDelegate: fetchErrorDelegate, fetchResultDelegate: fetchResultDelegate)
         }
         fetchQueue.waitUntilAllOperationsAreFinished()
     }
     
+}
+
+func fetchAllStatuses(delegateQueue delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue(), fetchQueue: NSOperationQueue, fetchErrorDelegate: (DeviceInfo, AppError) -> Void, fetchResultDelegate: (DeviceInfo, Bool) -> Void) {
+    discoverCompatibleDevices { deviceInfo in fetchQueue.addOperationWithBlock {
+        do {
+            let setting = try fetchSetting(deviceInfo)
+            delegateQueue.addOperationWithBlock { fetchResultDelegate(deviceInfo, setting) }
+        } catch let e as AppError {
+            delegateQueue.addOperationWithBlock { fetchErrorDelegate(deviceInfo, e) }
+        } catch { assert(false) }
+        }
+    }
+}
+
+func fetchAllStatusesOnce(delegateQueue delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue(), fetchErrorDelegate: (DeviceInfo, AppError) -> Void, fetchResultDelegate: (DeviceInfo, Bool) -> Void) {
+    let fetchQueue = NSOperationQueue()
+    fetchAllStatuses(delegateQueue: delegateQueue, fetchQueue: fetchQueue, fetchErrorDelegate: fetchErrorDelegate, fetchResultDelegate: fetchResultDelegate)
+    fetchQueue.waitUntilAllOperationsAreFinished()
 }

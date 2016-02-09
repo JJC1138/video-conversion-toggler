@@ -233,17 +233,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         // We're in the background so we should run a fetch to update the watch.
         oq.addOperationWithBlock {
             let delegateQueue = NSOperationQueue.mainQueue()
-            let fetchQueue = NSOperationQueue()
-            discoverCompatibleDevices { deviceInfo in fetchQueue.addOperationWithBlock {
-                do {
-                    let setting = try fetchSetting(deviceInfo)
-                    delegateQueue.addOperationWithBlock { self.newFetchResult(deviceInfo, setting: setting) }
-                } catch let e as AppError {
-                    delegateQueue.addOperationWithBlock { self.newFetchError(deviceInfo, error: e) }
-                } catch { assert(false) }
-                }
-            }
-            fetchQueue.waitUntilAllOperationsAreFinished()
+            fetchAllStatusesOnce(delegateQueue: delegateQueue, fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult)
             WCSession.defaultSession().sendMessage(["msg": "did an update on behalf of watch"], replyHandler: nil, errorHandler: nil) // FIXME remove
             delegateQueue.addOperationWithBlock(self.sendStatusToWatch)
         }
