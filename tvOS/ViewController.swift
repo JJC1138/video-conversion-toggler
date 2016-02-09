@@ -179,7 +179,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in applicationDidBecomeActive() }
         nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in
             self.oq.cancelAllOperations()
-            if let removeOldResultsTimer = self.removeOldResultsTimer { removeOldResultsTimer.invalidate() }
+            self.removeOldResultsTimer?.invalidate()
         }
         nc.addObserverForName(UIApplicationDidEnterBackgroundNotification, object: nil, queue: nil) { _ in
             self.errors = []

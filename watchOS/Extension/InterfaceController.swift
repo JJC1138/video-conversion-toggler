@@ -10,6 +10,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     @IBOutlet var phoneUnreachableErrorLabel: WKInterfaceLabel!
     
     var deviceInfo: DeviceInfo?
+    var requestUpdateTimer: NSTimer?
     
     override func willActivate() {
         super.willActivate()
@@ -22,12 +23,25 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         print("activated session on watch") // FIXME remove
         // FUTURETODO in watchOS 2.2 WCSession.activateSession() completes asynchronously so we can't count on it be activated already here:
         sessionReachabilityDidChange(session)
+        
+        requestUpdateTimer = {
+            // FUTURETODO Use the non-string selector initialization syntax when SE-0022 is implemented:
+            let t = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "requestAnUpdate", userInfo: nil, repeats: true)
+            t.tolerance = 1
+            return t
+            }()
+    }
+    
+    override func didDeactivate() {
+        super.didDeactivate()
+        
+        requestUpdateTimer?.invalidate()
     }
     
     func sessionReachabilityDidChange(session: WCSession) {
         print("on watch session is now \(session.reachable ? "reachable" : "unreachable")") // FIXME remove
         if session.reachable {
-            session.sendMessage([:], replyHandler: nil, errorHandler: sendMessageDidCauseError) // request an update
+            requestAnUpdate()
         } else {
             deviceInfo = nil
             
@@ -35,6 +49,12 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
             deviceInfoGroup.setHidden(true)
             deviceErrorLabel.setHidden(true)
         }
+    }
+    
+    func requestAnUpdate() {
+        let session = WCSession.defaultSession()
+        guard session.reachable else { return }
+        session.sendMessage([:], replyHandler: nil, errorHandler: sendMessageDidCauseError)
     }
     
     func sendMessageDidCauseError(error: NSError) {
