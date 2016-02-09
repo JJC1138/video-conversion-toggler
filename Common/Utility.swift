@@ -36,3 +36,22 @@ extension SequenceType {
         return true
     }
 }
+
+public struct Counter<Element: Hashable, Counter: IntegerType> {
+    
+    private var d = [Element : Counter]()
+    
+    public subscript(element: Element) -> Counter {
+        get {
+            return d[element] ?? 0
+        }
+        set {
+            if newValue == 0 {
+                d.removeValueForKey(element)
+            } else {
+                d[element] = newValue
+            }
+        }
+    }
+    
+}
