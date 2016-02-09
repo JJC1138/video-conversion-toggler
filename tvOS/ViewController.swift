@@ -257,7 +257,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedDataWithRootObject(DeviceInfoCoding(firstDeviceSetting.device))
             status[WatchMessageKeys.setting] = firstDeviceSetting.setting
         }
-        status[WatchMessageKeys.error] = !errors.isEmpty
+        status[WatchMessageKeys.error] = !errors.isEmpty || weHaventSeenADeviceInAWhile()
         
         try! WCSession.defaultSession().updateApplicationContext(status)
     }
