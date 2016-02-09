@@ -214,7 +214,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         func session(session: WCSession, didReceiveMessage message: [String: AnyObject]) {
             // Remember that this will be called on a background thread.
             if message.isEmpty { // a request for an update
-                NSOperationQueue.mainQueue().addOperationWithBlock(self.viewController.watchRequestedUpdate)
+                viewController.watchRequestedUpdate()
             }
             session.sendMessage(["msg": "received message on phone in state \(UIApplication.sharedApplication().applicationState == .Active ? "active" : "not active")"], replyHandler: nil, errorHandler: { print($0) }) // FIXME remove
         }
@@ -224,18 +224,26 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var watchDelegate: WCSD?
     
     func watchRequestedUpdate() {
-        guard UIApplication.sharedApplication().applicationState != .Active else {
-            // We're active so we'll be updating the watch regularly when we get data so there's no need to do anything special now.
-            WCSession.defaultSession().sendMessage(["msg": "skipping update because phone app is active"], replyHandler: nil, errorHandler: nil) // FIXME remove
-            return
-        }
+        let task = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler(nil)
         
-        // We're in the background so we should run a fetch to update the watch.
-        oq.addOperationWithBlock {
-            let delegateQueue = NSOperationQueue.mainQueue()
-            fetchAllStatusesOnce(delegateQueue: delegateQueue, fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult)
-            WCSession.defaultSession().sendMessage(["msg": "did an update on behalf of watch"], replyHandler: nil, errorHandler: nil) // FIXME remove
-            delegateQueue.addOperationWithBlock(self.sendStatusToWatch)
+        NSOperationQueue.mainQueue().addOperationWithBlock {
+            guard UIApplication.sharedApplication().applicationState != .Active else {
+                // We're active so we'll be updating the watch regularly when we get data so there's no need to do anything special now.
+                WCSession.defaultSession().sendMessage(["msg": "skipping update because phone app is active"], replyHandler: nil, errorHandler: nil) // FIXME remove
+                
+                UIApplication.sharedApplication().endBackgroundTask(task)
+                return
+            }
+            
+            // We're in the background so we should run a fetch to update the watch.
+            self.oq.addOperationWithBlock {
+                let delegateQueue = NSOperationQueue.mainQueue()
+                fetchAllStatusesOnce(delegateQueue: delegateQueue, fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult)
+                WCSession.defaultSession().sendMessage(["msg": "did an update on behalf of watch"], replyHandler: nil, errorHandler: nil) // FIXME remove
+                delegateQueue.addOperationWithBlock(self.sendStatusToWatch)
+                
+                UIApplication.sharedApplication().endBackgroundTask(task)
+            }
         }
     }
     
