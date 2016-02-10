@@ -37,6 +37,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var errors = [Error]()
     var lastTimeADeviceWasSeen = NSTimeInterval()
     var toggleOperationsOutstanding = Counter<DeviceInfo, Int>()
+    var completedWatchToggleTime = NSTimeInterval()
     
     func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
         lastTimeADeviceWasSeen = awakeUptime()
@@ -234,11 +235,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 viewController.watchRequestedUpdate()
             } else if let deviceInfoData = message[WatchMessageKeys.deviceInfo] { // a request for a toggle
                 let deviceInfo = (NSKeyedUnarchiver.unarchiveObjectWithData(deviceInfoData as! NSData) as! DeviceInfoCoding).deviceInfo
-                let setting = Bool(message[WatchMessageKeys.setting] as! NSNumber)
+                let setting = (message[WatchMessageKeys.setting] as! NSNumber).boolValue
+                let toggleRequestTime = (message[WatchMessageKeys.toggleRequestTime] as! NSNumber).doubleValue
                 
                 NSOperationQueue.mainQueue().addOperationWithBlock {
                     self.viewController.newFetchResult(deviceInfo, setting: setting) // Update the UI in case we're active or become active soon.
-                    self.viewController.toggleDevice(deviceInfo, toSetting: setting)
+                    self.viewController.toggleDevice(deviceInfo, toSetting: setting, watchToggleRequestTime: toggleRequestTime)
                 }
             } else {
                 assert(false)
@@ -278,6 +280,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         if let firstDeviceSetting = deviceSettings.first {
             status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedDataWithRootObject(DeviceInfoCoding(firstDeviceSetting.device))
             status[WatchMessageKeys.setting] = firstDeviceSetting.setting
+            status[WatchMessageKeys.lastPerformedToggleRequestTime] = completedWatchToggleTime
         }
         status[WatchMessageKeys.error] = !errors.isEmpty || weHaventSeenADeviceInAWhile()
         
@@ -349,7 +352,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         toggleDevice(newDeviceSetting.device, toSetting: newDeviceSetting.setting)
     }
     
-    func toggleDevice(deviceInfo: DeviceInfo, toSetting wantedSetting: Bool) {
+    func toggleDevice(deviceInfo: DeviceInfo, toSetting wantedSetting: Bool, watchToggleRequestTime: NSTimeInterval? = nil) {
         // It's useful for the user if we clear out any errors from previous attempts now, because we're about to try again. If the old error just stayed on screen and was replaced by the same error then it would be harder to tell what had happened.
         removeErrorFor(deviceInfo, forOperation: .Toggle)
         updateErrorText()
@@ -363,8 +366,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 try setSetting(deviceInfo, setting: wantedSetting)
             } catch let e as AppError {
                 delegateQueue.addOperationWithBlock {
-                    self.newOperationError(deviceInfo, error: e, operation: .Toggle)
                     --self.toggleOperationsOutstanding[deviceInfo]
+                    self.completedWatchToggleTime = watchToggleRequestTime ?? self.completedWatchToggleTime
+                    self.newOperationError(deviceInfo, error: e, operation: .Toggle)
                 }
                 return
             } catch { assert(false) }
@@ -374,12 +378,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     let newSetting = try fetchSetting(deviceInfo)
                     delegateQueue.addOperationWithBlock {
                         --self.toggleOperationsOutstanding[deviceInfo]
+                        self.completedWatchToggleTime = watchToggleRequestTime ?? self.completedWatchToggleTime
                         self.newFetchResult(deviceInfo, setting: newSetting)
                     }
                     return newSetting
                 } catch let e as AppError {
                     delegateQueue.addOperationWithBlock {
                         --self.toggleOperationsOutstanding[deviceInfo]
+                        self.completedWatchToggleTime = watchToggleRequestTime ?? self.completedWatchToggleTime
                         self.newFetchError(deviceInfo, error: e)
                     }
                 } catch { assert(false) }

@@ -51,6 +51,7 @@
 		FC96A6891C6912B800A7B0A0 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */; };
 		FC96A68A1C6912B800A7B0A0 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */; };
 		FC96A68B1C6912B800A7B0A0 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */; };
+		FC99AB741C6B632B0059CDCB /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF63DC01C453C72008AEC28 /* Utility.swift */; };
 		FCA711271C4E930900B8AA10 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCA711291C4E930900B8AA10 /* Localizable.strings */; };
 		FCAFD1AD1C63B299009F0CB0 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FCAFD1AB1C63B299009F0CB0 /* Interface.storyboard */; };
 		FCAFD1AF1C63B299009F0CB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCAFD1AE1C63B299009F0CB0 /* Assets.xcassets */; };
@@ -644,6 +645,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC99AB741C6B632B0059CDCB /* Utility.swift in Sources */,
 				FC96A6861C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift in Sources */,
 				FCAFD1BD1C63B29A009F0CB0 /* ExtensionDelegate.swift in Sources */,
 				FCAFD1BB1C63B29A009F0CB0 /* InterfaceController.swift in Sources */,
