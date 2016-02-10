@@ -783,6 +783,7 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="yw8-Zv-sg2" secondAttribute="trailing" constant="20" symbolic="YES" id="8Fy-BB-DMk"/>
                             <constraint firstItem="gLJ-T7-bnD" firstAttribute="top" secondItem="yw8-Zv-sg2" secondAttribute="bottom" constant="8" symbolic="YES" id="QQG-1E-Ow5"/>
+                            <constraint firstAttribute="bottom" secondItem="yw8-Zv-sg2" secondAttribute="bottom" priority="250" constant="20" symbolic="YES" id="RR9-KY-cWw"/>
                             <constraint firstAttribute="bottom" secondItem="gLJ-T7-bnD" secondAttribute="bottom" constant="20" symbolic="YES" id="VPQ-7U-p13"/>
                             <constraint firstAttribute="trailing" secondItem="gLJ-T7-bnD" secondAttribute="trailing" constant="20" id="fnn-rE-PTn"/>
                             <constraint firstItem="yw8-Zv-sg2" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="gAZ-vH-Z1v"/>
