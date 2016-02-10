@@ -680,7 +680,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="reverseSequential" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="zHM-ec-rvj" viewBased="YES" id="RQ7-AR-tut">
-                                            <rect key="frame" x="0.0" y="0.0" width="438" height="176"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="438" height="170"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -754,6 +754,10 @@
                                     </subviews>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="Rw7-Od-cMN"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="fXq-AZ-kru"/>
+                                </constraints>
                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="ykG-q2-xVr">
                                     <rect key="frame" x="1" y="188" width="0.0" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
@@ -763,7 +767,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="zHM-ec-rvj">
-                                    <rect key="frame" x="0.0" y="0.0" width="438" height="17"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="438" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
