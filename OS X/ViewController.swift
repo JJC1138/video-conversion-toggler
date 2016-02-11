@@ -95,4 +95,10 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
         return false
     }
     
+    @IBAction func checkBoxAction(sender: NSButton) {
+        let index = deviceTable.rowForView(sender)
+        let (device, _) = model.deviceAndSettingAtIndex(index)
+        model.toggleDevice(device, toSetting: sender.state == NSOnState)
+    }
+
 }
