@@ -1,32 +1,68 @@
 import Cocoa
 
-class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
+class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource, NSTableViewDelegate {
+    
+    var model: UIModel!
     
     override func viewDidLoad() {
-        // FIXME remove test devices:
-        deviceSettings.append(DeviceSetting(device: DeviceInfo(name: "Test Device", baseURL: NSURL(string: "http://127.0.0.1:8080")!), setting: false, retrieved: awakeUptime()))
-        deviceSettings.append(DeviceSetting(device: DeviceInfo(name: "Other Test Device", baseURL: NSURL(string: "http://127.0.0.1:8081")!), setting: true, retrieved: awakeUptime()))
+        model = UIModel(delegate: self)
     }
     
-    // Only touch these from the main thread:
-    var deviceSettings = [DeviceSetting]()
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        model.start()
+    }
+    
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        model.stop()
+    }
+    
+    override func viewDidDisappear() {
+        super.viewDidDisappear()
+        model.resetErrors()
+    }
+    
+    // MARK: ModelViewDelegate
+    
+    func insertDeviceViewAtIndex(index: Int) {
+        // FIXME implement
+    }
+    
+    func reloadDeviceViewAtIndex(index: Int) {
+        // FIXME implement
+    }
+    
+    func deleteDeviceViewAtIndex(index: Int) {
+        // FIXME implement
+    }
+    
+    func deleteDeviceViewsAtIndices(indices: [Int]) {
+        // FIXME implement
+    }
+    
+    func updateErrorText(text: String) {
+        // FIXME implement
+    }
+    
+    // MARK: NSTableViewDataSource and NSTableViewDelegate
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        return deviceSettings.count
+        return model.deviceCount
     }
     
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let deviceSetting = deviceSettings[row]
+        let (device, setting) = model.deviceAndSettingAtIndex(row)
         let columnID = tableColumn!.identifier
         
         let view = tableView.makeViewWithIdentifier(columnID, owner: self)
         
         if columnID == "Device" {
             let view = view as! NSTableCellView
-            view.textField!.stringValue = deviceSetting.device.description
+            view.textField!.stringValue = device.description
         } else if columnID == "Video Conversion" {
             let view = view as! NSButton
-            view.state = deviceSetting.setting ? NSOnState : NSOffState
+            view.state = setting ? NSOnState : NSOffState
         } else {
             assert(false)
         }
