@@ -118,6 +118,10 @@ class Model {
         }
     }
     
+    var hasAnyErrors: Bool {
+        return !errors.isEmpty || weHaventSeenADeviceInAWhile()
+    }
+    
     private func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
         lastTimeADeviceWasSeen = awakeUptime()
         let newSetting = DeviceSetting(device: deviceInfo, setting: setting, retrieved: awakeUptime())

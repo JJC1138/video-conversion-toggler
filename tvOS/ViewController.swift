@@ -110,12 +110,14 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         guard WCSession.isSupported() else { return }
         
         var status = [String : AnyObject]()
-        if let firstDeviceSetting = deviceSettings.first {
-            status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedDataWithRootObject(DeviceInfoCoding(firstDeviceSetting.device))
-            status[WatchMessageKeys.setting] = firstDeviceSetting.setting
+        if model.deviceCount > 0 {
+            let (device, setting) = model.deviceAndSettingForIndex(0)
+            
+            status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedDataWithRootObject(DeviceInfoCoding(device))
+            status[WatchMessageKeys.setting] = setting
             status[WatchMessageKeys.lastPerformedToggleRequestTime] = completedWatchToggleTime
         }
-        status[WatchMessageKeys.error] = !errors.isEmpty || weHaventSeenADeviceInAWhile()
+        status[WatchMessageKeys.error] = model.hasAnyErrors()
         
         try! WCSession.defaultSession().updateApplicationContext(status)
     }
