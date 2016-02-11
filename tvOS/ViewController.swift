@@ -193,18 +193,18 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         assert(indexPath.section == 0)
-        let deviceSetting = deviceSettings[indexPath.row]
+        let (setting, device) = model.deviceAndSettingAtIndex(indexPath.row)
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Device", forIndexPath: indexPath)
         
         #if os(tvOS)
-            cell.textLabel!.text = deviceSetting.device.description
-            cell.detailTextLabel!.text = localString(deviceSetting.setting ? "On" : "Off")
+            cell.textLabel!.text = device.description
+            cell.detailTextLabel!.text = localString(setting ? "On" : "Off")
         #else
             do {
                 let cell = cell as! DeviceTableViewCell
-                cell.nameLabel.text = deviceSetting.device.description
-                cell.settingSwitch.on = deviceSetting.setting
+                cell.nameLabel.text = device.description
+                cell.settingSwitch.on = setting
             }
         #endif
         

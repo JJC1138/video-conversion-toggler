@@ -61,6 +61,11 @@ class Model {
         return deviceSettings.count
     }
     
+    func deviceAndSettingAtIndex(index: Int) -> (DeviceInfo, Bool) {
+        let deviceSetting = deviceSettings[index]
+        return (deviceSetting.device, deviceSetting.setting)
+    }
+    
     private func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
         lastTimeADeviceWasSeen = awakeUptime()
         let newSetting = DeviceSetting(device: deviceInfo, setting: setting, retrieved: awakeUptime())
