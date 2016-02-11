@@ -122,6 +122,14 @@ class UIModel {
         return !errors.isEmpty || weHaventSeenADeviceInAWhile()
     }
     
+    func fetchAllStatusesOnce(operationDidCompleteHandler: (() -> Void)) {
+        oq.addOperationWithBlock {
+            let mainQueue = NSOperationQueue.mainQueue()
+            fetchAllStatusesOnce(delegateQueue: mainQueue, fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult)
+            mainQueue.addOperationWithBlock(operationDidCompleteHandler)
+        }
+    }
+    
     private func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
         lastTimeADeviceWasSeen = awakeUptime()
         let newSetting = DeviceSetting(device: deviceInfo, setting: setting, retrieved: awakeUptime())

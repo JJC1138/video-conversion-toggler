@@ -96,11 +96,8 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
             }
             
             // We're in the background so we should run a fetch to update the watch.
-            self.oq.addOperationWithBlock {
-                let delegateQueue = NSOperationQueue.mainQueue()
-                fetchAllStatusesOnce(delegateQueue: delegateQueue, fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult)
-                delegateQueue.addOperationWithBlock(self.sendStatusToWatch)
-                
+            model.fetchAllStatusesOnce {
+                self.sendStatusToWatch()
                 UIApplication.sharedApplication().endBackgroundTask(task)
             }
         }
