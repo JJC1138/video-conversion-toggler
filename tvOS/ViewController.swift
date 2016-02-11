@@ -120,6 +120,8 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         
         try! WCSession.defaultSession().updateApplicationContext(status)
     }
+    #else
+    func sendStatusToWatch() {}
     #endif
     
     // MARK: ModelViewDelegate
