@@ -7,7 +7,7 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
     @IBOutlet weak var deviceTable: NSTableView!
     
     var allColumns: NSIndexSet!
-    let rowAnimationOptions = NSTableViewAnimationOptions.EffectFade
+    let rowAnimationOptions = NSTableViewAnimationOptions.SlideDown
     
     override func viewDidLoad() {
         model = UIModel(delegate: self)
