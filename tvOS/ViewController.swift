@@ -5,7 +5,7 @@ import UIKit
 
 class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource, UITableViewDelegate {
     
-    let model = UIModel(delegate: self as! ModelViewDelegate)
+    var model: UIModel!
     
     @IBOutlet weak var deviceTable: UITableView!
     @IBOutlet weak var errorLabel: UILabel!
@@ -21,6 +21,8 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     }
     
     override func viewDidLoad() {
+        model = UIModel(delegate: self)
+        
         let nc = NSNotificationCenter.defaultCenter()
         func applicationDidBecomeActive() { model.start() }
         nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in applicationDidBecomeActive() }

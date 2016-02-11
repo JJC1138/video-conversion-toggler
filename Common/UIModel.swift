@@ -206,7 +206,7 @@ class UIModel {
         }
     }
     
-    private func removeOldResults() {
+    @objc private func removeOldResults() {
         let now = awakeUptime()
         let oldestAllowedTime = now - 5
         
