@@ -57,6 +57,10 @@ class Model {
         updateErrorText()
     }
     
+    var deviceCount: Int {
+        return deviceSettings.count
+    }
+    
     private func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
         lastTimeADeviceWasSeen = awakeUptime()
         let newSetting = DeviceSetting(device: deviceInfo, setting: setting, retrieved: awakeUptime())

@@ -16,7 +16,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     func row(index: Int) -> NSIndexPath { return NSIndexPath(forRow: index, inSection: 0) }
     
     func hideTableHeaderIfNecessary() {
-        if deviceSettings.count == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
+        if model.deviceCount == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
     }
     
     override func viewDidLoad() {
@@ -188,7 +188,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         assert(section == 0)
-        return deviceSettings.count
+        return model.deviceCount
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
