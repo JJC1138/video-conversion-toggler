@@ -5,6 +5,8 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
     var model: UIModel!
     
     @IBOutlet weak var deviceTable: NSTableView!
+    @IBOutlet weak var errorLabel: NSTextField!
+    @IBOutlet var errorLabelConstraint: NSLayoutConstraint!
     
     var allColumns: NSIndexSet!
     let rowAnimationOptions = NSTableViewAnimationOptions.SlideDown
@@ -12,6 +14,7 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
     override func viewDidLoad() {
         model = UIModel(delegate: self)
         allColumns = NSIndexSet(indexesInRange: NSRange(0..<deviceTable.numberOfColumns))
+        updateErrorText("")
     }
     
     override func viewWillAppear() {
@@ -52,7 +55,15 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
     }
     
     func updateErrorText(text: String) {
-        // FIXME implement
+        errorLabel.stringValue = text
+        
+        let errorLabelShouldBeHidden = text.isEmpty
+        let errorLabelIsHidden = errorLabel.hidden
+        
+        if errorLabelShouldBeHidden != errorLabelIsHidden {
+            errorLabel.hidden = errorLabelShouldBeHidden
+            errorLabelConstraint.active = !errorLabelShouldBeHidden
+        }
     }
     
     // MARK: NSTableViewDataSource and NSTableViewDelegate

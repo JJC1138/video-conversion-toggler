@@ -793,6 +793,8 @@
                     </view>
                     <connections>
                         <outlet property="deviceTable" destination="RQ7-AR-tut" id="CGd-ro-Drv"/>
+                        <outlet property="errorLabel" destination="gLJ-T7-bnD" id="uq1-EO-khv"/>
+                        <outlet property="errorLabelConstraint" destination="QQG-1E-Ow5" id="NCf-LL-5UN"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
