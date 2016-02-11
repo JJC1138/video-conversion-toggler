@@ -4,8 +4,14 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
     
     var model: UIModel!
     
+    @IBOutlet weak var deviceTable: NSTableView!
+    
+    var allColumns: NSIndexSet!
+    let rowAnimationOptions = NSTableViewAnimationOptions.EffectFade
+    
     override func viewDidLoad() {
         model = UIModel(delegate: self)
+        allColumns = NSIndexSet(indexesInRange: NSRange(0..<deviceTable.numberOfColumns))
     }
     
     override func viewWillAppear() {
@@ -26,19 +32,23 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
     // MARK: ModelViewDelegate
     
     func insertDeviceViewAtIndex(index: Int) {
-        // FIXME implement
+        deviceTable.insertRowsAtIndexes(row(index), withAnimation: rowAnimationOptions)
     }
     
+    func row(index: Int) -> NSIndexSet { return NSIndexSet(index: index) }
+    
     func reloadDeviceViewAtIndex(index: Int) {
-        // FIXME implement
+        deviceTable.reloadDataForRowIndexes(row(index), columnIndexes: allColumns)
     }
     
     func deleteDeviceViewAtIndex(index: Int) {
-        // FIXME implement
+        deviceTable.removeRowsAtIndexes(row(index), withAnimation: rowAnimationOptions)
     }
     
     func deleteDeviceViewsAtIndices(indices: [Int]) {
-        // FIXME implement
+        let indexSet = NSMutableIndexSet()
+        for i in indices { indexSet.addIndex(i) }
+        deviceTable.removeRowsAtIndexes(indexSet, withAnimation: rowAnimationOptions)
     }
     
     func updateErrorText(text: String) {
