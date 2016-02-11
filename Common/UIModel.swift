@@ -125,7 +125,7 @@ class UIModel {
     func fetchAllStatusesOnce(operationDidCompleteHandler: (() -> Void)) {
         oq.addOperationWithBlock {
             let mainQueue = NSOperationQueue.mainQueue()
-            fetchAllStatusesOnce(delegateQueue: mainQueue, fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult)
+            VideoConversionToggler.fetchAllStatusesOnce(delegateQueue: mainQueue, fetchErrorDelegate: self.newFetchError, fetchResultDelegate: self.newFetchResult)
             mainQueue.addOperationWithBlock(operationDidCompleteHandler)
         }
     }

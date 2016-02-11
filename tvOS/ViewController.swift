@@ -5,7 +5,7 @@ import UIKit
 
 class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource, UITableViewDelegate {
     
-    let model = UIModel(self)
+    let model = UIModel(delegate: self as! ModelViewDelegate)
     
     @IBOutlet weak var deviceTable: UITableView!
     @IBOutlet weak var errorLabel: UILabel!
@@ -24,8 +24,8 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         let nc = NSNotificationCenter.defaultCenter()
         func applicationDidBecomeActive() { model.start() }
         nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in applicationDidBecomeActive() }
-        nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in model.stop() }
-        nc.addObserverForName(UIApplicationDidEnterBackgroundNotification, object: nil, queue: nil) { _ in model.resetErrors() }
+        nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in self.model.stop() }
+        nc.addObserverForName(UIApplicationDidEnterBackgroundNotification, object: nil, queue: nil) { _ in self.model.resetErrors() }
         
         do { // tweak table header presentation:
             func uppercaseAllLabelsInHierarchy(view: UIView) {
@@ -73,7 +73,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
                 let toggleRequestTime = (message[WatchMessageKeys.toggleRequestTime] as! NSNumber).doubleValue
                 
                 NSOperationQueue.mainQueue().addOperationWithBlock {
-                    model.toggleDevice(deviceInfo, toSetting: setting) { self.completedWatchToggleTime = toggleRequestTime }
+                    self.viewController.model.toggleDevice(deviceInfo, toSetting: setting) { self.viewController.completedWatchToggleTime = toggleRequestTime }
                 }
             } else {
                 assert(false)
@@ -96,7 +96,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
             }
             
             // We're in the background so we should run a fetch to update the watch.
-            model.fetchAllStatusesOnce {
+            self.model.fetchAllStatusesOnce {
                 self.sendStatusToWatch()
                 UIApplication.sharedApplication().endBackgroundTask(task)
             }
@@ -108,13 +108,13 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         
         var status = [String : AnyObject]()
         if model.deviceCount > 0 {
-            let (device, setting) = model.deviceAndSettingForIndex(0)
+            let (device, setting) = model.deviceAndSettingAtIndex(0)
             
             status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedDataWithRootObject(DeviceInfoCoding(device))
             status[WatchMessageKeys.setting] = setting
             status[WatchMessageKeys.lastPerformedToggleRequestTime] = completedWatchToggleTime
         }
-        status[WatchMessageKeys.error] = model.hasAnyErrors()
+        status[WatchMessageKeys.error] = model.hasAnyErrors
         
         try! WCSession.defaultSession().updateApplicationContext(status)
     }
@@ -192,7 +192,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         assert(indexPath.section == 0)
-        let (setting, device) = model.deviceAndSettingAtIndex(indexPath.row)
+        let (device, setting) = model.deviceAndSettingAtIndex(indexPath.row)
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Device", forIndexPath: indexPath)
         
@@ -219,7 +219,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     
     func toggleDeviceAtIndexPath(indexPath: NSIndexPath) {
         assert(indexPath.section == 0)
-        model.ToggleDeviceAtIndex(indexPath.row)
+        model.toggleDeviceAtIndex(indexPath.row)
     }
     
 }
