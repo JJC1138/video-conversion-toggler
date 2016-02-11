@@ -5,7 +5,7 @@ import UIKit
 
 class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource, UITableViewDelegate {
     
-    let model = Model(self)
+    let model = UIModel(self)
     
     @IBOutlet weak var deviceTable: UITableView!
     @IBOutlet weak var errorLabel: UILabel!

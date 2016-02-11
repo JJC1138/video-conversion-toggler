@@ -1,6 +1,6 @@
 import Foundation
 
-class Model {
+class UIModel {
     
     private let delegate: ModelViewDelegate
     
