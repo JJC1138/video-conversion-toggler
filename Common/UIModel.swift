@@ -2,34 +2,34 @@ import Foundation
 
 class Model {
     
-    let delegate: ModelViewDelegate
+    private let delegate: ModelViewDelegate
     
-    let oq = NSOperationQueue()
-    var removeOldResultsTimer: NSTimer?
+    private let oq = NSOperationQueue()
+    private var removeOldResultsTimer: NSTimer?
     
-    struct DeviceSetting {
+    private struct DeviceSetting {
         let device: DeviceInfo
         let setting: Bool
         let retrieved: NSTimeInterval
     }
     
-    struct Error {
+    private struct Error {
         let device: DeviceInfo
         let error: AppError
         let cause: Operation
     }
     
-    enum Operation {
+    private enum Operation {
         case FetchSetting
         case Toggle
     }
     
     // Only touch these from the main thread:
-    var deviceSettings = [DeviceSetting]()
-    var errors = [Error]()
-    var lastTimeADeviceWasSeen = NSTimeInterval()
-    var toggleOperationsOutstanding = Counter<DeviceInfo, Int>()
-    var completedWatchToggleTime = NSTimeInterval()
+    private var deviceSettings = [DeviceSetting]()
+    private var errors = [Error]()
+    private var lastTimeADeviceWasSeen = NSTimeInterval()
+    private var toggleOperationsOutstanding = Counter<DeviceInfo, Int>()
+    private var completedWatchToggleTime = NSTimeInterval()
     
     init(delegate: ModelViewDelegate) {
         self.delegate = delegate
@@ -57,7 +57,7 @@ class Model {
         updateErrorText()
     }
     
-    func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
+    private func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {
         lastTimeADeviceWasSeen = awakeUptime()
         let newSetting = DeviceSetting(device: deviceInfo, setting: setting, retrieved: awakeUptime())
         
@@ -81,21 +81,21 @@ class Model {
         updateErrorText()
     }
     
-    func removeErrorFor(device: DeviceInfo, forOperation operation: Operation) {
+    private func removeErrorFor(device: DeviceInfo, forOperation operation: Operation) {
         if let i = errors.indexOf({ $0.device == device && $0.cause == operation }) {
             // We previously had an error with this device when performing this operation, but it has succeeded now so whatever was causing the error is presumably now fixed.
             errors.removeAtIndex(i)
         }
     }
     
-    func newFetchError(deviceInfo: DeviceInfo, error: AppError) {
+    private func newFetchError(deviceInfo: DeviceInfo, error: AppError) {
         newOperationError(deviceInfo, error: error, operation: .FetchSetting)
         
         // We haven't fetched the setting successfully and any previous setting we fetched might be out of date so remove it to avoid confusing users with possibly incorrect information:
         removeSettingFor(deviceInfo)
     }
     
-    func newOperationError(deviceInfo: DeviceInfo, error: AppError, operation: Operation) {
+    private func newOperationError(deviceInfo: DeviceInfo, error: AppError, operation: Operation) {
         lastTimeADeviceWasSeen = awakeUptime()
         let newError = Error(device: deviceInfo, error: error, cause: operation)
         
@@ -108,7 +108,7 @@ class Model {
         updateErrorText()
     }
     
-    func updateErrorText() {
+    private func updateErrorText() {
         delegate.updateErrorText({
             if self.errors.count > 0 {
                 return (self.errors.map { describeError($0.error, forDevice: $0.device) }).joinWithSeparator("\n\n") + "\n\n\(errorContactInstruction())"
@@ -122,18 +122,18 @@ class Model {
             }())
     }
     
-    func weHaventSeenADeviceInAWhile() -> Bool {
+    private func weHaventSeenADeviceInAWhile() -> Bool {
         return deviceSettings.isEmpty && errors.isEmpty && (awakeUptime() - lastTimeADeviceWasSeen) >= 5
     }
     
-    func removeSettingFor(device: DeviceInfo) {
+    private func removeSettingFor(device: DeviceInfo) {
         if let i = deviceSettings.indexOf( { $0.device == device } ) {
             deviceSettings.removeAtIndex(i)
             delegate.deleteDeviceViewAtIndex(i)
         }
     }
     
-    func removeOldResults() {
+    private func removeOldResults() {
         let now = awakeUptime()
         let oldestAllowedTime = now - 5
         
