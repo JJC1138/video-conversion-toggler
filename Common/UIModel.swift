@@ -237,11 +237,10 @@ class UIModel {
 
 protocol ModelViewDelegate {
     
-    // FIXME re-order these
-    func reloadDeviceViewAtIndex(index: Int)
     func insertDeviceViewAtIndex(index: Int)
-    func updateErrorText(text: String)
+    func reloadDeviceViewAtIndex(index: Int)
     func deleteDeviceViewAtIndex(index: Int)
     func deleteDeviceViewsAtIndices(indices: [Int])
+    func updateErrorText(text: String)
     
 }

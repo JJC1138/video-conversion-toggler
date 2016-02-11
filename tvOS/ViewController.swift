@@ -16,10 +16,6 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     func row(index: Int) -> NSIndexPath { return NSIndexPath(forRow: index, inSection: 0) }
     var completedWatchToggleTime = NSTimeInterval()
     
-    func hideTableHeaderIfNecessary() {
-        if model.deviceCount == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
-    }
-    
     override func viewDidLoad() {
         model = UIModel(delegate: self)
         
@@ -126,12 +122,6 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     
     // MARK: ModelViewDelegate
     
-    // FIXME reorder these methods:
-    func reloadDeviceViewAtIndex(index: Int) {
-        deviceTable.reloadRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
-        if index == 0 { sendStatusToWatch() }
-    }
-    
     func insertDeviceViewAtIndex(index: Int) {
         deviceTable.insertRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
         if index == 0 {
@@ -140,10 +130,25 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         }
     }
     
+    func reloadDeviceViewAtIndex(index: Int) {
+        deviceTable.reloadRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
+        if index == 0 { sendStatusToWatch() }
+    }
+    
     func deleteDeviceViewAtIndex(index: Int) {
         deviceTable.deleteRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
         hideTableHeaderIfNecessary()
         if index == 0 { sendStatusToWatch() }
+    }
+    
+    func deleteDeviceViewsAtIndices(indices: [Int]) {
+        deviceTable.deleteRowsAtIndexPaths(indices.map { row($0) }, withRowAnimation: tableAnimationType)
+        hideTableHeaderIfNecessary()
+        if indices.contains(0) { sendStatusToWatch() }
+    }
+    
+    func hideTableHeaderIfNecessary() {
+        if model.deviceCount == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
     }
     
     func updateErrorText(text: String) {
@@ -162,12 +167,6 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
                 tableFillConstraint.active = !errorLabelShouldBeVisible
             }
         }
-    }
-    
-    func deleteDeviceViewsAtIndices(indices: [Int]) {
-        deviceTable.deleteRowsAtIndexPaths(indices.map { row($0) }, withRowAnimation: tableAnimationType)
-        hideTableHeaderIfNecessary()
-        if indices.contains(0) { sendStatusToWatch() }
     }
     
     // MARK: HIG-compliance housekeeping like that which is done by UITableViewController:
