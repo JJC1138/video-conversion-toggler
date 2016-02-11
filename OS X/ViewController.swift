@@ -64,6 +64,9 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
             errorLabel.hidden = errorLabelShouldBeHidden
             errorLabelConstraint.active = !errorLabelShouldBeHidden
         }
+        
+        // KLUDGE This works around what seems to me to be a bug where the label only uses one line until the window is resized, at which point is dynamically wraps correctly. The workaround is imperfect because it fixes the wrapping width but since we update the error text regularly it's not a big problem.
+        errorLabel.preferredMaxLayoutWidth = errorLabel.frame.size.width
     }
     
     // MARK: NSTableViewDataSource and NSTableViewDelegate
