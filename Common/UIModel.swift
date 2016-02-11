@@ -29,7 +29,6 @@ class Model {
     private var errors = [Error]()
     private var lastTimeADeviceWasSeen = NSTimeInterval()
     private var toggleOperationsOutstanding = Counter<DeviceInfo, Int>()
-    private var completedWatchToggleTime = NSTimeInterval()
     
     init(delegate: ModelViewDelegate) {
         self.delegate = delegate
@@ -64,6 +63,59 @@ class Model {
     func deviceAndSettingAtIndex(index: Int) -> (DeviceInfo, Bool) {
         let deviceSetting = deviceSettings[index]
         return (deviceSetting.device, deviceSetting.setting)
+    }
+    
+    func toggleDeviceAtIndex(index: Int) {
+        let selectedDeviceSetting = deviceSettings[index]
+        toggleDevice(selectedDeviceSetting.device, toSetting: !selectedDeviceSetting.setting)
+    }
+    
+    func toggleDevice(deviceInfo: DeviceInfo, toSetting wantedSetting: Bool, operationWillCompleteHandler: (() -> Void)? = nil) {
+        newFetchResult(deviceInfo, setting: wantedSetting) // Update the UI and such.
+        
+        // It's useful for the user if we clear out any errors from previous attempts now, because we're about to try again. If the old error just stayed on screen and was replaced by the same error then it would be harder to tell what had happened.
+        removeErrorFor(deviceInfo, forOperation: .Toggle)
+        updateErrorText()
+        
+        ++toggleOperationsOutstanding[deviceInfo]
+        
+        oq.addOperationWithBlock {
+            let delegateQueue = NSOperationQueue.mainQueue()
+            
+            do {
+                try setSetting(deviceInfo, setting: wantedSetting)
+            } catch let e as AppError {
+                delegateQueue.addOperationWithBlock {
+                    --self.toggleOperationsOutstanding[deviceInfo]
+                    operationWillCompleteHandler?()
+                    self.newOperationError(deviceInfo, error: e, operation: .Toggle)
+                }
+                return
+            } catch { assert(false) }
+            
+            guard let newSetting: Bool = {
+                do {
+                    let newSetting = try fetchSetting(deviceInfo)
+                    delegateQueue.addOperationWithBlock {
+                        --self.toggleOperationsOutstanding[deviceInfo]
+                        operationWillCompleteHandler?()
+                        self.newFetchResult(deviceInfo, setting: newSetting)
+                    }
+                    return newSetting
+                } catch let e as AppError {
+                    delegateQueue.addOperationWithBlock {
+                        --self.toggleOperationsOutstanding[deviceInfo]
+                        operationWillCompleteHandler?()
+                        self.newFetchError(deviceInfo, error: e)
+                    }
+                } catch { assert(false) }
+                return nil
+                }() else { return }
+            
+            if newSetting != wantedSetting {
+                delegateQueue.addOperationWithBlock { self.newOperationError(deviceInfo, error: AppError(kind: .SettingDidNotChange), operation: .Toggle) }
+            }
+        }
     }
     
     private func newFetchResult(deviceInfo: DeviceInfo, setting: Bool) {

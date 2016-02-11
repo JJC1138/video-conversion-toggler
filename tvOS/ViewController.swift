@@ -14,6 +14,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     let tableAnimationType = UITableViewRowAnimation.Automatic
     let headerFadeTime = NSTimeInterval(1)
     func row(index: Int) -> NSIndexPath { return NSIndexPath(forRow: index, inSection: 0) }
+    var completedWatchToggleTime = NSTimeInterval()
     
     func hideTableHeaderIfNecessary() {
         if model.deviceCount == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
@@ -72,8 +73,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
                 let toggleRequestTime = (message[WatchMessageKeys.toggleRequestTime] as! NSNumber).doubleValue
                 
                 NSOperationQueue.mainQueue().addOperationWithBlock {
-                    self.viewController.newFetchResult(deviceInfo, setting: setting) // Update the UI in case we're active or become active soon.
-                    self.viewController.toggleDevice(deviceInfo, toSetting: setting, watchToggleRequestTime: toggleRequestTime)
+                    model.toggleDevice(deviceInfo, toSetting: setting) { self.completedWatchToggleTime = toggleRequestTime }
                 }
             } else {
                 assert(false)
@@ -220,61 +220,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     
     func toggleDeviceAtIndexPath(indexPath: NSIndexPath) {
         assert(indexPath.section == 0)
-        let deviceSettingsIndex = indexPath.row
-        let selectedDeviceSetting = self.deviceSettings[deviceSettingsIndex]
-        
-        let newDeviceSetting = DeviceSetting(device: selectedDeviceSetting.device, setting: !selectedDeviceSetting.setting, retrieved: awakeUptime())
-        self.deviceSettings[deviceSettingsIndex] = newDeviceSetting
-        self.deviceTable.reloadRowsAtIndexPaths([indexPath], withRowAnimation: self.tableAnimationType)
-        if deviceSettingsIndex == 0 { sendStatusToWatch() }
-        
-        toggleDevice(newDeviceSetting.device, toSetting: newDeviceSetting.setting)
-    }
-    
-    func toggleDevice(deviceInfo: DeviceInfo, toSetting wantedSetting: Bool, watchToggleRequestTime: NSTimeInterval? = nil) {
-        // It's useful for the user if we clear out any errors from previous attempts now, because we're about to try again. If the old error just stayed on screen and was replaced by the same error then it would be harder to tell what had happened.
-        removeErrorFor(deviceInfo, forOperation: .Toggle)
-        updateErrorText()
-        
-        ++toggleOperationsOutstanding[deviceInfo]
-        
-        oq.addOperationWithBlock {
-            let delegateQueue = NSOperationQueue.mainQueue()
-            
-            do {
-                try setSetting(deviceInfo, setting: wantedSetting)
-            } catch let e as AppError {
-                delegateQueue.addOperationWithBlock {
-                    --self.toggleOperationsOutstanding[deviceInfo]
-                    self.completedWatchToggleTime = watchToggleRequestTime ?? self.completedWatchToggleTime
-                    self.newOperationError(deviceInfo, error: e, operation: .Toggle)
-                }
-                return
-            } catch { assert(false) }
-            
-            guard let newSetting: Bool = {
-                do {
-                    let newSetting = try fetchSetting(deviceInfo)
-                    delegateQueue.addOperationWithBlock {
-                        --self.toggleOperationsOutstanding[deviceInfo]
-                        self.completedWatchToggleTime = watchToggleRequestTime ?? self.completedWatchToggleTime
-                        self.newFetchResult(deviceInfo, setting: newSetting)
-                    }
-                    return newSetting
-                } catch let e as AppError {
-                    delegateQueue.addOperationWithBlock {
-                        --self.toggleOperationsOutstanding[deviceInfo]
-                        self.completedWatchToggleTime = watchToggleRequestTime ?? self.completedWatchToggleTime
-                        self.newFetchError(deviceInfo, error: e)
-                    }
-                } catch { assert(false) }
-                return nil
-                }() else { return }
-            
-            if newSetting != wantedSetting {
-                delegateQueue.addOperationWithBlock { self.newOperationError(deviceInfo, error: AppError(kind: .SettingDidNotChange), operation: .Toggle) }
-            }
-        }
+        model.ToggleDeviceAtIndex(indexPath.row)
     }
     
 }
