@@ -15,23 +15,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     let headerFadeTime = NSTimeInterval(1)
     func row(index: Int) -> NSIndexPath { return NSIndexPath(forRow: index, inSection: 0) }
     
-    struct DeviceSetting {
-        let device: DeviceInfo
-        let setting: Bool
-        let retrieved: NSTimeInterval
-    }
-    
-    enum Operation {
-        case FetchSetting
-        case Toggle
-    }
-    
-    struct Error {
-        let device: DeviceInfo
-        let error: AppError
-        let cause: Operation
-    }
-    
     // Only touch these from the main thread:
     var deviceSettings = [DeviceSetting]()
     var errors = [Error]()

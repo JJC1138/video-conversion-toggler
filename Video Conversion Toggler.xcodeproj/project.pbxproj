@@ -11,6 +11,9 @@
 		FC2C18DA1C5656300024C7FF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2C18D91C5656300024C7FF /* ViewController.swift */; };
 		FC2C18DD1C5656300024C7FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC2C18DB1C5656300024C7FF /* Main.storyboard */; };
 		FC2C18DF1C5656300024C7FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC2C18DE1C5656300024C7FF /* Assets.xcassets */; };
+		FC41B94F1C6CCC6E00740E63 /* CommonUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41B94E1C6CCC6E00740E63 /* CommonUI.swift */; };
+		FC41B9501C6CCC6E00740E63 /* CommonUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41B94E1C6CCC6E00740E63 /* CommonUI.swift */; };
+		FC41B9511C6CCC6E00740E63 /* CommonUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41B94E1C6CCC6E00740E63 /* CommonUI.swift */; };
 		FC4225AC1C4D506200A0E99D /* Fuzi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC4225A81C4D505700A0E99D /* Fuzi.framework */; };
 		FC4225AD1C4D506200A0E99D /* Fuzi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC4225A81C4D505700A0E99D /* Fuzi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FC4225AE1C4D5BAF00A0E99D /* Fuzi.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC4225A91C4D505700A0E99D /* Fuzi.framework.dSYM */; };
@@ -149,6 +152,7 @@
 		FC2C18DC1C5656300024C7FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FC2C18DE1C5656300024C7FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC2C18E01C5656300024C7FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC41B94E1C6CCC6E00740E63 /* CommonUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUI.swift; sourceTree = "<group>"; };
 		FC4225A81C4D505700A0E99D /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/Mac/Fuzi.framework; sourceTree = SOURCE_ROOT; };
 		FC4225A91C4D505700A0E99D /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/Mac/Fuzi.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		FC524F2A1C56693100AA9294 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/tvOS/Alamofire.framework; sourceTree = SOURCE_ROOT; };
@@ -359,6 +363,7 @@
 				FCEAE3C61C47F0F500DD195E /* TinySSDPClient.swift */,
 				FCA711291C4E930900B8AA10 /* Localizable.strings */,
 				FC96A6871C6912B800A7B0A0 /* DeviceInfo.swift */,
+				FC41B94E1C6CCC6E00740E63 /* CommonUI.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -600,6 +605,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC41B9501C6CCC6E00740E63 /* CommonUI.swift in Sources */,
 				FC96A6891C6912B800A7B0A0 /* DeviceInfo.swift in Sources */,
 				FC6A47AC1C624A8400677864 /* UIKitUtility.swift in Sources */,
 				FC524F351C566A7100AA9294 /* VideoConversionToggler.swift in Sources */,
@@ -620,6 +626,7 @@
 				FC5F10B91C61122400A317DE /* VideoConversionToggler.swift in Sources */,
 				FC96A6851C68D87A00A7B0A0 /* WatchCommunicationProtocol.swift in Sources */,
 				FC5F10BA1C61122400A317DE /* TinySSDPClient.swift in Sources */,
+				FC41B9511C6CCC6E00740E63 /* CommonUI.swift in Sources */,
 				FC5F10BD1C611CE600A317DE /* AppDelegate.swift in Sources */,
 				FC96A68A1C6912B800A7B0A0 /* DeviceInfo.swift in Sources */,
 				FC5F10B81C61122400A317DE /* Utility.swift in Sources */,
@@ -638,6 +645,7 @@
 				FC65B21C1C45300600B71747 /* main.swift in Sources */,
 				FC65B21A1C452FED00B71747 /* CLI.swift in Sources */,
 				FC96A6881C6912B800A7B0A0 /* DeviceInfo.swift in Sources */,
+				FC41B94F1C6CCC6E00740E63 /* CommonUI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
