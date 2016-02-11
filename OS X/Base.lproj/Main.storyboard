@@ -686,7 +686,7 @@
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn width="128" minWidth="40" maxWidth="100000" id="mKA-Yf-gCc">
+                                                <tableColumn identifier="Device" width="128" minWidth="40" maxWidth="100000" id="mKA-Yf-gCc">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Device">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -718,7 +718,7 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn width="98" minWidth="18" maxWidth="200" id="5ZS-1X-RV6">
+                                                <tableColumn identifier="Video Conversion" width="98" minWidth="18" maxWidth="200" id="5ZS-1X-RV6">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Video Conversion">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
