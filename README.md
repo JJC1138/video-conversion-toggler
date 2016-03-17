@@ -6,6 +6,10 @@ It exists because I found myself wanting to toggle this setting often when using
 
 Unfortunately the setting that's needed isn't included in the official Denon/Marantz control protocol, so it's not available in remote control apps from the manufacturers or third parties. The setting is included in the devices' web interfaces, though, so this app just pretends to be a web browser and toggles it that way.
 
+### Screenshots
+
+<img src="http://jjc1138.github.io/video-conversion-toggler/Screenshots/OS%20X.png" height="180" alt="OS X"> <img src="http://jjc1138.github.io/video-conversion-toggler/Screenshots/tvOS.png" height="180" alt="tvOS"> <img src="http://jjc1138.github.io/video-conversion-toggler/Screenshots/iPhone.png" height="180" alt="iPhone"> <img src="http://jjc1138.github.io/video-conversion-toggler/Screenshots/iPad.png" height="180" alt="Apple Watch"> <img src="http://jjc1138.github.io/video-conversion-toggler/Screenshots/Apple%20Watch.png" height="180" alt="Apple Watch">
+
 ### Copyright
 
 Copyright © 2016 Jon Colverson and available under the [MIT license](https://opensource.org/licenses/MIT)
