@@ -104,6 +104,11 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     func sendStatusToWatch() {
         guard WCSession.isSupported() else { return }
         
+        let session = WCSession.defaultSession()
+        
+        // FUTURETODO Check session.activationState == WCSessionActivationState.Activated when that is available in iOS 9.3
+        guard session.paired && session.watchAppInstalled else { return }
+        
         var status = [String : AnyObject]()
         if model.deviceCount > 0 {
             let (device, setting) = model.deviceAndSettingAtIndex(0)
@@ -114,7 +119,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         }
         status[WatchMessageKeys.error] = model.hasAnyErrors
         
-        try! WCSession.defaultSession().updateApplicationContext(status)
+        try! session.updateApplicationContext(status)
     }
     #else
     func sendStatusToWatch() {}
