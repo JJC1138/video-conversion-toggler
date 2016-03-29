@@ -19,8 +19,6 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         let session = WCSession.defaultSession()
         session.delegate = self
         session.activateSession()
-        // FUTURETODO in watchOS 2.2 WCSession.activateSession() completes asynchronously so we can't count on it be activated already here:
-        sessionReachabilityDidChange(session)
         
         requestUpdateTimer = {
             let t = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(requestAnUpdate), userInfo: nil, repeats: true)
@@ -33,6 +31,11 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         super.didDeactivate()
         
         requestUpdateTimer?.invalidate()
+    }
+    
+    func session(session: WCSession, activationDidCompleteWithState activationState: WCSessionActivationState, error: NSError?) {
+        guard activationState == .Activated else { return }
+        sessionReachabilityDidChange(session)
     }
     
     func sessionReachabilityDidChange(session: WCSession) {

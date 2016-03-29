@@ -78,6 +78,15 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
             }
         }
         
+        // These are implemented to indicate to iOS that we support switching between multiple watches:
+        func session(session: WCSession, activationDidCompleteWithState activationState: WCSessionActivationState, error: NSError?) {}
+        func sessionDidBecomeInactive(session: WCSession) {}
+        
+        func sessionDidDeactivate(session: WCSession) {
+            // This is called when changing watches so we need to activate the session again:
+            session.activateSession()
+        }
+        
     }
     
     var watchDelegate: WCSD?
@@ -106,8 +115,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         
         let session = WCSession.defaultSession()
         
-        // FUTURETODO Check session.activationState == WCSessionActivationState.Activated when that is available in iOS 9.3
-        guard session.paired && session.watchAppInstalled else { return }
+        guard session.paired && session.watchAppInstalled && session.activationState == .Activated else { return }
         
         var status = [String : AnyObject]()
         if model.deviceCount > 0 {
