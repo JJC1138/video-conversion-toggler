@@ -469,7 +469,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0730;
 				TargetAttributes = {
 					FC2C18D41C5656300024C7FF = {
 						CreatedOnToolsVersion = 7.2;
@@ -1023,7 +1023,9 @@
 		FC7110411C3AA6B1002755E4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
 				PRODUCT_MODULE_NAME = VideoConversionToggler;
 				PRODUCT_NAME = "Video Conversion Toggler";
