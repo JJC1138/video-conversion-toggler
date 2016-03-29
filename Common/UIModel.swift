@@ -38,8 +38,7 @@ class UIModel {
         lastTimeADeviceWasSeen = awakeUptime()
         oq.addOperation(PeriodicallyFetchAllStatuses(fetchErrorDelegate: { di, e in self.newOperationError(di, error: e, operation: .FetchSetting) } , fetchResultDelegate: self.newFetchResult))
         removeOldResultsTimer = {
-            // FUTURETODO Use the non-string selector initialization syntax when SE-0022 is implemented:
-            let t = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "removeOldResults", userInfo: nil, repeats: true)
+            let t = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(removeOldResults), userInfo: nil, repeats: true)
             t.tolerance = 3
             return t
             }()
@@ -77,7 +76,7 @@ class UIModel {
         removeErrorFor(deviceInfo, forOperation: .Toggle)
         updateErrorText()
         
-        ++toggleOperationsOutstanding[deviceInfo]
+        toggleOperationsOutstanding[deviceInfo] += 1
         
         oq.addOperationWithBlock {
             let delegateQueue = NSOperationQueue.mainQueue()
@@ -86,7 +85,7 @@ class UIModel {
                 try setSetting(deviceInfo, setting: wantedSetting)
             } catch let e as AppError {
                 delegateQueue.addOperationWithBlock {
-                    --self.toggleOperationsOutstanding[deviceInfo]
+                    self.toggleOperationsOutstanding[deviceInfo] -= 1
                     operationWillCompleteHandler?()
                     self.newOperationError(deviceInfo, error: e, operation: .Toggle)
                 }
@@ -97,14 +96,14 @@ class UIModel {
                 do {
                     let newSetting = try fetchSetting(deviceInfo)
                     delegateQueue.addOperationWithBlock {
-                        --self.toggleOperationsOutstanding[deviceInfo]
+                        self.toggleOperationsOutstanding[deviceInfo] -= 1
                         operationWillCompleteHandler?()
                         self.newFetchResult(deviceInfo, setting: newSetting)
                     }
                     return newSetting
                 } catch let e as AppError {
                     delegateQueue.addOperationWithBlock {
-                        --self.toggleOperationsOutstanding[deviceInfo]
+                        self.toggleOperationsOutstanding[deviceInfo] -= 1
                         operationWillCompleteHandler?()
                         self.newFetchError(deviceInfo, error: e)
                     }

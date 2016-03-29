@@ -23,8 +23,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         sessionReachabilityDidChange(session)
         
         requestUpdateTimer = {
-            // FUTURETODO Use the non-string selector initialization syntax when SE-0022 is implemented:
-            let t = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "requestAnUpdate", userInfo: nil, repeats: true)
+            let t = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(requestAnUpdate), userInfo: nil, repeats: true)
             t.tolerance = 1
             return t
             }()

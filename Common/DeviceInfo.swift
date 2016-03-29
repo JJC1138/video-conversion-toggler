@@ -18,9 +18,8 @@ class DeviceInfoCoding: NSObject, NSCoding {
     static let baseURLKey = "baseURL"
     
     required init?(coder: NSCoder) {
-        // FUTURETODO this initialization before returning nil won't be needed in Swift 2.2: http://stackoverflow.com/a/26497229
-        guard let name = coder.decodeObjectForKey(DeviceInfoCoding.nameKey) as? String else { deviceInfo = DeviceInfo(name: "", baseURL: NSURL()); super.init(); return nil }
-        guard let baseURL = coder.decodeObjectForKey(DeviceInfoCoding.baseURLKey) as? NSURL else { deviceInfo = DeviceInfo(name: "", baseURL: NSURL()); super.init(); return nil }
+        guard let name = coder.decodeObjectForKey(DeviceInfoCoding.nameKey) as? String else { return nil }
+        guard let baseURL = coder.decodeObjectForKey(DeviceInfoCoding.baseURLKey) as? NSURL else { return nil }
         
         deviceInfo = DeviceInfo(name: name, baseURL: baseURL)
         super.init()
