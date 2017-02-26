@@ -13,11 +13,11 @@ struct AppError : Error {
     }
     let kind: Kind
     let info: String?
-    let nsError: NSError?
-    init(kind: Kind, info: String? = nil, nsError: NSError? = nil) {
+    let cause: Error?
+    init(kind: Kind, info: String? = nil, cause: Error? = nil) {
         self.kind = kind
         self.info = info
-        self.nsError = nsError
+        self.cause = cause
     }
 }
 
@@ -32,14 +32,14 @@ func describeError(_ error: AppError, forDevice deviceInfo: DeviceInfo) -> Strin
     
     var errorInfo = [String]()
     
-    errorInfo.append(localString(key: errorDescriptionFormat, fromTable: deviceInfo.debugDescription))
-    if let e = error.info { errorInfo.append(e) }
-    if let e = error.nsError { errorInfo.append(e.localizedDescription) }
+    errorInfo.append(localString(errorDescriptionFormat, fromTable: deviceInfo.debugDescription))
+    if let info = error.info { errorInfo.append(info) }
+    if let cause = error.cause { errorInfo.append(cause.localizedDescription) }
     
     return errorInfo.joined(separator: "\n\n")
 }
 
-let af = Alamofire.Manager(configuration: {
+let af = Alamofire.SessionManager(configuration: {
     let configuration = URLSessionConfiguration.ephemeral
     configuration.timeoutIntervalForRequest = 5
     return configuration
@@ -52,28 +52,28 @@ func fetchSetting(_ deviceInfo: DeviceInfo) throws -> Bool {
     do {
         let complete = DispatchSemaphore(value: 0)
         // We have to request this page first to initialize something in the web interface. If we don't then the d_video request below can sometimes return a page where neither of the setting's radio buttons are checked.
-        af.request(.GET, URL(string: "SETUP/VIDEO/r_video.asp", relativeTo: deviceInfo.baseURL)!).validate().responseData {
+        af.request(URL(string: "SETUP/VIDEO/r_video.asp", relativeTo: deviceInfo.baseURL)!).validate().responseData {
             response in
             
             defer { complete.signal() }
             
             if let responseError = response.result.error {
-                error = AppError(kind: .couldNotAccessWebInterface, nsError: responseError)
+                error = AppError(kind: .couldNotAccessWebInterface, cause: responseError)
                 return
             }
         }
-        complete.wait(timeout: DispatchTime.distantFuture)
+        _ = complete.wait(timeout: DispatchTime.distantFuture)
     }
     
     if error == nil {
         let complete = DispatchSemaphore(value: 0)
-        af.request(.GET, URL(string: "SETUP/VIDEO/d_video.asp", relativeTo: deviceInfo.baseURL)!).validate().responseData {
+        af.request(URL(string: "SETUP/VIDEO/d_video.asp", relativeTo: deviceInfo.baseURL)!).validate().responseData {
             response in
             
             defer { complete.signal() }
             
             if let responseError = response.result.error {
-                error = AppError(kind: .couldNotAccessWebInterface, nsError: responseError)
+                error = AppError(kind: .couldNotAccessWebInterface, cause: responseError)
                 return
             }
             
@@ -107,7 +107,7 @@ func fetchSetting(_ deviceInfo: DeviceInfo) throws -> Bool {
             
             result = conversionWasOn
         }
-        complete.wait(timeout: DispatchTime.distantFuture)
+        _ = complete.wait(timeout: DispatchTime.distantFuture)
     }
     
     if let error = error { throw error }
@@ -119,18 +119,18 @@ func setSetting(_ deviceInfo: DeviceInfo, setting: Bool) throws {
     
     var error: AppError?
     
-    af.request(.POST, URL(string: "SETUP/VIDEO/s_video.asp", relativeTo: deviceInfo.baseURL)!, parameters: ["radioVideoConvMode": setting ? "ON" : "OFF"]).validate().responseData {
+    af.request(URL(string: "SETUP/VIDEO/s_video.asp", relativeTo: deviceInfo.baseURL)!, method: .post, parameters: ["radioVideoConvMode": setting ? "ON" : "OFF"]).validate().responseData {
         response in
         
         defer { complete.signal() }
         
         if let responseError = response.result.error {
-            error = AppError(kind: .couldNotAccessWebInterface, nsError: responseError)
+            error = AppError(kind: .couldNotAccessWebInterface, cause: responseError)
             return
         }
     }
     
-    complete.wait(timeout: DispatchTime.distantFuture)
+    _ = complete.wait(timeout: DispatchTime.distantFuture)
     
     if let error = error { throw error }
 }
@@ -149,9 +149,9 @@ func discoverCompatibleDevices(_ delegate: @escaping (DeviceInfo) -> Void) {
     
     discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { ssdpResponse in
         locationFetches.addOperation {
-            let complete = DispatchSemaphore(value: 0)!
+            let complete = DispatchSemaphore(value: 0)
             
-            af.request(.GET, ssdpResponse.location).validate().responseData { httpResponse in
+            af.request(ssdpResponse.location).validate().responseData { httpResponse in
                 defer { complete.signal() }
                 
                 guard let xml: Fuzi.XMLDocument = {
@@ -176,7 +176,7 @@ func discoverCompatibleDevices(_ delegate: @escaping (DeviceInfo) -> Void) {
                 delegate(deviceInfo)
             }
             
-            complete.wait(timeout: DispatchTime.distantFuture)
+            _ = complete.wait(timeout: DispatchTime.distantFuture)
         }
     }
     
@@ -186,11 +186,11 @@ func discoverCompatibleDevices(_ delegate: @escaping (DeviceInfo) -> Void) {
 let contact = "vidconvtoggle@jjc1138.net"
 
 func errorContactInstruction() -> String {
-    return localString(key: localString("Please contact %@ with the above error information."), fromTable: contact)
+    return localString(localString("Please contact %@ with the above error information."), fromTable: contact)
 }
 
 func noDevicesContactInstruction() -> String {
-    return localString(key: localString("No devices found."), fromTable: contact)
+    return localString(localString("No devices found."), fromTable: contact)
 }
 
 class PeriodicallyFetchAllStatuses: Operation {

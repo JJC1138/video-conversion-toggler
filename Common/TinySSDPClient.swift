@@ -28,7 +28,7 @@ public func == (lhs: SSDPResponse, rhs: SSDPResponse) -> Bool {
 }
 
 public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegateQueue: OperationQueue = OperationQueue.main, delegate: @escaping (SSDPResponse) -> Void) {
-    class SocketDelegate: GCDAsyncUdpSocketDelegate {
+    class SocketDelegate: NSObject, GCDAsyncUdpSocketDelegate {
         
         let responseDelegate: (SSDPResponse) -> Void
         let responseDelegateQueue: OperationQueue
@@ -39,9 +39,11 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
             self.responseDelegate = responseDelegate
         }
         
-        @objc func udpSocket(_ sock: GCDAsyncUdpSocket!, didReceive data: Data!, fromAddress address: Data!, withFilterContext filterContext: AnyObject!) {
+        @objc func udpSocket(_: GCDAsyncUdpSocket, didReceive data: Data, fromAddress _: Data, withFilterContext _: Any?) {
             let responseMessage = CFHTTPMessageCreateEmpty(nil, false).takeRetainedValue()
-            guard CFHTTPMessageAppendBytes(responseMessage, data.bytes.bindMemory(to: UInt8.self, capacity: data.count), data.count) else { return }
+            data.withUnsafeBytes() { (bytes: UnsafePointer<UInt8>) -> () in
+                CFHTTPMessageAppendBytes(responseMessage, bytes, data.count)
+            }
             guard CFHTTPMessageIsHeaderComplete(responseMessage) else { return }
             guard let originalHeaders = CFHTTPMessageCopyAllHeaderFields(responseMessage)?.takeRetainedValue() as Dictionary? else { return }
             var headers = [String: String]()
@@ -62,7 +64,7 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
             responseDelegateQueue.addOperation { self.responseDelegate(response) }
         }
         
-        @objc func udpSocket(_ sock: GCDAsyncUdpSocket!, didSendDataWithTag tag: Int) {
+        @objc func udpSocket(_ sock: GCDAsyncUdpSocket, didSendDataWithTag tag: Int) {
             // We can't begin receiving until the socket is bound and we're doing that implicitly by sending data over it, so this is the right place for this.
             try! sock.beginReceiving()
         }
@@ -70,7 +72,7 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
     }
     
     let socketDelegate = SocketDelegate(responseDelegateQueue: delegateQueue, responseDelegate: delegate) // We have to keep a reference to this so it can't be inlined in the call below.
-    let sock = GCDAsyncUdpSocket(delegate: socketDelegate, delegateQueue: DispatchQueue(label: nil, attributes: [])) // The queue has to be serial so that duplicate filtering works.
+    let sock = GCDAsyncUdpSocket(delegate: socketDelegate, delegateQueue: DispatchQueue(label: "TinySSDPClient")) // The queue has to be serial so that duplicate filtering works (and the created queue is serial by default).
     
     let maximumResponseWaitingTimeSeconds = 1
     let ip = "239.255.255.250"
@@ -85,7 +87,7 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
         "ST: \(serviceType)",
         "",
         "",
-        ].joined(separator: "\r\n").data(using: String.Encoding.utf8)
+        ].joined(separator: "\r\n").data(using: String.Encoding.utf8)!
     
     sock.send(searchMessage, toHost: ip, port: port, withTimeout: -1, tag: 0)
     

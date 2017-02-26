@@ -1,9 +1,9 @@
 import Foundation
 
 // From http://stackoverflow.com/a/25226794
-class StandardErrorOutputStream: OutputStream {
+class StandardErrorOutputStream: TextOutputStream {
     func write(_ string: String) {
-        FileHandle.withStandardError.write(string.data(using: String.Encoding.utf8)!)
+        FileHandle.standardError.write(string.data(using: String.Encoding.utf8)!)
     }
 }
 var stderr = StandardErrorOutputStream()
@@ -43,7 +43,7 @@ public struct Counter<Element: Hashable, Counter: Integer> {
     
     public subscript(element: Element) -> Counter {
         get {
-            return d[element] as! _? ?? 0
+            return d[element] ?? 0
         }
         set {
             if newValue == 0 {
