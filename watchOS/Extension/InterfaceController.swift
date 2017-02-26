@@ -10,18 +10,18 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     @IBOutlet var phoneUnreachableErrorLabel: WKInterfaceLabel!
     
     var deviceInfo: DeviceInfo?
-    var requestUpdateTimer: NSTimer?
-    var lastToggleRequestTime = NSTimeInterval()
+    var requestUpdateTimer: Timer?
+    var lastToggleRequestTime = TimeInterval()
     
     override func willActivate() {
         super.willActivate()
         
-        let session = WCSession.defaultSession()
+        let session = WCSession.default()
         session.delegate = self
-        session.activateSession()
+        session.activate()
         
         requestUpdateTimer = {
-            let t = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(requestAnUpdate), userInfo: nil, repeats: true)
+            let t = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(requestAnUpdate), userInfo: nil, repeats: true)
             t.tolerance = 1
             return t
             }()
@@ -33,13 +33,13 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         requestUpdateTimer?.invalidate()
     }
     
-    func session(session: WCSession, activationDidCompleteWithState activationState: WCSessionActivationState, error: NSError?) {
-        guard activationState == .Activated else { return }
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        guard activationState == .activated else { return }
         sessionReachabilityDidChange(session)
     }
     
-    func sessionReachabilityDidChange(session: WCSession) {
-        if session.reachable {
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        if session.isReachable {
             requestAnUpdate()
             phoneUnreachableErrorLabel.setHidden(true)
         } else {
@@ -52,31 +52,31 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     func requestAnUpdate() {
-        let session = WCSession.defaultSession()
-        guard session.reachable else { return }
+        let session = WCSession.default()
+        guard session.isReachable else { return }
         session.sendMessage([:], replyHandler: nil, errorHandler: sendMessageDidCauseError)
     }
     
-    func sendMessageDidCauseError(error: NSError) {
+    func sendMessageDidCauseError(_ error: NSError) {
         #if DEBUG
             print(error)
         #endif
     }
     
-    @IBAction func switchToggled(value: Bool) {
+    @IBAction func switchToggled(_ value: Bool) {
         guard let deviceInfo = deviceInfo else { return }
         
         var status = [String : AnyObject]()
-        status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedDataWithRootObject(DeviceInfoCoding(deviceInfo))
-        status[WatchMessageKeys.setting] = value
+        status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedData(withRootObject: DeviceInfoCoding(deviceInfo)) as AnyObject?
+        status[WatchMessageKeys.setting] = value as AnyObject?
         lastToggleRequestTime = awakeUptime()
-        status[WatchMessageKeys.toggleRequestTime] = lastToggleRequestTime
+        status[WatchMessageKeys.toggleRequestTime] = lastToggleRequestTime as AnyObject?
         
-        WCSession.defaultSession().sendMessage(status, replyHandler: nil, errorHandler: sendMessageDidCauseError)
+        WCSession.default().sendMessage(status, replyHandler: nil, errorHandler: sendMessageDidCauseError)
     }
     
-    func session(session: WCSession, didReceiveApplicationContext applicationContext: [String : AnyObject]) {
-        NSOperationQueue.mainQueue().addOperationWithBlock {
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        OperationQueue.main.addOperation {
             self.deviceErrorLabel.setHidden(!(applicationContext[WatchMessageKeys.error] as! NSNumber).boolValue)
             
             if let deviceInfoData = applicationContext[WatchMessageKeys.deviceInfo] {
@@ -96,7 +96,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
                     }
                 }
                 
-                let deviceInfo = (NSKeyedUnarchiver.unarchiveObjectWithData(deviceInfoData as! NSData) as! DeviceInfoCoding).deviceInfo
+                let deviceInfo = (NSKeyedUnarchiver.unarchiveObject(with: deviceInfoData as! Data) as! DeviceInfoCoding).deviceInfo
                 let setting = (applicationContext[WatchMessageKeys.setting] as! NSNumber).boolValue
                 
                 self.deviceInfo = deviceInfo

@@ -2,10 +2,10 @@ import UIKit
 
 extension UITableView {
     // Based on http://stackoverflow.com/a/19262598
-    func indexPathWithSubview(view: UIView?) -> NSIndexPath? {
+    func indexPathWithSubview(_ view: UIView?) -> IndexPath? {
         var view = view
         while let v = view {
-            if let tableViewCell = v as? UITableViewCell { return indexPathForCell(tableViewCell) }
+            if let tableViewCell = v as? UITableViewCell { return indexPath(for: tableViewCell) }
             view = v.superview
         }
         return nil

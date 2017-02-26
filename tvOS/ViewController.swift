@@ -11,24 +11,24 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet var tableFillConstraint: NSLayoutConstraint?
     
-    let tableAnimationType = UITableViewRowAnimation.Automatic
-    let headerFadeTime = NSTimeInterval(1)
-    func row(index: Int) -> NSIndexPath { return NSIndexPath(forRow: index, inSection: 0) }
-    var completedWatchToggleTime = NSTimeInterval()
+    let tableAnimationType = UITableViewRowAnimation.automatic
+    let headerFadeTime = TimeInterval(1)
+    func row(_ index: Int) -> IndexPath { return IndexPath(row: index, section: 0) }
+    var completedWatchToggleTime = TimeInterval()
     
     override func viewDidLoad() {
         model = UIModel(delegate: self)
         
-        let nc = NSNotificationCenter.defaultCenter()
+        let nc = NotificationCenter.default
         func applicationDidBecomeActive() { model.start() }
-        nc.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { _ in applicationDidBecomeActive() }
-        nc.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { _ in self.model.stop() }
-        nc.addObserverForName(UIApplicationDidEnterBackgroundNotification, object: nil, queue: nil) { _ in self.model.resetErrors() }
+        nc.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil) { _ in applicationDidBecomeActive() }
+        nc.addObserver(forName: NSNotification.Name.UIApplicationWillResignActive, object: nil, queue: nil) { _ in self.model.stop() }
+        nc.addObserver(forName: NSNotification.Name.UIApplicationDidEnterBackground, object: nil, queue: nil) { _ in self.model.resetErrors() }
         
         do { // tweak table header presentation:
-            func uppercaseAllLabelsInHierarchy(view: UIView) {
+            func uppercaseAllLabelsInHierarchy(_ view: UIView) {
                 if let label = view as? UILabel, let text = label.text {
-                    label.text = text.uppercaseStringWithLocale(NSLocale.currentLocale())
+                    label.text = text.uppercased(with: Locale.current)
                 }
                 for subview in view.subviews { uppercaseAllLabelsInHierarchy(subview) }
             }
@@ -37,17 +37,17 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
             header.alpha = 0
         }
         
-        if UIApplication.sharedApplication().applicationState == .Active {
+        if UIApplication.shared.applicationState == .active {
             // We've missed the first UIApplicationDidBecomeActiveNotification already so just call the function now. This can happen if we're in a navigation controller, for example.
             applicationDidBecomeActive()
         }
         
         #if !os(tvOS)
             if WCSession.isSupported() {
-                let session = WCSession.defaultSession()
+                let session = WCSession.default()
                 watchDelegate = WCSD(viewController: self)
                 session.delegate = watchDelegate
-                session.activateSession()
+                session.activate()
             }
         #endif
     }
@@ -61,16 +61,16 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         
         let viewController: ViewController
         
-        func session(session: WCSession, didReceiveMessage message: [String: AnyObject]) {
+        func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
             // Remember that this will be called on a background thread.
             if message.isEmpty { // a request for an update
                 viewController.watchRequestedUpdate()
             } else if let deviceInfoData = message[WatchMessageKeys.deviceInfo] { // a request for a toggle
-                let deviceInfo = (NSKeyedUnarchiver.unarchiveObjectWithData(deviceInfoData as! NSData) as! DeviceInfoCoding).deviceInfo
+                let deviceInfo = (NSKeyedUnarchiver.unarchiveObject(with: deviceInfoData as! Data) as! DeviceInfoCoding).deviceInfo
                 let setting = (message[WatchMessageKeys.setting] as! NSNumber).boolValue
                 let toggleRequestTime = (message[WatchMessageKeys.toggleRequestTime] as! NSNumber).doubleValue
                 
-                NSOperationQueue.mainQueue().addOperationWithBlock {
+                OperationQueue.main.addOperation {
                     self.viewController.model.toggleDevice(deviceInfo, toSetting: setting) { self.viewController.completedWatchToggleTime = toggleRequestTime }
                 }
             } else {
@@ -79,12 +79,12 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         }
         
         // These are implemented to indicate to iOS that we support switching between multiple watches:
-        func session(session: WCSession, activationDidCompleteWithState activationState: WCSessionActivationState, error: NSError?) {}
-        func sessionDidBecomeInactive(session: WCSession) {}
+        func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+        func sessionDidBecomeInactive(_ session: WCSession) {}
         
-        func sessionDidDeactivate(session: WCSession) {
+        func sessionDidDeactivate(_ session: WCSession) {
             // This is called when changing watches so we need to activate the session again:
-            session.activateSession()
+            session.activate()
         }
         
     }
@@ -92,20 +92,20 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     var watchDelegate: WCSD?
     
     func watchRequestedUpdate() {
-        let task = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler(nil)
+        let task = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
         
-        NSOperationQueue.mainQueue().addOperationWithBlock {
-            guard UIApplication.sharedApplication().applicationState != .Active else {
+        OperationQueue.main.addOperation {
+            guard UIApplication.shared.applicationState != .active else {
                 // We're active and we'll be updating regularly so there's no need to do a special fetch right now.
                 self.sendStatusToWatch()
-                UIApplication.sharedApplication().endBackgroundTask(task)
+                UIApplication.shared.endBackgroundTask(task)
                 return
             }
             
             // We're in the background so we should run a fetch to update the watch.
             self.model.fetchAllStatusesOnce {
                 self.sendStatusToWatch()
-                UIApplication.sharedApplication().endBackgroundTask(task)
+                UIApplication.shared.endBackgroundTask(task)
             }
         }
     }
@@ -113,19 +113,19 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     func sendStatusToWatch() {
         guard WCSession.isSupported() else { return }
         
-        let session = WCSession.defaultSession()
+        let session = WCSession.default()
         
-        guard session.paired && session.watchAppInstalled && session.activationState == .Activated else { return }
+        guard session.isPaired && session.isWatchAppInstalled && session.activationState == .activated else { return }
         
         var status = [String : AnyObject]()
         if model.deviceCount > 0 {
             let (device, setting) = model.deviceAndSettingAtIndex(0)
             
-            status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedDataWithRootObject(DeviceInfoCoding(device))
-            status[WatchMessageKeys.setting] = setting
-            status[WatchMessageKeys.lastPerformedToggleRequestTime] = completedWatchToggleTime
+            status[WatchMessageKeys.deviceInfo] = NSKeyedArchiver.archivedData(withRootObject: DeviceInfoCoding(device)) as AnyObject?
+            status[WatchMessageKeys.setting] = setting as AnyObject?
+            status[WatchMessageKeys.lastPerformedToggleRequestTime] = completedWatchToggleTime as AnyObject?
         }
-        status[WatchMessageKeys.error] = model.hasAnyErrors
+        status[WatchMessageKeys.error] = model.hasAnyErrors as AnyObject?
         
         try! session.updateApplicationContext(status)
     }
@@ -135,36 +135,36 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     
     // MARK: ModelViewDelegate
     
-    func insertDeviceViewAtIndex(index: Int) {
-        deviceTable.insertRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
+    func insertDeviceViewAtIndex(_ index: Int) {
+        deviceTable.insertRows(at: [row(index)], with: tableAnimationType)
         if index == 0 {
-            UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 1 }
+            UIView.animate(withDuration: headerFadeTime, animations: { self.deviceTable.tableHeaderView!.alpha = 1 }) 
             sendStatusToWatch()
         }
     }
     
-    func reloadDeviceViewAtIndex(index: Int) {
-        deviceTable.reloadRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
+    func reloadDeviceViewAtIndex(_ index: Int) {
+        deviceTable.reloadRows(at: [row(index)], with: tableAnimationType)
         if index == 0 { sendStatusToWatch() }
     }
     
-    func deleteDeviceViewAtIndex(index: Int) {
-        deviceTable.deleteRowsAtIndexPaths([row(index)], withRowAnimation: tableAnimationType)
+    func deleteDeviceViewAtIndex(_ index: Int) {
+        deviceTable.deleteRows(at: [row(index)], with: tableAnimationType)
         hideTableHeaderIfNecessary()
         if index == 0 { sendStatusToWatch() }
     }
     
-    func deleteDeviceViewsAtIndices(indices: [Int]) {
-        deviceTable.deleteRowsAtIndexPaths(indices.map { row($0) }, withRowAnimation: tableAnimationType)
+    func deleteDeviceViewsAtIndices(_ indices: [Int]) {
+        deviceTable.deleteRows(at: indices.map { row($0) }, with: tableAnimationType)
         hideTableHeaderIfNecessary()
         if indices.contains(0) { sendStatusToWatch() }
     }
     
     func hideTableHeaderIfNecessary() {
-        if model.deviceCount == 0 { UIView.animateWithDuration(headerFadeTime) { self.deviceTable.tableHeaderView!.alpha = 0 } }
+        if model.deviceCount == 0 { UIView.animate(withDuration: headerFadeTime, animations: { self.deviceTable.tableHeaderView!.alpha = 0 })  }
     }
     
-    func updateErrorText(text: String) {
+    func updateErrorText(_ text: String) {
         do {
             let hasError = { self.errorLabel.text != nil && !self.errorLabel.text!.isEmpty }
             let hadError = hasError()
@@ -174,10 +174,10 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         
         if let tableFillConstraint = tableFillConstraint {
             let errorLabelShouldBeVisible = !errorLabel.text!.isEmpty
-            let errorLabelIsVisible = !tableFillConstraint.active
+            let errorLabelIsVisible = !tableFillConstraint.isActive
             
             if errorLabelShouldBeVisible != errorLabelIsVisible {
-                tableFillConstraint.active = !errorLabelShouldBeVisible
+                tableFillConstraint.isActive = !errorLabelShouldBeVisible
             }
         }
     }
@@ -186,7 +186,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     // https://developer.apple.com/library/tvos/documentation/UserExperience/Conceptual/TableView_iPhone/TableViewAndDataModel/TableViewAndDataModel.html
     override func viewWillAppear(_: Bool) {
         if let selectedRows = deviceTable.indexPathsForSelectedRows {
-            for row in selectedRows { deviceTable.deselectRowAtIndexPath(row, animated: false) }
+            for row in selectedRows { deviceTable.deselectRow(at: row, animated: false) }
         }
     }
     override func viewDidAppear(_: Bool) {
@@ -194,23 +194,23 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     }
     
     #if !os(tvOS)
-    @IBAction func deviceSwitchChanged(deviceSwitch: UISwitch) {
+    @IBAction func deviceSwitchChanged(_ deviceSwitch: UISwitch) {
     toggleDeviceAtIndexPath(deviceTable.indexPathWithSubview(deviceSwitch)!)
     }
     #endif
     
     // MARK: UITableViewDataSource
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         assert(section == 0)
         return model.deviceCount
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         assert(indexPath.section == 0)
         let (device, setting) = model.deviceAndSettingAtIndex(indexPath.row)
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Device", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Device", for: indexPath)
         
         #if os(tvOS)
             cell.textLabel!.text = device.description
@@ -219,7 +219,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
             do {
                 let cell = cell as! DeviceTableViewCell
                 cell.nameLabel.text = device.description
-                cell.settingSwitch.on = setting
+                cell.settingSwitch.isOn = setting
             }
         #endif
         
@@ -228,12 +228,12 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
     
     // MARK: UITableViewDelegate
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         toggleDeviceAtIndexPath(indexPath)
     }
     
-    func toggleDeviceAtIndexPath(indexPath: NSIndexPath) {
+    func toggleDeviceAtIndexPath(_ indexPath: IndexPath) {
         assert(indexPath.section == 0)
         model.toggleDeviceAtIndex(indexPath.row)
     }

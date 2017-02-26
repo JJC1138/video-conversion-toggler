@@ -476,6 +476,7 @@
 					};
 					FC5F109C1C60FF0800A317DE = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0820;
 					};
 					FC65B2071C451BF600B71747 = {
 						CreatedOnToolsVersion = 7.2;
@@ -483,9 +484,11 @@
 					};
 					FCAFD1A81C63B299009F0CB0 = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 0820;
 					};
 					FCAFD1B41C63B29A009F0CB0 = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 0820;
 					};
 				};
 			};
@@ -874,6 +877,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -918,6 +922,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1049,6 +1054,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler;
 				PRODUCT_MODULE_NAME = VideoConversionToggler;
 				PRODUCT_NAME = "Video Conversion Toggler";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1077,6 +1083,7 @@
 				PRODUCT_MODULE_NAME = VideoConversionToggler;
 				PRODUCT_NAME = "Video Conversion Toggler";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1125,6 +1132,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.2;
 			};
@@ -1167,6 +1175,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler.watchkitapp;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 2.2;
@@ -1216,6 +1225,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.2;
 			};
@@ -1256,6 +1266,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.jjc1138.VideoConversionToggler.watchkitapp.watchkitextension;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 2.2;
