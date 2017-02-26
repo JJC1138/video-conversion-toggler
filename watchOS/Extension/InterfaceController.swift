@@ -57,7 +57,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         session.sendMessage([:], replyHandler: nil, errorHandler: sendMessageDidCauseError)
     }
     
-    func sendMessageDidCauseError(_ error: NSError) {
+    func sendMessageDidCauseError(_ error: Error) {
         #if DEBUG
             print(error)
         #endif
