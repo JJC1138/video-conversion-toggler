@@ -18,7 +18,7 @@ func localString(format: String, _ arguments: CVarArg...) -> String {
 }
 
 // Based on https://developer.apple.com/library/mac/qa/qa1398/_index.html
-private let machTimebaseMultiplier: TimeInterval = {
+fileprivate let machTimebaseMultiplier: TimeInterval = {
     var info = mach_timebase_info()
     mach_timebase_info(&info)
     return (TimeInterval(info.numer) / TimeInterval(info.denom)) / 1e9
@@ -39,7 +39,7 @@ extension Sequence {
 
 public struct Counter<Element: Hashable, Counter: Integer> {
     
-    fileprivate var d = [Element : Counter]()
+    private var d = [Element : Counter]()
     
     public subscript(element: Element) -> Counter {
         get {
