@@ -4,12 +4,12 @@ import Alamofire
 import Fuzi
 import HTMLReader
 
-struct AppError : ErrorType {
+struct AppError : Error {
     enum Kind {
-        case CouldNotAccessWebInterface
-        case WebInterfaceNotAsExpected
-        case SubmittingChangeFailed
-        case SettingDidNotChange
+        case couldNotAccessWebInterface
+        case webInterfaceNotAsExpected
+        case submittingChangeFailed
+        case settingDidNotChange
     }
     let kind: Kind
     let info: String?
@@ -21,79 +21,79 @@ struct AppError : ErrorType {
     }
 }
 
-func describeError(error: AppError, forDevice deviceInfo: DeviceInfo) -> String {
+func describeError(_ error: AppError, forDevice deviceInfo: DeviceInfo) -> String {
     let errorDescriptionFormat: String = {
         // Using a switch here allows the compiler to catch the error if we don't specify all possible values:
         switch error.kind {
-        case .CouldNotAccessWebInterface, .WebInterfaceNotAsExpected, .SubmittingChangeFailed, .SettingDidNotChange:
+        case .couldNotAccessWebInterface, .webInterfaceNotAsExpected, .submittingChangeFailed, .settingDidNotChange:
             return localString("AppError.Kind.\(error.kind)")
         }
     }()
     
     var errorInfo = [String]()
     
-    errorInfo.append(localString(format: errorDescriptionFormat, deviceInfo.debugDescription))
+    errorInfo.append(localString(key: errorDescriptionFormat, fromTable: deviceInfo.debugDescription))
     if let e = error.info { errorInfo.append(e) }
     if let e = error.nsError { errorInfo.append(e.localizedDescription) }
     
-    return errorInfo.joinWithSeparator("\n\n")
+    return errorInfo.joined(separator: "\n\n")
 }
 
 let af = Alamofire.Manager(configuration: {
-    let configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
+    let configuration = URLSessionConfiguration.ephemeral
     configuration.timeoutIntervalForRequest = 5
     return configuration
     }())
 
-func fetchSetting(deviceInfo: DeviceInfo) throws -> Bool {
+func fetchSetting(_ deviceInfo: DeviceInfo) throws -> Bool {
     var error: AppError?
     var result: Bool?
     
     do {
-        let complete = dispatch_semaphore_create(0)!
+        let complete = DispatchSemaphore(value: 0)
         // We have to request this page first to initialize something in the web interface. If we don't then the d_video request below can sometimes return a page where neither of the setting's radio buttons are checked.
-        af.request(.GET, NSURL(string: "SETUP/VIDEO/r_video.asp", relativeToURL: deviceInfo.baseURL)!).validate().responseData {
+        af.request(.GET, URL(string: "SETUP/VIDEO/r_video.asp", relativeTo: deviceInfo.baseURL)!).validate().responseData {
             response in
             
-            defer { dispatch_semaphore_signal(complete) }
+            defer { complete.signal() }
             
             if let responseError = response.result.error {
-                error = AppError(kind: .CouldNotAccessWebInterface, nsError: responseError)
+                error = AppError(kind: .couldNotAccessWebInterface, nsError: responseError)
                 return
             }
         }
-        dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+        complete.wait(timeout: DispatchTime.distantFuture)
     }
     
     if error == nil {
-        let complete = dispatch_semaphore_create(0)!
-        af.request(.GET, NSURL(string: "SETUP/VIDEO/d_video.asp", relativeToURL: deviceInfo.baseURL)!).validate().responseData {
+        let complete = DispatchSemaphore(value: 0)
+        af.request(.GET, URL(string: "SETUP/VIDEO/d_video.asp", relativeTo: deviceInfo.baseURL)!).validate().responseData {
             response in
             
-            defer { dispatch_semaphore_signal(complete) }
+            defer { complete.signal() }
             
             if let responseError = response.result.error {
-                error = AppError(kind: .CouldNotAccessWebInterface, nsError: responseError)
+                error = AppError(kind: .couldNotAccessWebInterface, nsError: responseError)
                 return
             }
             
             let doc = HTMLDocument(data: response.data!, contentTypeHeader: response.response?.allHeaderFields["Content-Type"] as! String?)
             
             guard let
-                conversionOnElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"ON\"]"),
-                conversionOffElement = doc.firstNodeMatchingSelector("input[name=\"radioVideoConvMode\"][value=\"OFF\"]") else {
+                conversionOnElement = doc.firstNode(matchingSelector: "input[name=\"radioVideoConvMode\"][value=\"ON\"]"),
+                let conversionOffElement = doc.firstNode(matchingSelector: "input[name=\"radioVideoConvMode\"][value=\"OFF\"]") else {
                     
-                error = AppError(kind: .WebInterfaceNotAsExpected, info: "Couldn't find setting input element")
+                error = AppError(kind: .webInterfaceNotAsExpected, info: "Couldn't find setting input element")
                 return
             }
             
-            func isChecked(element: HTMLElement) -> Bool { return element.attributes["checked"] != nil }
+            func isChecked(_ element: HTMLElement) -> Bool { return element.attributes["checked"] != nil }
             
             let conversionOnChecked = isChecked(conversionOnElement)
             let conversionOffChecked = isChecked(conversionOffElement)
             
             guard conversionOnChecked != conversionOffChecked else {
-                error = AppError(kind: .WebInterfaceNotAsExpected, info: "Setting on and off elements had same value")
+                error = AppError(kind: .webInterfaceNotAsExpected, info: "Setting on and off elements had same value")
                 return
             }
             
@@ -107,56 +107,56 @@ func fetchSetting(deviceInfo: DeviceInfo) throws -> Bool {
             
             result = conversionWasOn
         }
-        dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+        complete.wait(timeout: DispatchTime.distantFuture)
     }
     
     if let error = error { throw error }
     return result!
 }
 
-func setSetting(deviceInfo: DeviceInfo, setting: Bool) throws {
-    let complete = dispatch_semaphore_create(0)!
+func setSetting(_ deviceInfo: DeviceInfo, setting: Bool) throws {
+    let complete = DispatchSemaphore(value: 0)
     
     var error: AppError?
     
-    af.request(.POST, NSURL(string: "SETUP/VIDEO/s_video.asp", relativeToURL: deviceInfo.baseURL)!, parameters: ["radioVideoConvMode": setting ? "ON" : "OFF"]).validate().responseData {
+    af.request(.POST, URL(string: "SETUP/VIDEO/s_video.asp", relativeTo: deviceInfo.baseURL)!, parameters: ["radioVideoConvMode": setting ? "ON" : "OFF"]).validate().responseData {
         response in
         
-        defer { dispatch_semaphore_signal(complete) }
+        defer { complete.signal() }
         
         if let responseError = response.result.error {
-            error = AppError(kind: .CouldNotAccessWebInterface, nsError: responseError)
+            error = AppError(kind: .couldNotAccessWebInterface, nsError: responseError)
             return
         }
     }
     
-    dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+    complete.wait(timeout: DispatchTime.distantFuture)
     
     if let error = error { throw error }
 }
 
-func toggleSetting(deviceInfo: DeviceInfo) throws -> Bool {
+func toggleSetting(_ deviceInfo: DeviceInfo) throws -> Bool {
     let setting1 = try fetchSetting(deviceInfo)
     try setSetting(deviceInfo, setting: !setting1)
     let setting2 = try fetchSetting(deviceInfo)
     
-    if (setting1 == setting2) { throw AppError(kind: .SettingDidNotChange) }
+    if (setting1 == setting2) { throw AppError(kind: .settingDidNotChange) }
     return setting2
 }
 
-func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
-    let locationFetches = NSOperationQueue()
+func discoverCompatibleDevices(_ delegate: @escaping (DeviceInfo) -> Void) {
+    let locationFetches = OperationQueue()
     
     discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { ssdpResponse in
-        locationFetches.addOperationWithBlock {
-            let complete = dispatch_semaphore_create(0)!
+        locationFetches.addOperation {
+            let complete = DispatchSemaphore(value: 0)!
             
             af.request(.GET, ssdpResponse.location).validate().responseData { httpResponse in
-                defer { dispatch_semaphore_signal(complete) }
+                defer { complete.signal() }
                 
-                guard let xml: XMLDocument = {
+                guard let xml: Fuzi.XMLDocument = {
                     guard let data = httpResponse.data else { return nil }
-                    return try? XMLDocument(data: data)
+                    return try? Fuzi.XMLDocument(data: data)
                     }() else { return }
                 
                 guard let deviceTag = xml.root?.firstChild(tag: "device") else { return }
@@ -167,7 +167,7 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
                 
                 guard let presentationURLTag = deviceTag.firstChild(tag: "presentationURL") else { return }
                 
-                guard let presentationURL = NSURL(string: presentationURLTag.stringValue, relativeToURL: ssdpResponse.location) else { return }
+                guard let presentationURL = URL(string: presentationURLTag.stringValue, relativeTo: ssdpResponse.location) else { return }
                 
                 guard let friendlyName = deviceTag.firstChild(tag: "friendlyName")?.stringValue else { return }
                 
@@ -176,7 +176,7 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
                 delegate(deviceInfo)
             }
             
-            dispatch_semaphore_wait(complete, DISPATCH_TIME_FOREVER)
+            complete.wait(timeout: DispatchTime.distantFuture)
         }
     }
     
@@ -186,29 +186,29 @@ func discoverCompatibleDevices(delegate: DeviceInfo -> Void) {
 let contact = "vidconvtoggle@jjc1138.net"
 
 func errorContactInstruction() -> String {
-    return localString(format: localString("Please contact %@ with the above error information."), contact)
+    return localString(key: localString("Please contact %@ with the above error information."), fromTable: contact)
 }
 
 func noDevicesContactInstruction() -> String {
-    return localString(format: localString("No devices found."), contact)
+    return localString(key: localString("No devices found."), fromTable: contact)
 }
 
-class PeriodicallyFetchAllStatuses: NSOperation {
+class PeriodicallyFetchAllStatuses: Operation {
     
-    init(delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue(), fetchErrorDelegate: (DeviceInfo, AppError) -> Void, fetchResultDelegate: (DeviceInfo, Bool) -> Void) {
+    init(delegateQueue: OperationQueue = OperationQueue.main, fetchErrorDelegate: @escaping (DeviceInfo, AppError) -> Void, fetchResultDelegate: @escaping (DeviceInfo, Bool) -> Void) {
         // FUTURETODO replace with memberwise init when that exists
         self.delegateQueue = delegateQueue
         self.fetchErrorDelegate = fetchErrorDelegate
         self.fetchResultDelegate = fetchResultDelegate
     }
     
-    let delegateQueue: NSOperationQueue
+    let delegateQueue: OperationQueue
     let fetchErrorDelegate: (DeviceInfo, AppError) -> Void
     let fetchResultDelegate: (DeviceInfo, Bool) -> Void
     
     override func main() {
-        let fetchQueue = NSOperationQueue()
-        while (!cancelled) {
+        let fetchQueue = OperationQueue()
+        while (!isCancelled) {
             fetchAllStatuses(delegateQueue: delegateQueue, fetchQueue: fetchQueue, fetchErrorDelegate: fetchErrorDelegate, fetchResultDelegate: fetchResultDelegate)
         }
         fetchQueue.waitUntilAllOperationsAreFinished()
@@ -216,20 +216,20 @@ class PeriodicallyFetchAllStatuses: NSOperation {
     
 }
 
-func fetchAllStatuses(delegateQueue delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue(), fetchQueue: NSOperationQueue, fetchErrorDelegate: (DeviceInfo, AppError) -> Void, fetchResultDelegate: (DeviceInfo, Bool) -> Void) {
-    discoverCompatibleDevices { deviceInfo in fetchQueue.addOperationWithBlock {
+func fetchAllStatuses(delegateQueue: OperationQueue = OperationQueue.main, fetchQueue: OperationQueue, fetchErrorDelegate: @escaping (DeviceInfo, AppError) -> Void, fetchResultDelegate: @escaping (DeviceInfo, Bool) -> Void) {
+    discoverCompatibleDevices { deviceInfo in fetchQueue.addOperation {
         do {
             let setting = try fetchSetting(deviceInfo)
-            delegateQueue.addOperationWithBlock { fetchResultDelegate(deviceInfo, setting) }
+            delegateQueue.addOperation { fetchResultDelegate(deviceInfo, setting) }
         } catch let e as AppError {
-            delegateQueue.addOperationWithBlock { fetchErrorDelegate(deviceInfo, e) }
+            delegateQueue.addOperation { fetchErrorDelegate(deviceInfo, e) }
         } catch { assert(false) }
         }
     }
 }
 
-func fetchAllStatusesOnce(delegateQueue delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue(), fetchErrorDelegate: (DeviceInfo, AppError) -> Void, fetchResultDelegate: (DeviceInfo, Bool) -> Void) {
-    let fetchQueue = NSOperationQueue()
+func fetchAllStatusesOnce(delegateQueue: OperationQueue = OperationQueue.main, fetchErrorDelegate: @escaping (DeviceInfo, AppError) -> Void, fetchResultDelegate: @escaping (DeviceInfo, Bool) -> Void) {
+    let fetchQueue = OperationQueue()
     fetchAllStatuses(delegateQueue: delegateQueue, fetchQueue: fetchQueue, fetchErrorDelegate: fetchErrorDelegate, fetchResultDelegate: fetchResultDelegate)
     fetchQueue.waitUntilAllOperationsAreFinished()
 }

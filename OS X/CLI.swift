@@ -1,11 +1,11 @@
 import Foundation
 
-func runRunLoopUntilAllOperationsAreFinished(onQueue queue: NSOperationQueue) {
-    let runLoopStopperQueue = NSOperationQueue()
-    class RunLoopStopper: NSOperation {
-        let queue: NSOperationQueue
+func runRunLoopUntilAllOperationsAreFinished(onQueue queue: OperationQueue) {
+    let runLoopStopperQueue = OperationQueue()
+    class RunLoopStopper: Operation {
+        let queue: OperationQueue
         let runLoop: CFRunLoop
-        init(queue: NSOperationQueue, runLoop: CFRunLoop) {
+        init(queue: OperationQueue, runLoop: CFRunLoop) {
             self.queue = queue
             self.runLoop = runLoop
         }
@@ -23,31 +23,31 @@ func runRunLoopUntilAllOperationsAreFinished(onQueue queue: NSOperationQueue) {
 
 func cli() {
     // Just looking up this key does something magical to enable the checking behaviour if it should be enabled, and to make pseudo-language support work:
-    NSUserDefaults.standardUserDefaults().boolForKey("NSShowNonLocalizedStrings")
+    UserDefaults.standard.bool(forKey: "NSShowNonLocalizedStrings")
     
     var deviceSettings = [DeviceInfo: Bool]()
     var deviceErrors = [DeviceInfo: AppError]()
     
-    let operationQueue = NSOperationQueue()
-    let resultQueue = NSOperationQueue()
+    let operationQueue = OperationQueue()
+    let resultQueue = OperationQueue()
     resultQueue.maxConcurrentOperationCount = 1 // Serialize accesses to the non-thread safe result dictionaries above.
     
-    func toggleSettingAndReportResults(deviceInfo: DeviceInfo) {
-        operationQueue.addOperationWithBlock {
+    func toggleSettingAndReportResults(_ deviceInfo: DeviceInfo) {
+        operationQueue.addOperation {
             do {
                 let result = try toggleSetting(deviceInfo)
-                resultQueue.addOperationWithBlock { deviceSettings[deviceInfo] = result }
+                resultQueue.addOperation { deviceSettings[deviceInfo] = result }
             } catch let e as AppError {
-                resultQueue.addOperationWithBlock { deviceErrors[deviceInfo] = e }
+                resultQueue.addOperation { deviceErrors[deviceInfo] = e }
             } catch {}
         }
     }
     
 //    toggleSettingAndReportResults(DeviceInfo(name: "Test Device", baseURL: NSURL(string: "http://192.168.255.207")!))
 //    operationQueue.addOperationWithBlock { discoverSSDPServices(type: "urn:schemas-upnp-org:device:MediaRenderer:1") { print($0) } }
-    operationQueue.addOperationWithBlock {
+    operationQueue.addOperation {
         discoverCompatibleDevices { deviceInfo in
-            operationQueue.addOperationWithBlock {
+            operationQueue.addOperation {
                 toggleSettingAndReportResults(deviceInfo)
             }
         }
@@ -67,16 +67,16 @@ func cli() {
         guard let error = deviceErrors[deviceInfo] else { continue }
         
         anyErrors = true
-        print(describeError(error, forDevice: deviceInfo), toStream: &stderr)
+        print(describeError(error, forDevice: deviceInfo), to: &stderr)
     }
     
     if anyErrors {
-        print("\n\(errorContactInstruction())", toStream: &stderr)
+        print("\n\(errorContactInstruction())", to: &stderr)
         exit(1)
     }
     
     if !anyErrors && deviceSettings.isEmpty {
-        print(noDevicesContactInstruction(), toStream: &stderr)
+        print(noDevicesContactInstruction(), to: &stderr)
         exit(2)
     }
 }

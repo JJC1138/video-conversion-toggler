@@ -8,7 +8,7 @@ import CocoaAsyncSocket
 // http://www.apache.org/licenses/LICENSE-2.0
 
 public struct SSDPResponse: CustomStringConvertible, Hashable {
-    public let location: NSURL
+    public let location: URL
     public let st: String
     public let usn: String
     public let extraHeaders: [String: String]
@@ -27,42 +27,42 @@ public func == (lhs: SSDPResponse, rhs: SSDPResponse) -> Bool {
         lhs.extraHeaders == rhs.extraHeaders
 }
 
-public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue(), delegate: SSDPResponse -> Void) {
+public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegateQueue: OperationQueue = OperationQueue.main, delegate: @escaping (SSDPResponse) -> Void) {
     class SocketDelegate: GCDAsyncUdpSocketDelegate {
         
-        let responseDelegate: SSDPResponse -> Void
-        let responseDelegateQueue: NSOperationQueue
+        let responseDelegate: (SSDPResponse) -> Void
+        let responseDelegateQueue: OperationQueue
         var responses = Set<SSDPResponse>()
         
-        init(responseDelegateQueue: NSOperationQueue, responseDelegate: SSDPResponse -> Void) {
+        init(responseDelegateQueue: OperationQueue, responseDelegate: @escaping (SSDPResponse) -> Void) {
             self.responseDelegateQueue = responseDelegateQueue
             self.responseDelegate = responseDelegate
         }
         
-        @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
+        @objc func udpSocket(_ sock: GCDAsyncUdpSocket!, didReceive data: Data!, fromAddress address: Data!, withFilterContext filterContext: AnyObject!) {
             let responseMessage = CFHTTPMessageCreateEmpty(nil, false).takeRetainedValue()
-            guard CFHTTPMessageAppendBytes(responseMessage, UnsafePointer(data.bytes), data.length) else { return }
+            guard CFHTTPMessageAppendBytes(responseMessage, data.bytes.bindMemory(to: UInt8.self, capacity: data.count), data.count) else { return }
             guard CFHTTPMessageIsHeaderComplete(responseMessage) else { return }
             guard let originalHeaders = CFHTTPMessageCopyAllHeaderFields(responseMessage)?.takeRetainedValue() as Dictionary? else { return }
             var headers = [String: String]()
-            for (k, v) in originalHeaders { headers[(k as! String).uppercaseString] = (v as! String) }
+            for (k, v) in originalHeaders { headers[(k as! String).uppercased()] = (v as! String) }
             
-            guard let location: NSURL = {
-                guard let s = headers.removeValueForKey("LOCATION") else { return nil }
-                return NSURL(string: s)
+            guard let location: URL = {
+                guard let s = headers.removeValue(forKey: "LOCATION") else { return nil }
+                return URL(string: s)
             }() else { return }
-            guard let st = headers.removeValueForKey("ST") else { return }
-            guard let usn = headers.removeValueForKey("USN") else { return }
+            guard let st = headers.removeValue(forKey: "ST") else { return }
+            guard let usn = headers.removeValue(forKey: "USN") else { return }
             
             let response = SSDPResponse(location: location, st: st, usn: usn, extraHeaders: headers)
             // Services often respond more than once to a single request so skip duplicates:
             guard !responses.contains(response) else { return }
             
             responses.insert(response)
-            responseDelegateQueue.addOperationWithBlock { self.responseDelegate(response) }
+            responseDelegateQueue.addOperation { self.responseDelegate(response) }
         }
         
-        @objc func udpSocket(sock: GCDAsyncUdpSocket!, didSendDataWithTag tag: Int) {
+        @objc func udpSocket(_ sock: GCDAsyncUdpSocket!, didSendDataWithTag tag: Int) {
             // We can't begin receiving until the socket is bound and we're doing that implicitly by sending data over it, so this is the right place for this.
             try! sock.beginReceiving()
         }
@@ -70,7 +70,7 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
     }
     
     let socketDelegate = SocketDelegate(responseDelegateQueue: delegateQueue, responseDelegate: delegate) // We have to keep a reference to this so it can't be inlined in the call below.
-    let sock = GCDAsyncUdpSocket(delegate: socketDelegate, delegateQueue: dispatch_queue_create(nil, DISPATCH_QUEUE_SERIAL)) // The queue has to be serial so that duplicate filtering works.
+    let sock = GCDAsyncUdpSocket(delegate: socketDelegate, delegateQueue: DispatchQueue(label: nil, attributes: [])) // The queue has to be serial so that duplicate filtering works.
     
     let maximumResponseWaitingTimeSeconds = 1
     let ip = "239.255.255.250"
@@ -85,9 +85,9 @@ public func discoverSSDPServices(type serviceType: String = "ssdp:all", delegate
         "ST: \(serviceType)",
         "",
         "",
-        ].joinWithSeparator("\r\n").dataUsingEncoding(NSUTF8StringEncoding)
+        ].joined(separator: "\r\n").data(using: String.Encoding.utf8)
     
-    sock.sendData(searchMessage, toHost: ip, port: port, withTimeout: -1, tag: 0)
+    sock.send(searchMessage, toHost: ip, port: port, withTimeout: -1, tag: 0)
     
     sleep(UInt32(maximumResponseWaitingTimeSeconds * 2))
     

@@ -27,7 +27,7 @@ class ViewController: UIViewController, ModelViewDelegate, UITableViewDataSource
         
         do { // tweak table header presentation:
             func uppercaseAllLabelsInHierarchy(view: UIView) {
-                if let label = view as? UILabel, text = label.text {
+                if let label = view as? UILabel, let text = label.text {
                     label.text = text.uppercaseStringWithLocale(NSLocale.currentLocale())
                 }
                 for subview in view.subviews { uppercaseAllLabelsInHierarchy(subview) }

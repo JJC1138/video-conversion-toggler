@@ -1,9 +1,9 @@
 import Cocoa
 
-let args = Process.arguments
+let args = CommandLine.arguments
 if args.count > 1 && args[1] == "-cli" {
     cli()
 } else {
-    NSApplication.sharedApplication().delegate = AppDelegate()
-    NSApplicationMain(Process.argc, Process.unsafeArgv)
+    NSApplication.shared().delegate = AppDelegate()
+    NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
 }

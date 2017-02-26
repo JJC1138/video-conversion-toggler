@@ -8,12 +8,12 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
     @IBOutlet weak var errorLabel: NSTextField!
     @IBOutlet var errorLabelConstraint: NSLayoutConstraint!
     
-    var allColumns: NSIndexSet!
-    let rowAnimationOptions = NSTableViewAnimationOptions.SlideDown
+    var allColumns: IndexSet!
+    let rowAnimationOptions = NSTableViewAnimationOptions.slideDown
     
     override func viewDidLoad() {
         model = UIModel(delegate: self)
-        allColumns = NSIndexSet(indexesInRange: NSRange(0..<deviceTable.numberOfColumns))
+        allColumns = IndexSet(integersIn: 0..<deviceTable.numberOfColumns)
         updateErrorText("")
     }
     
@@ -34,35 +34,35 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
     
     // MARK: ModelViewDelegate
     
-    func insertDeviceViewAtIndex(index: Int) {
-        deviceTable.insertRowsAtIndexes(row(index), withAnimation: rowAnimationOptions)
+    func insertDeviceViewAtIndex(_ index: Int) {
+        deviceTable.insertRows(at: row(index), withAnimation: rowAnimationOptions)
     }
     
-    func row(index: Int) -> NSIndexSet { return NSIndexSet(index: index) }
+    func row(_ index: Int) -> IndexSet { return IndexSet(integer: index) }
     
-    func reloadDeviceViewAtIndex(index: Int) {
-        deviceTable.reloadDataForRowIndexes(row(index), columnIndexes: allColumns)
+    func reloadDeviceViewAtIndex(_ index: Int) {
+        deviceTable.reloadData(forRowIndexes: row(index), columnIndexes: allColumns)
     }
     
-    func deleteDeviceViewAtIndex(index: Int) {
-        deviceTable.removeRowsAtIndexes(row(index), withAnimation: rowAnimationOptions)
+    func deleteDeviceViewAtIndex(_ index: Int) {
+        deviceTable.removeRows(at: row(index), withAnimation: rowAnimationOptions)
     }
     
-    func deleteDeviceViewsAtIndices(indices: [Int]) {
+    func deleteDeviceViewsAtIndices(_ indices: [Int]) {
         let indexSet = NSMutableIndexSet()
-        for i in indices { indexSet.addIndex(i) }
-        deviceTable.removeRowsAtIndexes(indexSet, withAnimation: rowAnimationOptions)
+        for i in indices { indexSet.add(i) }
+        deviceTable.removeRows(at: indexSet as IndexSet, withAnimation: rowAnimationOptions)
     }
     
-    func updateErrorText(text: String) {
+    func updateErrorText(_ text: String) {
         errorLabel.stringValue = text
         
         let errorLabelShouldBeHidden = text.isEmpty
-        let errorLabelIsHidden = errorLabel.hidden
+        let errorLabelIsHidden = errorLabel.isHidden
         
         if errorLabelShouldBeHidden != errorLabelIsHidden {
-            errorLabel.hidden = errorLabelShouldBeHidden
-            errorLabelConstraint.active = !errorLabelShouldBeHidden
+            errorLabel.isHidden = errorLabelShouldBeHidden
+            errorLabelConstraint.isActive = !errorLabelShouldBeHidden
         }
         
         // KLUDGE This works around what seems to me to be a bug where the label only uses one line until the window is resized, at which point is dynamically wraps correctly. The workaround is imperfect because it fixes the wrapping width but since we update the error text regularly it's not a big problem.
@@ -71,15 +71,15 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
     
     // MARK: NSTableViewDataSource and NSTableViewDelegate
     
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+    func numberOfRows(in tableView: NSTableView) -> Int {
         return model.deviceCount
     }
     
-    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let (device, setting) = model.deviceAndSettingAtIndex(row)
         let columnID = tableColumn!.identifier
         
-        let view = tableView.makeViewWithIdentifier(columnID, owner: self)
+        let view = tableView.make(withIdentifier: columnID, owner: self)
         
         if columnID == "Device" {
             let view = view as! NSTableCellView
@@ -94,12 +94,12 @@ class ViewController: NSViewController, ModelViewDelegate, NSTableViewDataSource
         return view
     }
     
-    func selectionShouldChangeInTableView(tableView: NSTableView) -> Bool {
+    func selectionShouldChange(in tableView: NSTableView) -> Bool {
         return false
     }
     
-    @IBAction func checkBoxAction(sender: NSButton) {
-        let index = deviceTable.rowForView(sender)
+    @IBAction func checkBoxAction(_ sender: NSButton) {
+        let index = deviceTable.row(for: sender)
         let (device, _) = model.deviceAndSettingAtIndex(index)
         model.toggleDevice(device, toSetting: sender.state == NSOnState)
     }

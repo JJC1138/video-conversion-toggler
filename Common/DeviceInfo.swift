@@ -2,7 +2,7 @@ import Foundation
 
 struct DeviceInfo: Hashable, CustomStringConvertible, CustomDebugStringConvertible {
     let name: String
-    let baseURL: NSURL
+    let baseURL: URL
     
     var hashValue: Int { return baseURL.hashValue }
     var description: String { return name }
@@ -18,8 +18,8 @@ class DeviceInfoCoding: NSObject, NSCoding {
     static let baseURLKey = "baseURL"
     
     required init?(coder: NSCoder) {
-        guard let name = coder.decodeObjectForKey(DeviceInfoCoding.nameKey) as? String else { return nil }
-        guard let baseURL = coder.decodeObjectForKey(DeviceInfoCoding.baseURLKey) as? NSURL else { return nil }
+        guard let name = coder.decodeObject(forKey: DeviceInfoCoding.nameKey) as? String else { return nil }
+        guard let baseURL = coder.decodeObject(forKey: DeviceInfoCoding.baseURLKey) as? URL else { return nil }
         
         deviceInfo = DeviceInfo(name: name, baseURL: baseURL)
         super.init()
@@ -27,9 +27,9 @@ class DeviceInfoCoding: NSObject, NSCoding {
     
     init(_ deviceInfo: DeviceInfo) { self.deviceInfo = deviceInfo }
     
-    func encodeWithCoder(coder: NSCoder) {
-        coder.encodeObject(deviceInfo.name, forKey: DeviceInfoCoding.nameKey)
-        coder.encodeObject(deviceInfo.baseURL, forKey: DeviceInfoCoding.baseURLKey)
+    func encode(with coder: NSCoder) {
+        coder.encode(deviceInfo.name, forKey: DeviceInfoCoding.nameKey)
+        coder.encode(deviceInfo.baseURL, forKey: DeviceInfoCoding.baseURLKey)
     }
     
 }
