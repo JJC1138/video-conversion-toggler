@@ -32,7 +32,7 @@ func describeError(_ error: AppError, forDevice deviceInfo: DeviceInfo) -> Strin
     
     var errorInfo = [String]()
     
-    errorInfo.append(localString(errorDescriptionFormat, fromTable: deviceInfo.debugDescription))
+    errorInfo.append(localString(format: errorDescriptionFormat, deviceInfo.debugDescription))
     if let info = error.info { errorInfo.append(info) }
     if let cause = error.cause { errorInfo.append(cause.localizedDescription) }
     
@@ -186,11 +186,11 @@ func discoverCompatibleDevices(_ delegate: @escaping (DeviceInfo) -> Void) {
 let contact = "vidconvtoggle@jjc1138.net"
 
 func errorContactInstruction() -> String {
-    return localString(localString("Please contact %@ with the above error information."), fromTable: contact)
+    return localString(format: localString("Please contact %@ with the above error information."), contact)
 }
 
 func noDevicesContactInstruction() -> String {
-    return localString(localString("No devices found."), fromTable: contact)
+    return localString(format: localString("No devices found."), contact)
 }
 
 class PeriodicallyFetchAllStatuses: Operation {
